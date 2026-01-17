@@ -1,0 +1,17 @@
+--> ACTIVAR ENV
+venv\Scripts\activate
+
+
+--> LANZAR WEB
+python -m uvicorn main:app --reload
+
+
+--> LANZAR POSTGRESQL 
+docker compose up -d
+
+--> ACCEDER A BD
+docker exec -it postgres_tfg psql -U tfg_user -d tfg_db
+
+--> OPERAR
+INSERT INTO/ SELECT / \dt / \q
+

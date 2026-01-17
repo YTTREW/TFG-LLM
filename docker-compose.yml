@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres_tfg
+    restart: always
+    environment:
+      POSTGRES_DB: tfg_db
+      POSTGRES_USER: tfg_user
+      POSTGRES_PASSWORD: tfg_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
