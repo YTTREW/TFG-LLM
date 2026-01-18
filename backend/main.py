@@ -6,11 +6,18 @@ from .auth import authenticate_user, pwd_context
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import User, Base
+from .models import Base, Estudiante
+from .database import engine
+from starlette.middleware.sessions import SessionMiddleware
+
 import os
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+app.add_middleware(
+    SessionMiddleware,
+    secret_key="tg_key_123"
+)
 templates = Jinja2Templates(directory="backend/templates")
 app.mount("/static", StaticFiles(directory="backend/static"), name="static")
 
@@ -33,15 +40,19 @@ def login_page(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/login")
-def login_json(username: str = Form(...), password: str = Form(...)):
+def login(  request: Request, username: str = Form(...), password: str = Form(...)):
     role = authenticate_user(username, password)
+
+    if not role:
+        return {"success": False, "error": "Usuario o contraseña incorrectos"}
+
+    request.session["user"] = username
+    request.session["role"] = role
 
     if role == "profesor":
         return {"success": True, "redirect": "/dashboard-profesor"}
-    if role == "estudiante":
+    else:
         return {"success": True, "redirect": "/dashboard-estudiante"}
-
-    return {"success": False, "error": "Usuario o contraseña incorrectos"}
 
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
@@ -59,7 +70,7 @@ def register_user(
     db = SessionLocal()
     try:
         # 1. Comprobar si ya existe
-        existing_user = db.query(User).filter_by(username=username).first()
+        existing_user = db.query(Estudiante).filter_by(username=username).first()
         if existing_user:
             return {"error": "Usuario ya existe"}
 
@@ -67,14 +78,14 @@ def register_user(
         hashed = pwd_context.hash(password)
 
         # 3. Crear usuario y guardar
-        user = User(
-            username=username,
-            password_hash=hashed,
-            role="estudiante",
-            nombre=nombre,
-            apellidos=apellidos
-        )
-        db.add(user)
+        estudiante = Estudiante(
+                username=username,
+                password_hash=hashed,
+                nombre=nombre,
+                apellidos=apellidos,
+                role="estudiante"
+            )
+        db.add(estudiante)
         db.commit()
     finally:
         db.close() 
@@ -85,11 +96,35 @@ def register_user(
 
 @app.get("/dashboard-profesor", response_class=HTMLResponse)
 def dashboard_profesor(request: Request):
-    return templates.TemplateResponse("dashboard_profesor.html", {"request": request})
+    if "user" not in request.session:
+        return RedirectResponse("/login")
+
+    if request.session.get("role") != "profesor":
+        return RedirectResponse("/login")
+
+    return templates.TemplateResponse(
+        "dashboard_profesor.html",
+        {"request": request}
+    )
 
 @app.get("/dashboard-estudiante", response_class=HTMLResponse)
 def dashboard_estudiante(request: Request):
-    return templates.TemplateResponse("dashboard_estudiante.html", {"request": request})
+    if "user" not in request.session:
+        return RedirectResponse("/login")
+
+    if request.session.get("role") != "estudiante":
+        return RedirectResponse("/login")
+
+    return templates.TemplateResponse(
+        "dashboard_estudiante.html",
+        {"request": request}
+    )
+
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/login")
+
 
 @app.get("/")
 def root():

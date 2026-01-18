@@ -1,27 +1,23 @@
 from passlib.context import CryptContext
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from backend.models import Base, User
+from backend.database import SessionLocal
+from backend.models import Profesor
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 engine = create_engine("postgresql://tfg_user:tfg_password@localhost:5432/tfg_db")
-Session = sessionmaker(bind=engine)
-session = Session()
+db = SessionLocal()
 
-# Solo un profesor y un estudiante
-usuarios = [
-    {"username": "profesor1", "password": "prof123", "role": "profesor", "nombre": "Ana", "apellidos": "García"},
-    {"username": "estudiante1", "password": "est123", "role": "estudiante", "nombre": "Luis", "apellidos": "Pérez"}
-]
+prof = Profesor(
+    username="profesor1",
+    password_hash=pwd_context.hash("prof123"),
+    nombre="Ana",
+    apellidos="García",
+    role="profesor"
+)
 
-for u in usuarios:
-    hashed = pwd_context.hash(u["password"])
-    user = User(username=u["username"], password_hash=hashed, role=u["role"],
-                nombre=u["nombre"], apellidos=u["apellidos"])
-    session.add(user)
-
-session.commit()
-session.close()
+db.add(prof)
+db.commit()
+db.close()
 print("Usuarios creados correctamente")
 
