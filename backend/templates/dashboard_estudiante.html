@@ -1,7 +1,29 @@
-<h1>Dashboard Estudiante</h1>
-<p>Bienvenido, estudiante.</p>
-<a href="http://localhost:8501" target="_blank">
-    <button>Ir al Chat</button>
-</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/static/dashboard_estudiante.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Saludo personalizado -->
+        <h1>Welcome, {{ username }}!</h1>
+        <p>Ready to continue learning?</p>
 
-<a href="/logout">Cerrar sesión</a>
+        <!-- Tarjeta central -->
+        <div class="dashboard-card">
+            <a href="http://localhost:8501" target="_blank">
+                <button class="btn btn-primary">Start New Chat</button>
+            </a>
+            <a href="/check-marks">
+                <button class="btn btn-secondary">Check Marks</button>
+            </a>
+            <a href="/logout">
+                <button class="btn btn-danger">Sign Out</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
+

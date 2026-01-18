@@ -37,22 +37,26 @@ SessionLocal  = sessionmaker(bind=engine)
 # Endpoints
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse("login.html", {"request": request})
 
-@app.post("/login")
+@app.post("/login", response_class=HTMLResponse)
 def login(  request: Request, username: str = Form(...), password: str = Form(...)):
     role = authenticate_user(username, password)
 
     if not role:
-        return {"success": False, "error": "Usuario o contraseña incorrectos"}
-
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "error": "Incorrect username or password",
+            "username": username  
+        })
+    
     request.session["user"] = username
     request.session["role"] = role
 
     if role == "profesor":
-        return {"success": True, "redirect": "/dashboard-profesor"}
+        return RedirectResponse("/dashboard-profesor", status_code=303)
     else:
-        return {"success": True, "redirect": "/dashboard-estudiante"}
+        return RedirectResponse("/dashboard-estudiante", status_code=303)
 
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
@@ -66,7 +70,6 @@ def register_user(
     nombre: str = Form(...),
     apellidos: str = Form(...),
 ):
-    # 1. Comprobar si ya existe
     db = SessionLocal()
     try:
         # 1. Comprobar si ya existe
@@ -114,10 +117,12 @@ def dashboard_estudiante(request: Request):
 
     if request.session.get("role") != "estudiante":
         return RedirectResponse("/login")
+    
+    username = request.session.get("user", "Student")
 
     return templates.TemplateResponse(
         "dashboard_estudiante.html",
-        {"request": request}
+        {"request": request, "username": username}
     )
 
 @app.get("/logout")

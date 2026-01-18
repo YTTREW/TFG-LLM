@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head > 
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="/static/login.css">
+    <title>Login</title>
+</head>
+<body>
+    <div class="login-container">
+        <h2>CognitiveLab</h2>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form action="/login" method="post">
+            <input type="text" name="username" placeholder="User" required><br><br>
+            <input type="password" name="password" placeholder="Password" required><br><br>
+            <button type="submit">Sign in</button>
+        </form>
+
+        <div class="register-container">
+            <form action="/register">
+                <button type="submit">Sign up</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
