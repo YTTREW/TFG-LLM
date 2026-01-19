@@ -1,3 +1,31 @@
-<h1>Dashboard Profesor</h1>
-<p>Bienvenido, profesor.</p>
-<a href="/logout">Cerrar sesión</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Professor Dashboard</title>
+    <link rel="stylesheet" href="/static/dashboard_profesor.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>Welcome, {{ username }}</h1>
+        <p>Professor Dashboard</p>
+
+        <div class="dashboard-card">
+            <a href="/students" style="width:100%;">
+            <button class="btn btn-primary">
+                View Students
+            </button>
+            </a>
+
+            <a href="/logout" style="width:100%;">
+                <button class="btn btn-danger">
+                    Sign out
+                </button>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
+

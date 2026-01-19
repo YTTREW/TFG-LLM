@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b1d3a, #0f2a55, #0d3b70);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    padding: 20px;
+}
+
+.dashboard-container {
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 30px;
+}
+
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* Cada estudiante */
+.student-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+
+.student-row:last-child {
+    border-bottom: none;
+}
+
+/* Volver */
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}

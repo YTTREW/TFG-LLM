@@ -64,9 +64,13 @@ p {
 }
 
 /* Tipos de botones */
-.btn-primary { background: linear-gradient(to right, #0052cc, #0072ff); }
-.btn-secondary { background: linear-gradient(to right, #00c6ff, #0072ff); }
-.btn-danger { background: linear-gradient(to right, #ff4c4c, #ff0000); }
+.btn-primary {
+    background: linear-gradient(to right, #0052cc, #0072ff);
+}
+
+.btn-danger {
+    background: linear-gradient(to right, #ff4c4c, #ff0000);
+}
 
 /* Hover efecto */
 .btn:hover {

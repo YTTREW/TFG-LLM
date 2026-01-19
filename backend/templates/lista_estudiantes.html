@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Students List</title>
+    <link rel="stylesheet" href="/static/lista_estudiantes.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>Students</h1>
+        <p>Registered students</p>
+
+        <div class="dashboard-card">
+            {% for student in students %}
+                <div class="student-row">
+                    <span>{{ student.nombre }}</span>
+                    <span>{{ student.apellidos }}</span>
+                </div>
+            {% else %}
+                <p>No students found.</p>
+            {% endfor %}
+        </div>
+
+        <a href="/dashboard-profesor" class="back-link">
+            ← Back to dashboard
+        </a>
+    </div>
+
+</body>
+</html>

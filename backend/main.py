@@ -93,7 +93,7 @@ def register_user(
     finally:
         db.close() 
 
-    return {"success": "Usuario creado correctamente"}
+    return RedirectResponse("/login", status_code=303)
 
 
 
@@ -105,9 +105,14 @@ def dashboard_profesor(request: Request):
     if request.session.get("role") != "profesor":
         return RedirectResponse("/login")
 
+    username = request.session.get("user", "Professor")
+
     return templates.TemplateResponse(
         "dashboard_profesor.html",
-        {"request": request}
+        {
+            "request": request,
+            "username": username
+        }
     )
 
 @app.get("/dashboard-estudiante", response_class=HTMLResponse)
@@ -134,3 +139,27 @@ def logout(request: Request):
 @app.get("/")
 def root():
     return RedirectResponse(url="/login")
+
+@app.get("/students", response_class=HTMLResponse)
+def list_students(request: Request):
+
+ # Seguridad
+    if "user" not in request.session:
+        return RedirectResponse("/login")
+
+    if request.session.get("role") != "profesor":
+        return RedirectResponse("/login")
+
+    db = SessionLocal()
+    try:
+        students = db.query(Estudiante).all()
+    finally:
+        db.close()
+
+    return templates.TemplateResponse(
+        "lista_estudiantes.html",
+        {
+            "request": request,
+            "students": students
+        }
+    )
