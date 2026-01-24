@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/static/dashboard_admin.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, {{ username }}</p>
+
+        <div class="dashboard-card">
+
+            <a href="/students">
+                <button class="btn btn-primary">View Students</button>
+            </a>
+
+            <a href="/admin/professors">
+                <button class="btn btn-secondary">View Professors</button>
+            </a>
+
+            <a href="/admin/register">
+                <button class="btn btn-accent">Register New User</button>
+            </a>
+
+            <a href="/logout">
+                <button class="btn btn-danger">Sign Out</button>
+            </a>
+
+        </div>
+    </div>
+
+</body>
+</html>

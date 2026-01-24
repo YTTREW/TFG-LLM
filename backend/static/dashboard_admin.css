@@ -1,0 +1,138 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fondo */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b1d3a, #0f2a55, #0d3b70);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+}
+
+/* Contenedor */
+.dashboard-container {
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+}
+
+/* Títulos */
+h1 {
+    font-size: 2.4rem;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1.2rem;
+    margin-bottom: 35px;
+    opacity: 0.9;
+}
+
+/* Tarjeta */
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 35px 40px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    max-width: 380px;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Botones base */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Tipos de botón */
+.btn-primary {
+    background: linear-gradient(to right, #0052cc, #0072ff);
+}
+
+.btn-secondary {
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+}
+
+.btn-accent {
+    background: linear-gradient(to right, #7b61ff, #5a4bff);
+}
+
+.btn-danger {
+    background: linear-gradient(to right, #ff4c4c, #ff0000);
+}
+
+/* Hover */
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 198, 255, 0.35);
+}
+
+/* Quitar subrayado links */
+a {
+    width: 100%;
+    text-decoration: none;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.9rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+
+    .dashboard-card {
+        padding: 25px;
+        gap: 15px;
+    }
+
+    .btn {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. Todos los derechos reservados.";
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}

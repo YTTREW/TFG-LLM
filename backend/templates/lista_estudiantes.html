@@ -7,25 +7,45 @@
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <h1>Students</h1>
-        <p>Registered students</p>
+<div class="page-container">
+    <h1>Students</h1>
 
-        <div class="dashboard-card">
-            {% for student in students %}
-                <div class="student-row">
-                    <span>{{ student.nombre }}</span>
-                    <span>{{ student.apellidos }}</span>
-                </div>
-            {% else %}
-                <p>No students found.</p>
-            {% endfor %}
-        </div>
+    <div class="students-card">
+        <table class="students-table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                        <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td class="student-name">
+                        {{ student.nombre }} {{ student.apellidos }}
+                    </td>
 
-        <a href="/dashboard-profesor" class="back-link">
-            ← Back to dashboard
-        </a>
+                    {% if role == "admin"%}
+                    <td>
+                        <form action="/admin/delete-student/{{ student.id }}" method="post">
+                            <button class="btn-delete" type="submit">Delete</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                    {% if role == "profesor" %}
+                    <td>
+                        <a href="#" class="btn-view">
+                            View conversations
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    <a href="/dashboard-admin" class="back-link">← Back</a>
+</div>
 
 </body>
 </html>

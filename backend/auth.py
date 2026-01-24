@@ -1,4 +1,4 @@
-from .models import Profesor, Estudiante
+from .models import Profesor, Estudiante, Administrador
 from .database import SessionLocal
 from passlib.context import CryptContext
 
@@ -22,6 +22,11 @@ def authenticate_user(username: str, password: str):
     if estudiante and verify_password(password, estudiante.password_hash):
         db.close()
         return "estudiante"
+    
+    admin = db.query(Administrador).filter_by(username=username).first()
+    if admin and verify_password(password, admin.password_hash):
+        db.close()
+        return "admin"
 
     db.close()
     return None

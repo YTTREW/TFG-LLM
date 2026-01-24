@@ -6,7 +6,7 @@ from .auth import authenticate_user, pwd_context
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Base, Estudiante
+from .models import Base, Estudiante, Profesor, Administrador
 from .database import engine
 from starlette.middleware.sessions import SessionMiddleware
 
@@ -55,6 +55,8 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
 
     if role == "profesor":
         return RedirectResponse("/dashboard-profesor", status_code=303)
+    elif role == "admin":
+        return RedirectResponse("/dashboard-admin", status_code=303)
     else:
         return RedirectResponse("/dashboard-estudiante", status_code=303)
 
@@ -130,6 +132,21 @@ def dashboard_estudiante(request: Request):
         {"request": request, "username": username}
     )
 
+@app.get("/dashboard-admin", response_class=HTMLResponse)
+def dashboard_estudiante(request: Request):
+    if "user" not in request.session:
+        return RedirectResponse("/login")
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login")
+    
+    username = request.session.get("user", "Admin")
+
+    return templates.TemplateResponse(
+        "dashboard_admin.html",
+        {"request": request, "username": username}
+    )
+
 @app.get("/logout")
 def logout(request: Request):
     request.session.clear()
@@ -147,7 +164,8 @@ def list_students(request: Request):
     if "user" not in request.session:
         return RedirectResponse("/login")
 
-    if request.session.get("role") != "profesor":
+    role = request.session.get("role")
+    if role not in ["profesor", "admin"]:
         return RedirectResponse("/login")
 
     db = SessionLocal()
@@ -160,6 +178,103 @@ def list_students(request: Request):
         "lista_estudiantes.html",
         {
             "request": request,
-            "students": students
+            "students": students, 
+            "role": role
         }
     )
+
+@app.post("/admin/delete-student/{student_id}")
+def delete_student(student_id: int, request: Request):
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login")
+
+    db = SessionLocal()
+    try:
+        student = db.query(Estudiante).filter_by(id=student_id).first()
+        if student:
+            db.delete(student)
+            db.commit()
+    finally:
+        db.close()
+
+    return RedirectResponse("/students", status_code=303)
+
+@app.get("/admin/professors", response_class=HTMLResponse)
+def list_professors(request: Request):
+
+    # Seguridad
+    if "user" not in request.session:
+        return RedirectResponse("/login")
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login")
+
+    db = SessionLocal()
+    try:
+        professors = db.query(Profesor).all()
+    finally:
+        db.close()
+
+    return templates.TemplateResponse(
+        "lista_profesores.html",
+        {
+            "request": request,
+            "professors": professors,
+            "role": "admin"
+        }
+    )
+
+@app.get("/admin/register", response_class=HTMLResponse)
+def create_user_form(request: Request):
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login")
+
+    return templates.TemplateResponse(
+        "register_users.html",
+        {"request": request}
+    )
+
+@app.post("/admin/register")
+def create_user(
+    request: Request,
+    nombre: str = Form(...),
+    apellidos: str = Form(...),
+    username: str = Form(...),
+    password: str = Form(...),
+    role: str = Form(...)
+):
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login")
+
+    db = SessionLocal()
+    try:
+        hashed_password = pwd_context.hash(password)
+
+        if role == "estudiante":
+            user = Estudiante(
+                username=username,
+                password_hash=hashed_password,
+                nombre=nombre,
+                apellidos=apellidos,
+                role="estudiante"
+            )
+
+        elif role == "profesor":
+            user = Profesor(
+                username=username,
+                password_hash=hashed_password,
+                nombre=nombre,
+                apellidos=apellidos,
+                role="profesor"
+            )
+        else:
+            return {"error": "Invalid role"}
+
+        db.add(user)
+        db.commit()
+
+    finally:
+        db.close()
+
+    return RedirectResponse("/dashboard-admin", status_code=303)

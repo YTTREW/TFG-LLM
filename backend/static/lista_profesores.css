@@ -1,3 +1,4 @@
+/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -5,95 +6,89 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Fondo */
 body {
     min-height: 100vh;
     background: linear-gradient(135deg, #0b1d3a, #0f2a55, #0d3b70);
-    color: white;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    color: #ffffff;
 }
 
+/* Contenedor */
 .page-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 700px;
     padding: 20px;
-    text-align: center;
 }
 
+/* Título */
 h1 {
+    text-align: center;
     margin-bottom: 30px;
 }
 
-.students-card {
+/* Card */
+.professors-card {
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     border-radius: 14px;
-    padding: 25px;
+    padding: 20px;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
-table {
+/* Tabla */
+.professors-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-th, td {
+.professors-table th,
+.professors-table td {
     padding: 14px;
+    text-align: left;
+}
+
+.professors-table th {
     border-bottom: 1px solid rgba(255,255,255,0.2);
+    font-size: 0.9rem;
+    opacity: 0.8;
 }
 
-th {
-    font-weight: 600;
+.professor-name {
+    font-weight: 500;
 }
 
-tr:last-child td {
-    border-bottom: none;
-}
-
+/* Botón delete */
 .btn-delete {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
     background: linear-gradient(to right, #ff4c4c, #ff0000);
+    border: none;
     color: white;
-    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: 600;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-delete:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.45);
+    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.4);
 }
 
+/* Back link */
 .back-link {
-    display: inline-block;
-    margin-top: 25px;
-    color: white;
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+    color: #ffffff;
     text-decoration: none;
     opacity: 0.8;
 }
 
 .back-link:hover {
-    opacity: 1;
-}
-
-.btn-view {
-    display: inline-block;
-    padding: 8px 14px;
-    border-radius: 6px;
-    background: linear-gradient(to right, #00c6ff, #0072ff);
-    color: white;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.btn-view:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 198, 255, 0.4);
+    text-decoration: underline;
 }
 
 /* Footer copyright */
