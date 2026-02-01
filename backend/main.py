@@ -6,11 +6,14 @@ from .auth import authenticate_user, pwd_context
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Base, Estudiante, Profesor, Administrador
+from .models import Base, Estudiante, Profesor, SessionToken
 from .database import engine
 from starlette.middleware.sessions import SessionMiddleware
+from .chats import router as chats_router
 
 import os
+import secrets
+
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
@@ -20,6 +23,7 @@ app.add_middleware(
 )
 templates = Jinja2Templates(directory="backend/templates")
 app.mount("/static", StaticFiles(directory="backend/static"), name="static")
+app.include_router(chats_router)
 
 # Carga variables del .env
 load_dotenv()
@@ -49,16 +53,28 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
             "error": "Incorrect username or password",
             "username": username  
         })
+    token = secrets.token_hex(16)
     
     request.session["user"] = username
     request.session["role"] = role
+    request.session["token"] = token
 
-    if role == "profesor":
-        return RedirectResponse("/dashboard-profesor", status_code=303)
+    db = SessionLocal()
+    try:
+        db.add(SessionToken(token=token, username=username))
+        db.commit()
+    finally:
+        db.close()
+
+    if role == "estudiante":
+        return RedirectResponse(
+            url=f"http://localhost:8501?token={token}",
+            status_code=303
+        )
     elif role == "admin":
         return RedirectResponse("/dashboard-admin", status_code=303)
     else:
-        return RedirectResponse("/dashboard-estudiante", status_code=303)
+        return RedirectResponse("/dashboard-profesor", status_code=303)
 
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
@@ -224,6 +240,23 @@ def list_professors(request: Request):
             "role": "admin"
         }
     )
+
+@app.post("/admin/delete-professor/{student_id}")
+def delete_professor(professor_id: int, request: Request):
+
+    if request.session.get("role") != "admin":
+        return RedirectResponse("/login")
+
+    db = SessionLocal()
+    try:
+        professor = db.query(Profesor).filter_by(id=professor_id).first()
+        if professor:
+            db.delete(professor)
+            db.commit()
+    finally:
+        db.close()
+
+    return RedirectResponse("/admin/professors", status_code=303)
 
 @app.get("/admin/register", response_class=HTMLResponse)
 def create_user_form(request: Request):
