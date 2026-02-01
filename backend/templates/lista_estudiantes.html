@@ -11,6 +11,7 @@
     <h1>Students</h1>
 
     <div class="students-card">
+        {% if students %}
         <table class="students-table">
             <thead>
                 <tr>
@@ -43,8 +44,16 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <p>No students found.</p>
+        {% endif %}
     </div>
+    {%if role == "admin"%}
     <a href="/dashboard-admin" class="back-link">← Back</a>
+    {% endif %}
+    {%if role == "profesor"%}
+    <a href="/dashboard-profesor" class="back-link">← Back</a>
+    {% endif %}
 </div>
 
 </body>

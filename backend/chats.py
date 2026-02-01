@@ -6,12 +6,15 @@ from backend.database import SessionLocal
 from backend.models import Estudiante, Chat, Message, SessionToken
 from fastapi import Depends, Header, HTTPException
 from pydantic import BaseModel
+from fastapi import Header, HTTPException
 
+# Todos los endpoints empiezan con /api/chats
 router = APIRouter(prefix="/api/chats", tags=["Chats"])
 class MessageCreate(BaseModel):
     role: str
     content: str
 
+# ----------- Abrir sesión BD ----------
 def get_db():
     db = SessionLocal()
     try:
@@ -19,8 +22,7 @@ def get_db():
     finally:
         db.close()
 
-from fastapi import Header, HTTPException
-
+# ---------- Obtener estudiante actual ----------
 def get_current_student(
     authorization: str = Header(None),
     db: Session = Depends(get_db)
@@ -39,9 +41,7 @@ def get_current_student(
 
     return student
 
-
-
-
+# ---------- Listar chats ----------
 @router.get("/")
 def list_chats(
     student: Estudiante = Depends(get_current_student),
@@ -64,8 +64,7 @@ def list_chats(
     ]
 
 
-
-
+# ---------- Crear nuevo chat ----------
 @router.post("/")
 def create_chat(
     student: Estudiante = Depends(get_current_student),
@@ -106,6 +105,7 @@ def get_chat_messages(
         }
         for msg in chat.messages
     ]
+
 @router.post("/{chat_id}/messages")
 def save_message(
     chat_id: int,
@@ -128,3 +128,38 @@ def save_message(
         "role": new_msg.role,
         "content": new_msg.content
     }
+
+@router.delete("/{chat_id}")
+def delete_chat(
+    chat_id: int,
+    db: Session = Depends(get_db),
+    student: Estudiante = Depends(get_current_student)
+):
+    # Buscar el chat del usuario
+    chat = db.query(Chat).filter(
+        Chat.id == chat_id,
+        Chat.estudiante_id == student.id
+    ).first()
+
+    if not chat:
+        raise HTTPException(status_code=404, detail="Chat not found")
+
+    # Borrar primero los mensajes del chat (IMPORTANTE)
+    db.query(Message).filter(Message.chat_id == chat.id).delete()
+
+    # Borrar el chat
+    db.delete(chat)
+    db.commit()
+
+    return {"message": "Chat deleted successfully"}
+
+@router.get("/logout")
+def logout(request: Request, db: Session = Depends(get_db)):
+    token = request.session.get("token")
+
+    if token:
+        db.query(SessionToken).filter_by(token=token).delete()
+        db.commit()
+
+    request.session.clear()
+    return RedirectResponse("/login", status_code=303)

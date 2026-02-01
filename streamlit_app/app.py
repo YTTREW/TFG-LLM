@@ -1,17 +1,63 @@
 import streamlit as st
-from api import get_chats, create_chat, get_messages, save_message
+from api import get_chats, create_chat, get_messages, save_message, delete_chat
 from chat import Chatbot
 
-st.set_page_config(page_title="Chat Estudiante", layout="wide")
+st.set_page_config(page_title="Chat Student", layout="wide")
 
-token = st.query_params.get("token")
-if token:
-    st.session_state["token"] = token[0]  # token viene en lista
-else:
-    st.error("No authentication token provided")
-    st.stop()
+#Estilos 
+st.markdown(
+    """
+    <style>
+    /* Fondo de toda la app con gradiente */
+    .stApp {
+        background: linear-gradient(135deg, #0b1d3a, #0f2a55, #0d3b70);
+        color: white;  /* Texto blanco */
+    }
 
-st.session_state["token"] = token
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(135deg, #0d2a50, #102f70, #1a3b90);
+        color: white;
+    }
+
+    /* Botones primarios */
+    button[kind="primary"] {
+        background-color: #1a3a5c;
+        color: white;
+        border-radius: 8px;
+        border: none;
+    }
+
+    /* Inputs de texto */
+    .stTextInput>div>div>input {
+        background-color: #0f2a55;
+        color: white;
+        border: 1px solid #1a3a5c;
+        border-radius: 4px;
+    }
+
+    /* Scrollbars opcionales */
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #1a3a5c;
+        border-radius: 4px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# ---------- AUTH ----------
+if "token" not in st.session_state:
+    token_param = st.query_params.get("token")
+
+    if token_param:
+        st.session_state["token"] = token_param
+    else:
+        st.error("No authentication token provided")
+        st.stop()
 
 # ---------- INIT SESSION ----------
 if "chatbot" not in st.session_state:
@@ -25,30 +71,61 @@ if "messages" not in st.session_state:
 
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("💬 Tus chats")
+st.sidebar.title("💬 Chats")
 
-if st.sidebar.button("➕ Nuevo chat"):
+if st.sidebar.button("🚪 Sign out"):
+    st.session_state.clear()
+    st.query_params.clear() 
+    st.markdown(
+        '<meta http-equiv="refresh" content="0; url=http://localhost:8000/logout">',
+        unsafe_allow_html=True
+    )
+    st.stop()
+
+if st.sidebar.button("➕ New chat"):
     chat = create_chat()
     st.session_state.current_chat_id = chat["id"]
     st.session_state.messages = []
     st.session_state.chatbot.history = []
     st.rerun()
 
+st.sidebar.divider()
+
+
+st.sidebar.title("💬 Chats")
+
 chats = get_chats()
 
 for chat in chats:
-    if st.sidebar.button(chat["title"], key=chat["id"]):
-        st.session_state.current_chat_id = chat["id"]
-        msgs = get_messages(chat["id"])
-        st.session_state.messages = msgs
-        st.session_state.chatbot.load_history(msgs)
-        st.rerun()
+    col1, col2 = st.sidebar.columns([4, 1])
+
+    # 👉 Botón para ABRIR chat
+    with col1:
+        if st.button(chat["title"], key=f"open_{chat['id']}"):
+            st.session_state.current_chat_id = chat["id"]
+            msgs = get_messages(chat["id"])
+            st.session_state.messages = msgs
+            st.session_state.chatbot.load_history(msgs)
+            st.rerun()
+
+    # 👉 Botón para BORRAR chat
+    with col2:
+        if st.button("🗑️", key=f"delete_{chat['id']}"):
+            delete_chat(chat["id"])
+
+            # Si borras el chat actual, limpiamos la vista
+            if st.session_state.get("current_chat_id") == chat["id"]:
+                st.session_state.current_chat_id = None
+                st.session_state.messages = []
+                st.session_state.chatbot.history = []
+
+            st.rerun()
 
 # ---------- MAIN ----------
 st.title("🧠 CognitiveLab – Student Chat")
 
 if st.session_state.current_chat_id is None:
-    st.info("Selecciona o crea un chat")
+    st.info("Choose or create a new chat")
     st.stop()
 
 # Mostrar mensajes
@@ -57,7 +134,7 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # Input
-user_input = st.chat_input("Escribe tu mensaje...")
+user_input = st.chat_input("Write your message...")
 
 if user_input:
     chat_id = st.session_state.current_chat_id
@@ -66,9 +143,10 @@ if user_input:
         "role": "user",
         "content": user_input
     })
+    
     save_message(chat_id, "user", user_input)
 
-    with st.spinner("Pensando..."):
+    with st.spinner("Thinking..."):
         response = st.session_state.chatbot.ask(user_input)
 
     st.session_state.messages.append({
