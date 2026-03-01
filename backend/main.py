@@ -6,7 +6,7 @@ from .auth import authenticate_user, pwd_context
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Base, Estudiante, Profesor, SessionToken, Chat
+from .models import Base, Estudiante, Profesor, SessionToken, Chat, Message
 from .database import engine
 from starlette.middleware.sessions import SessionMiddleware
 from .chats import router as chats_router
@@ -189,6 +189,44 @@ def view_student_chats(student_id: int, request: Request):
             "role": "profesor"
         }
     )
+
+@app.get("/professor/student/{student_id}/chat/{chat_id}")
+def open_chat(
+    request: Request,
+    student_id: int,
+    chat_id: int
+):
+    # 🔐 Verificar rol
+    if request.session.get("role") != "profesor":
+        return RedirectResponse("/login", status_code=303)
+
+    db = SessionLocal()
+    try:
+        # 1️⃣ Buscar el chat
+        chat = db.query(Chat).filter_by(
+            id=chat_id,
+            estudiante_id=student_id
+        ).first()
+
+        if not chat:
+            return {"error": "Chat not found"}
+
+        # 2️⃣ Obtener mensajes del chat
+        messages = db.query(Message).filter_by(
+            chat_id=chat.id
+        ).order_by(Message.id.asc()).all()
+
+        return templates.TemplateResponse(
+            "chat_messages.html",
+            {
+                "request": request,
+                "chat": chat,
+                "messages": messages
+            }
+        )
+
+    finally:
+        db.close()
 
 ############################################
 #                                          #

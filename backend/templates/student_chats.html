@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="stylesheet" href="/static/student_chats.css">
+    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+    <meta charset="UTF-8">
+    <title>Sign up</title>
+</head>
+<div class="page-container">
+    <h1>Conversations of {{ student.nombre }} {{ student.apellidos }}</h1>
+
+    <div class="chats-card">
+        {% if chats %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Chat ID</th>
+                    <th>Title</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for chat in chats %}
+                <tr>
+                    <td>{{ chat.id }}</td>
+                    <td>{{ chat.title }}</td>
+                    <td>
+                        <a href="/professor/student/{{ student.id }}/chat/{{ chat.id }}" class="btn-view">Open Chat</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>No conversations found for this student.</p>
+        {% endif %}
+    </div>
+
+    <a href="/students" class="back-link">← Back</a>
+</div>
+</html>

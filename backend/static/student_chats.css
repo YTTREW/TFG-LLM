@@ -1,0 +1,147 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fondo */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b1d3a, #0f2a55, #0d3b70);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor principal */
+.page-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Título */
+h1 {
+    margin-bottom: 30px;
+}
+
+/* Card para la tabla */
+.chats-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    padding: 0 25px 25px 25px;
+}
+
+/* Cabecera */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+thead th {
+    background: #0f2a55;
+    color: white;
+    padding: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    font-weight: 600;
+    text-align: center; /* centra los títulos */
+}
+
+/* Opcional: sombra elegante debajo de cabecera */
+thead tr {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Filas */
+tbody td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    text-align: center; /* centra el contenido */
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Botón Open Chat */
+.btn-view {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 198, 255, 0.4);
+}
+
+/* Back link */
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    color: white;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+.back-link:hover {
+    opacity: 1;
+}
+
+/* Scroll personalizado para Chrome, Edge y Safari */
+.chats-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chats-card::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.chats-card::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #0052cc, #0072ff);
+    border-radius: 10px;
+}
+
+.chats-card::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #0072ff, #00c6ff);
+}
+
+/* Scroll para Firefox */
+.chats-card {
+    scrollbar-width: thin;
+    scrollbar-color: #0072ff rgba(255, 255, 255, 0.05);
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. Todos los derechos reservados.";
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}

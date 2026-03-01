@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Messages</title>
+    <link rel="stylesheet" href="/static/chat_messages.css">
+    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+</head>
+
+<div class="chat-container">
+
+    <h2>Chat: {{ chat.title }}</h2>
+
+    <div class="messages-box">
+        {% for msg in messages %}
+        <div class="message {{ msg.role }}">
+            <div class="message-role">{{ msg.role }}</div>
+            <div class="message-content">{{ msg.content }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="/professor/student/{{ chat.estudiante_id }}/chats" class="back-link">
+        ← Back to chats
+    </a>
+
+</div>
+</html>
