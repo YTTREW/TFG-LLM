@@ -30,36 +30,101 @@ h1 {
 }
 
 /* Card */
+/* Card scrollable */
 .professors-card {
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     border-radius: 14px;
-    padding: 20px;
+    padding: 0; /* quitamos padding superior para sticky */
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    max-height: 400px; /* altura máxima del card */
+    overflow-y: auto; /* scroll vertical */
+}
+
+/* Scroll personalizado Chrome / Edge / Safari */
+.professors-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.professors-card::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.professors-card::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #0052cc, #0072ff);
+    border-radius: 10px;
+}
+
+.professors-card::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #0072ff, #00c6ff);
+}
+
+/* Scroll Firefox */
+.professors-card {
+    scrollbar-width: thin;
+    scrollbar-color: #0072ff rgba(255, 255, 255, 0.05);
 }
 
 /* Tabla */
 .professors-table {
     width: 100%;
     border-collapse: collapse;
+    padding: 0 25px 25px 25px; /* mismo padding que estudiantes */
+    margin: 0; /* quitar margen para no generar hueco */
+}
+
+/* Header fijo */
+.professors-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #0f2a55; /* sólido para que no se vea nada detrás */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* sombra elegante */
 }
 
 .professors-table th,
 .professors-table td {
     padding: 14px;
-    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.2); /* línea entre filas */
+    vertical-align: middle; /* centra verticalmente el contenido */
+    text-align: center;     /* centra horizontalmente */
 }
 
-.professors-table th {
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    font-size: 0.9rem;
-    opacity: 0.8;
+.professors-table tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.professors-table tr:last-child {
+    border-bottom: none; /* última fila sin línea */
 }
 
 .professor-name {
     font-weight: 500;
 }
 
+/* Cabecera fija */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+thead th {
+    background: #0f2a55; /* color sólido igual que estudiantes */
+    font-weight: 600;
+    opacity: 0.95;
+}
+
+/* Última fila sin borde */
+.professors-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover opcional para filas */
+.professors-table tbody tr:hover {
+    background: rgba(255,255,255,0.05);
+}
 /* Botón delete */
 .btn-delete {
     background: linear-gradient(to right, #ff4c4c, #ff0000);

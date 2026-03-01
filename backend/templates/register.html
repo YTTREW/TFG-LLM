@@ -2,13 +2,18 @@
 <html lang="es">
 <head>
     <link rel="stylesheet" href="/static/register.css">
+    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
     <meta charset="UTF-8">
-    <title>CognitiveLab - Sign up</title>
+    <title>Sign up</title>
 </head>
 <body>
 <div class="login-container">
         <h2>Create Your Account</h2>
 
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+        
 
         <form action="/register" method="post">
             <input type="text" name="nombre" placeholder="Name" required>

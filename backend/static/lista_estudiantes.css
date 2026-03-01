@@ -29,7 +29,9 @@ h1 {
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(12px);
     border-radius: 14px;
-    padding: 25px;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
     box-shadow: 0 20px 40px rgba(0,0,0,0.4);
 }
 
@@ -38,13 +40,34 @@ table {
     border-collapse: collapse;
 }
 
+.students-table,
+table {
+    padding: 0 25px 25px 25px;
+}
+
 th, td {
     padding: 14px;
     border-bottom: 1px solid rgba(255,255,255,0.2);
 }
+/* Hacer cabecera completamente fija y sólida */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+thead th {
+    background: #0f2a55; /* color sólido del gradiente */
+}
+
+/* Opcional: pequeña sombra elegante */
+thead tr {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
 
 th {
     font-weight: 600;
+    background: rgba(15, 42, 85, 0.95);
 }
 
 tr:last-child td {
@@ -105,4 +128,34 @@ body::after {
     transform: translateX(-50%);
     font-size: 13px;
     color: rgba(255, 255, 255, 0.6);
+}
+
+.students-card {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Scroll para Chrome, Edge y Safari */
+.students-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.students-card::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.students-card::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #0052cc, #0072ff);
+    border-radius: 10px;
+}
+
+.students-card::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #0072ff, #00c6ff);
+}
+
+/* Scroll para Firefox */
+.students-card {
+    scrollbar-width: thin;
+    scrollbar-color: #0072ff rgba(255, 255, 255, 0.05);
 }

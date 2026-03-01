@@ -38,11 +38,18 @@ DATABASE_URL = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST
 engine = create_engine(DATABASE_URL)
 SessionLocal  = sessionmaker(bind=engine)
 
-# Endpoints
+############################################
+#                                          #
+# ENDPOINTS DE AUTENTICACIÓN Y REGISTROS   #
+#                                          #
+############################################
+
+# Endpoint GET para mostrar la página de login 
 @app.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
+# Endpoint POST para autenticar al usuario y cargar su dashboard
 @app.post("/login", response_class=HTMLResponse)
 def login(  request: Request, username: str = Form(...), password: str = Form(...)):
     role = authenticate_user(username, password)
@@ -53,6 +60,8 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
             "error": "Incorrect username or password",
             "username": username  
         })
+    
+    # Generar token de sesión
     token = secrets.token_hex(16)
     
     request.session["user"] = username
@@ -66,6 +75,7 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
     finally:
         db.close()
 
+    # Verificar rol
     if role == "estudiante":
         return RedirectResponse(
             url=f"http://localhost:8501?token={token}",
@@ -76,13 +86,27 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
     else:
         return RedirectResponse("/dashboard-profesor", status_code=303)
 
+# Endpoint GET para cerrar sesión
+@app.get("/logout")
+def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse("/login")
+
+# Endpoint GET para redirigir a la página principal
+@app.get("/")
+def root():
+    return RedirectResponse(url="/login")
+
+# Endpoint GET para carga página de registro
 @app.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
 
 
+# Endpoint POST para registrar un nuevo usuario
 @app.post("/register")
 def register_user(
+     request: Request,
     username: str = Form(...),
     password: str = Form(...),
     nombre: str = Form(...),
@@ -90,15 +114,17 @@ def register_user(
 ):
     db = SessionLocal()
     try:
-        # 1. Comprobar si ya existe
+        # Comprobar si ya existe
         existing_user = db.query(Estudiante).filter_by(username=username).first()
         if existing_user:
-            return {"error": "Usuario ya existe"}
-
-        # 2. Crear hash de la contraseña
+            return templates.TemplateResponse("register.html", {
+                "request": request,
+                "error": "Username already exists."
+            })
+        # Crear hash de la contraseña
         hashed = pwd_context.hash(password)
 
-        # 3. Crear usuario y guardar
+        # Crear usuario y guardar
         estudiante = Estudiante(
                 username=username,
                 password_hash=hashed,
@@ -114,7 +140,13 @@ def register_user(
     return RedirectResponse("/login", status_code=303)
 
 
+############################################
+#                                          #
+#        ENDPOINTS DE PROFESORES           #
+#                                          #
+############################################
 
+# Endpoint GET para cargar dashboard del profesor
 @app.get("/dashboard-profesor", response_class=HTMLResponse)
 def dashboard_profesor(request: Request):
     if "user" not in request.session:
@@ -133,6 +165,11 @@ def dashboard_profesor(request: Request):
         }
     )
 
+############################################
+#                                          #
+#        ENDPOINTS DE ESTUDIANTES          #
+#                                          #
+############################################
 @app.get("/dashboard-estudiante", response_class=HTMLResponse)
 def dashboard_estudiante(request: Request):
     if "user" not in request.session:
@@ -148,8 +185,14 @@ def dashboard_estudiante(request: Request):
         {"request": request, "username": username}
     )
 
+############################################
+#                                          #
+#       ENDPOINTS DE ADMINISTRADOR         #
+#                                          #
+############################################
+# Endpoint GET para cargar dashboard del admin
 @app.get("/dashboard-admin", response_class=HTMLResponse)
-def dashboard_estudiante(request: Request):
+def dashboard_admin(request: Request):
     if "user" not in request.session:
         return RedirectResponse("/login")
 
@@ -163,20 +206,11 @@ def dashboard_estudiante(request: Request):
         {"request": request, "username": username}
     )
 
-@app.get("/logout")
-def logout(request: Request):
-    request.session.clear()
-    return RedirectResponse("/login")
 
-
-@app.get("/")
-def root():
-    return RedirectResponse(url="/login")
-
+# Endpoint GET para listar estudiantes
 @app.get("/students", response_class=HTMLResponse)
 def list_students(request: Request):
 
- # Seguridad
     if "user" not in request.session:
         return RedirectResponse("/login")
 
@@ -199,6 +233,7 @@ def list_students(request: Request):
         }
     )
 
+# Endpoint POST para eliminar estudiante
 @app.post("/admin/delete-student/{student_id}")
 def delete_student(student_id: int, request: Request):
 
@@ -216,10 +251,10 @@ def delete_student(student_id: int, request: Request):
 
     return RedirectResponse("/students", status_code=303)
 
+# Endpoint GET para listar profesores
 @app.get("/admin/professors", response_class=HTMLResponse)
 def list_professors(request: Request):
 
-    # Seguridad
     if "user" not in request.session:
         return RedirectResponse("/login")
 
@@ -241,7 +276,8 @@ def list_professors(request: Request):
         }
     )
 
-@app.post("/admin/delete-professor/{student_id}")
+# Endpoint POST para eliminar profesor
+@app.post("/admin/delete-professor/{professor_id}")
 def delete_professor(professor_id: int, request: Request):
 
     if request.session.get("role") != "admin":
@@ -258,6 +294,7 @@ def delete_professor(professor_id: int, request: Request):
 
     return RedirectResponse("/admin/professors", status_code=303)
 
+# Endpoint GET para cargar formulario de creación de usuarios
 @app.get("/admin/register", response_class=HTMLResponse)
 def create_user_form(request: Request):
     if request.session.get("role") != "admin":
@@ -268,6 +305,7 @@ def create_user_form(request: Request):
         {"request": request}
     )
 
+# Endpoint POST para crear un nuevo usuario (profesor o estudiante)
 @app.post("/admin/register")
 def create_user(
     request: Request,
