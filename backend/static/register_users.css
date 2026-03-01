@@ -69,8 +69,6 @@ input, select {
     opacity: 1;
 }
 
-
-
 /* Footer copyright */
 body::after {
     content: "© 2026 CognitiveLab. Todos los derechos reservados.";
@@ -80,4 +78,26 @@ body::after {
     transform: translateX(-50%);
     font-size: 13px;
     color: rgba(255, 255, 255, 0.6);
+}
+
+.error-message {
+    background-color: #ff4c4c;
+    color: white;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 600;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

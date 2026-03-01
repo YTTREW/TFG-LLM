@@ -6,7 +6,7 @@ from .auth import authenticate_user, pwd_context
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Base, Estudiante, Profesor, SessionToken
+from .models import Base, Estudiante, Profesor, SessionToken, Chat
 from .database import engine
 from starlette.middleware.sessions import SessionMiddleware
 from .chats import router as chats_router
@@ -165,6 +165,31 @@ def dashboard_profesor(request: Request):
         }
     )
 
+@app.get("/professor/student/{student_id}/chats", response_class=HTMLResponse)
+def view_student_chats(student_id: int, request: Request):
+    if request.session.get("role") != "profesor":
+        return RedirectResponse("/login")
+    
+    db = SessionLocal()
+    try:
+        student = db.query(Estudiante).filter_by(id=student_id).first()
+        if not student:
+            return HTMLResponse("Student not found", status_code=404)
+        
+        chats = db.query(Chat).filter_by(estudiante_id=student_id).all()
+    finally:
+        db.close()
+    
+    return templates.TemplateResponse(
+        "student_chats.html",
+        {
+            "request": request,
+            "student": student,
+            "chats": chats,
+            "role": "profesor"
+        }
+    )
+
 ############################################
 #                                          #
 #        ENDPOINTS DE ESTUDIANTES          #
@@ -320,6 +345,20 @@ def create_user(
 
     db = SessionLocal()
     try:
+        existing_student = db.query(Estudiante).filter_by(username=username).first()
+
+        existing_professor = db.query(Profesor).filter_by(username=username).first()
+
+        if existing_student or existing_professor:
+            print("Username already exists")
+            return templates.TemplateResponse(
+                "register_users.html",
+                {
+                    "request": request,
+                    "error": "Username already exists"
+                }
+            )
+
         hashed_password = pwd_context.hash(password)
 
         if role == "estudiante":
