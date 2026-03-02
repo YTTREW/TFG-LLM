@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form, Request
+from fastapi import FastAPI, Form, Request, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -208,6 +208,8 @@ def open_chat(
             estudiante_id=student_id
         ).first()
 
+        grade = chat.grade
+
         if not chat:
             return {"error": "Chat not found"}
 
@@ -221,13 +223,48 @@ def open_chat(
             {
                 "request": request,
                 "chat": chat,
-                "messages": messages
+                "messages": messages,
+                "grade": grade
             }
         )
 
     finally:
         db.close()
 
+@app.post("/professor/chat/{chat_id}/grade")
+def assign_grade(
+    request: Request,
+    chat_id: int,
+    grade: float = Form(...)
+):
+    # 🔐 Verificar rol
+    if request.session.get("role") != "profesor":
+        return RedirectResponse("/login", status_code=303)
+
+    db = SessionLocal()
+    try:
+        # 1️⃣ Buscar el chat
+        chat = db.query(Chat).filter_by(id=chat_id).first()
+
+        if not chat:
+            raise HTTPException(status_code=404, detail="Chat not found")
+
+        # 2️⃣ Validar nota
+        if grade < 0 or grade > 10:
+            raise HTTPException(status_code=400, detail="Invalid grade")
+
+        # 3️⃣ Asignar nota
+        chat.grade = grade
+        db.commit()
+
+        # 4️⃣ Redirigir al mismo chat
+        return RedirectResponse(
+            url=f"/professor/student/{chat.estudiante_id}/chat/{chat.id}",
+            status_code=303
+        )
+
+    finally:
+        db.close()
 ############################################
 #                                          #
 #        ENDPOINTS DE ESTUDIANTES          #

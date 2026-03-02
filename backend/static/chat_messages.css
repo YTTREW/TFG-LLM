@@ -19,6 +19,50 @@ h2 {
     text-align: center;
     margin-bottom: 20px;
 }
+/* Header con título + nota */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Formulario nota */
+.grade-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* Input nota */
+.grade-form input {
+    width: 90px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+
+/* Botón guardar */
+.grade-form button {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    transition: 0.2s ease;
+}
+
+.grade-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,114,255,0.4);
+}
 
 /* Caja glass */
 .messages-box {
@@ -80,17 +124,30 @@ h2 {
     scrollbar-color: #0072ff rgba(255,255,255,0.05);
 }
 
-/* Back link */
 .back-link {
-    display: inline-block;
-    margin-top: 20px;
+    display: block;
+    width: fit-content;
+    margin: 25px auto 0 auto; /* esto lo centra */
     text-decoration: none;
     color: white;
     opacity: 0.8;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+/* Quitar flechas en Chrome, Edge, Safari */
+.grade-form input::-webkit-outer-spin-button,
+.grade-form input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
+/* Quitar flechas en Firefox */
+.grade-form input[type=number] {
+    -moz-appearance: textfield;
+}
 .back-link:hover {
     opacity: 1;
+    transform: translateY(-2px);
 }
 
 /* Animación */

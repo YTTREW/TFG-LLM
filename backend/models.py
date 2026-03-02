@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Float, Integer, String, DateTime, ForeignKey, Text
 from .database import Base
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -54,7 +54,7 @@ class Chat(Base):
 
     title = Column(String, default="Nuevo chat")
     created_at = Column(DateTime, default=datetime.utcnow)
-
+    grade = Column(Float, nullable=True)  
     # Relaciones
     messages = relationship(
         "Message",
