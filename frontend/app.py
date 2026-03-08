@@ -1,6 +1,5 @@
 import streamlit as st
-from api import get_chats, create_chat, get_messages, save_message, delete_chat
-from chat import Chatbot
+from api_client import get_chats, create_chat, get_messages, send_message, delete_chat
 
 st.set_page_config(page_title="Chat Student", layout="wide")
 
@@ -60,8 +59,6 @@ if "token" not in st.session_state:
         st.stop()
 
 # ---------- INIT SESSION ----------
-if "chatbot" not in st.session_state:
-    st.session_state.chatbot = Chatbot()
 
 if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
@@ -86,7 +83,6 @@ if st.sidebar.button("➕ New chat"):
     chat = create_chat()
     st.session_state.current_chat_id = chat["id"]
     st.session_state.messages = []
-    st.session_state.chatbot.history = []
     st.rerun()
 
 st.sidebar.divider()
@@ -105,7 +101,6 @@ for chat in chats:
             st.session_state.current_chat_id = chat["id"]
             msgs = get_messages(chat["id"])
             st.session_state.messages = msgs
-            st.session_state.chatbot.load_history(msgs)
             st.rerun()
 
     # 👉 Botón para BORRAR chat
@@ -117,7 +112,6 @@ for chat in chats:
             if st.session_state.get("current_chat_id") == chat["id"]:
                 st.session_state.current_chat_id = None
                 st.session_state.messages = []
-                st.session_state.chatbot.history = []
 
             st.rerun()
 
@@ -139,21 +133,18 @@ user_input = st.chat_input("Write your message...")
 if user_input:
     chat_id = st.session_state.current_chat_id
 
-    st.session_state.messages.append({
-        "role": "user",
-        "content": user_input
-    })
-    
-    save_message(chat_id, "user", user_input)
+# 1. Mostramos el mensaje del usuario en pantalla inmediatamente
+    st.session_state.messages.append({"role": "user", "content": user_input})
+    with st.chat_message("user"):
+        st.markdown(user_input)
 
-    with st.spinner("Thinking..."):
-        response = st.session_state.chatbot.ask(user_input)
+    # 2. Llamamos al Backend para que haga su magia
+    with st.spinner("Pensando respuesta clínica..."):
+        # El backend guarda el mensaje, llama a Ollama, guarda la respuesta y nos la devuelve
+        ai_response = send_message(chat_id, user_input)
 
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": response
-    })
-    save_message(chat_id, "assistant", response)
-
-    st.rerun()
+    # 3. Guardamos y pintamos la respuesta de la IA
+    st.session_state.messages.append(ai_response)
+    with st.chat_message("assistant"):
+        st.markdown(ai_response["content"])
 

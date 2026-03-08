@@ -1,28 +1,17 @@
-from fastapi import APIRouter, Request, Depends
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi import APIRouter, Depends, Header, HTTPException
 from sqlalchemy.orm import Session
-
-from backend.core.database import SessionLocal
-from backend.models.users import Estudiante, Chat, Message, SessionToken
-from fastapi import Depends, Header, HTTPException
 from pydantic import BaseModel
-from fastapi import Header, HTTPException
 
-# Todos los endpoints empiezan con /api/chats
-router = APIRouter(prefix="/api/chats", tags=["Chats"])
+from backend.core.database import get_db
+from backend.models import Estudiante, Chat, Message, SessionToken
+from backend.services import llm_service
+
+router = APIRouter(prefix="/api/chats", tags=["API de Chats"])
+
 class MessageCreate(BaseModel):
-    role: str
     content: str
 
-# ----------- Abrir sesión BD ----------
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-# ---------- Obtener estudiante actual ----------
+#Obtener estudiante actual
 def get_current_student(
     authorization: str = Header(None),
     db: Session = Depends(get_db)
@@ -41,7 +30,7 @@ def get_current_student(
 
     return student
 
-# ---------- Listar chats ----------
+#Listar chats
 @router.get("/")
 def list_chats(
     student: Estudiante = Depends(get_current_student),
@@ -63,8 +52,7 @@ def list_chats(
         for chat in chats
     ]
 
-
-# ---------- Crear nuevo chat ----------
+#Crear nuevo chat
 @router.post("/")
 def create_chat(
     student: Estudiante = Depends(get_current_student),
@@ -83,7 +71,6 @@ def create_chat(
         "id": chat.id,
         "title": chat.title
     }
-
 
 @router.get("/{chat_id}")
 def get_chat_messages(
@@ -107,7 +94,7 @@ def get_chat_messages(
     ]
 
 @router.post("/{chat_id}/messages")
-def save_message(
+def send_message(
     chat_id: int,
     message: MessageCreate,
     db: Session = Depends(get_db),
@@ -117,16 +104,25 @@ def save_message(
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
 
-    new_msg = Message(chat_id=chat.id, role=message.role, content=message.content)
-    db.add(new_msg)
+    user_msg = Message(chat_id=chat.id, role="user", content=message.content)
+    db.add(user_msg)
     db.commit()
-    db.refresh(new_msg)
+
+    # 2. Recuperar el historial de la conversación (incluyendo el mensaje que acabamos de guardar)
+    chat_history = db.query(Message).filter(Message.chat_id == chat.id).order_by(Message.id.asc()).all()
+
+    # 3. Llamar al servicio de LLM pasándole el historial
+    ia_response_text = llm_service.get_response(chat_history)
+
+    # 4. Guardar la respuesta de la IA en la Base de Datos
+    ia_msg = Message(chat_id=chat.id, role="assistant", content=ia_response_text)
+    db.add(ia_msg)
+    db.commit()
 
     return {
-        "id": new_msg.id,
-        "chat_id": new_msg.chat_id,
-        "role": new_msg.role,
-        "content": new_msg.content
+        "role": ia_msg.role,
+        "content": ia_msg.content,
+        "created_at": ia_msg.created_at.isoformat()
     }
 
 @router.delete("/{chat_id}")
@@ -135,7 +131,6 @@ def delete_chat(
     db: Session = Depends(get_db),
     student: Estudiante = Depends(get_current_student)
 ):
-    # Buscar el chat del usuario
     chat = db.query(Chat).filter(
         Chat.id == chat_id,
         Chat.estudiante_id == student.id
@@ -144,22 +139,11 @@ def delete_chat(
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
 
-    # Borrar primero los mensajes del chat (IMPORTANTE)
     db.query(Message).filter(Message.chat_id == chat.id).delete()
 
-    # Borrar el chat
     db.delete(chat)
     db.commit()
 
     return {"message": "Chat deleted successfully"}
 
-@router.get("/logout")
-def logout(request: Request, db: Session = Depends(get_db)):
-    token = request.session.get("token")
 
-    if token:
-        db.query(SessionToken).filter_by(token=token).delete()
-        db.commit()
-
-    request.session.clear()
-    return RedirectResponse("/login", status_code=303)

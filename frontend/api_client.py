@@ -36,16 +36,16 @@ def get_messages(chat_id: int):
     res.raise_for_status()
     return res.json()
 
-# ---------- Guardar mensaje en un chat ----------
-def save_message(chat_id: int, role: str, content: str):
+# ---------- Enviar mensaje al Chat ----------
+def send_message(chat_id: int, content: str):
     url = f"{BASE_URL}/{chat_id}/messages"
     res = requests.post(
         url,
         headers={**auth_headers(), "Content-Type": "application/json"},
-        json={"role": role, "content": content}  
+        json={"content": content}  # Solo enviamos el texto
     )
     res.raise_for_status()
-    return res.json()
+    return res.json() 
 
 # ---------- Borrar un chat ----------
 def delete_chat(chat_id: int):

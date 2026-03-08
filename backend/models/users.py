@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Float, Integer, String, DateTime, ForeignKey, Text
-from .database import Base
+from ..core.database import Base
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -12,7 +12,6 @@ class Profesor(Base):
     role = Column(String, default="profesor")
     nombre = Column(String)
     apellidos = Column(String)
-
 
 class Estudiante(Base):
     __tablename__ = "estudiantes"
@@ -39,47 +38,6 @@ class Administrador(Base):
     name = Column(String, nullable=False)
     surname = Column(String, nullable=False)
     role = Column(String, default="admin", nullable=False)
-
-class Chat(Base):
-    __tablename__ = "chats"
-
-    id = Column(Integer, primary_key=True, index=True)
-
-    # Relación con Estudiante
-    estudiante_id = Column(
-        Integer,
-        ForeignKey("estudiantes.id", ondelete="CASCADE"),
-        nullable=False
-    )
-
-    title = Column(String, default="Nuevo chat")
-    created_at = Column(DateTime, default=datetime.utcnow)
-    grade = Column(Float, nullable=True)  
-    # Relaciones
-    messages = relationship(
-        "Message",
-        back_populates="chat",
-        cascade="all, delete-orphan"
-    )
-
-class Message(Base):
-    __tablename__ = "messages"
-
-    id = Column(Integer, primary_key=True, index=True)
-
-    chat_id = Column(
-        Integer,
-        ForeignKey("chats.id", ondelete="CASCADE"),
-        nullable=False
-    )
-
-    role = Column(String, nullable=False)  # "user" | "assistant"
-    content = Column(Text, nullable=False)
-
-    created_at = Column(DateTime, default=datetime.utcnow)
-
-    # Relaciones
-    chat = relationship("Chat", back_populates="messages")
 
 
 class SessionToken(Base):
