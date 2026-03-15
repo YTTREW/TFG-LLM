@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/static/css/edit_profile.css">
+    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Edit Profile</h1>
+    <p class="subtitle">Update your credentials below</p>
+
+    {% if error %}
+    <div class="error-message">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="post" action="/professor/edit-profile">
+        <label for="new_username">Username</label>
+        <input type="text" id="new_username" name="new_username" value="{{ current_username }}" required>
+        
+        <label for="new_password">New Password</label>
+        <input type="password" id="new_password" name="new_password" placeholder="Leave blank to keep current password">
+
+        <button type="submit" class="btn-primary">Update Profile</button>
+    </form>
+
+    <a href="/dashboard-profesor" class="back-link">← Back to Dashboard</a>
+</div>
+
+</body>
+</html>

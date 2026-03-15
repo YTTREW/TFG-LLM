@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Clinical Case</title>
+    <link rel="stylesheet" href="/static/css/create_case.css"> 
+    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+</head>
+<body>
+
+<div class="form-container">
+    <h1>New Patient Profile</h1>
+    <p>Define the psychological profile for the simulation</p>
+
+    <form method="post" action="/professor/create-case">
+        <input type="text" name="nombre_paciente" placeholder="Patient's Name (e.g., Deidre)" required>
+        
+        <input type="number" name="edad" placeholder="Age" required min="5" max="99">
+
+        <textarea name="problema_descripcion" placeholder="Describe the psychological issue, background, and symptoms..." required rows="5"></textarea>
+
+        <div class="checkbox-container">
+            <input type="checkbox" name="es_evaluable" value="true" id="evaluable">
+            <label for="evaluable">This case is Evaluable</label>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Patient</button>
+    </form>
+
+    <a href="/dashboard-profesor" class="back-link">← Back to Dashboard</a>
+</div>
+
+</body>
+</html>

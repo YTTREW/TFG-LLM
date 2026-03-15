@@ -1,0 +1,179 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b1d3a, #0f2a55, #0d3b70);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 30px;
+}
+
+/* Renombrado de students-card a cases-card pero con tus reglas exactas */
+.cases-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cases-table,
+table {
+    padding: 0 25px 25px 25px;
+}
+
+th, td {
+    padding: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Hacer cabecera completamente fija y sólida */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+thead th {
+    background: #0f2a55; /* color sólido del gradiente */
+}
+
+/* Sombra elegante de tu código */
+thead tr {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+th {
+    font-weight: 600;
+    background: rgba(15, 42, 85, 0.95);
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* --- CLASES ESPECÍFICAS PARA LOS CASOS --- */
+.patient-name {
+    font-weight: 500;
+}
+
+.status-yes {
+    color: #4ade80;
+    font-weight: bold;
+}
+
+.status-no {
+    color: #f87171;
+    font-weight: bold;
+}
+
+.empty-state {
+    padding: 40px;
+    color: rgba(255,255,255,0.8);
+}
+/* ----------------------------------------- */
+
+.btn-delete {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(to right, #ff4c4c, #ff0000);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 0, 0, 0.45);
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    color: white;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+.back-link:hover {
+    opacity: 1;
+}
+
+.btn-view {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 198, 255, 0.4);
+}
+
+/* Footer copyright de tu código */
+body::after {
+    content: "© 2026 CognitiveLab. Todos los derechos reservados.";
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Scroll para Chrome, Edge y Safari */
+.cases-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.cases-card::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.cases-card::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #0052cc, #0072ff);
+    border-radius: 10px;
+}
+
+.cases-card::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #0072ff, #00c6ff);
+}
+
+/* Scroll para Firefox */
+.cases-card {
+    scrollbar-width: thin;
+    scrollbar-color: #0072ff rgba(255, 255, 255, 0.05);
+}

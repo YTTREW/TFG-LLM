@@ -1,7 +1,7 @@
 from passlib.context import CryptContext
 from sqlalchemy import create_engine
-from backend.database import SessionLocal
-from backend.models import Administrador
+from backend.core.database import SessionLocal
+from backend.models.users import Administrador
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 

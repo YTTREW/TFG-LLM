@@ -12,7 +12,8 @@ class Profesor(Base):
     role = Column(String, default="profesor")
     nombre = Column(String)
     apellidos = Column(String)
-
+    casos = relationship("CasoClinico", back_populates="profesor", cascade="all, delete-orphan")
+    
 class Estudiante(Base):
     __tablename__ = "estudiantes"
 

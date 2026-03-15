@@ -68,7 +68,6 @@ if "messages" not in st.session_state:
 
 
 # ---------- SIDEBAR ----------
-st.sidebar.title("💬 Chats")
 
 if st.sidebar.button("🚪 Sign out"):
     st.session_state.clear()
