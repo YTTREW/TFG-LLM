@@ -1,4 +1,3 @@
-
 import requests
 import streamlit as st
 
@@ -16,18 +15,31 @@ def auth_headers():
         "Authorization": f"Bearer {token}"
     }
 
-# ---------- Obtener lista de chats ----------
-def get_chats():
-    res = requests.get(BASE_URL, headers=auth_headers())
-    res.raise_for_status()  # Esto lanza el 401 si algo falla
-    return res.json()
-
-# ---------- Crear nuevo chat ----------
-def create_chat():
-    res = requests.post(BASE_URL, headers=auth_headers())
+# ---------- NUEVO: Obtener lista de Casos Clínicos ----------
+def get_cases():
+    url = f"{BASE_URL}/cases"
+    res = requests.get(url, headers=auth_headers())
     res.raise_for_status()
     return res.json()
 
+# ---------- Obtener lista de chats ----------
+def get_chats():
+    # FastAPI requiere la barra al final si la ruta es "/"
+    url = f"{BASE_URL}/" 
+    res = requests.get(url, headers=auth_headers())
+    res.raise_for_status()  # Esto lanza el 401 si algo falla
+    return res.json()
+
+# ---------- MODIFICADO: Crear nuevo chat para un caso específico ----------
+def create_chat(caso_id: int):
+    url = f"{BASE_URL}/"
+    res = requests.post(
+        url, 
+        headers={**auth_headers(), "Content-Type": "application/json"},
+        json={"caso_id": caso_id} # Enviamos el ID del caso al backend
+    )
+    res.raise_for_status()
+    return res.json()
 
 # ---------- Obtener mensajes de un chat ----------
 def get_messages(chat_id: int):
@@ -53,4 +65,3 @@ def delete_chat(chat_id: int):
     res = requests.delete(url, headers=auth_headers())
     res.raise_for_status()
     return res.json()
-

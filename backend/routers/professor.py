@@ -240,7 +240,8 @@ def edit_profile_post(
     new_username: str = Form(...),
     new_password: str = Form(None)  # Opcional: si lo deja en blanco, no se cambia
 ):
-    if request.session.get("role") != "profesor": return RedirectResponse("/login")
+    if request.session.get("role") != "profesor": 
+        return RedirectResponse("/login")
     
     db = SessionLocal()
     try:

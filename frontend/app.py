@@ -1,5 +1,5 @@
 import streamlit as st
-from api_client import get_chats, create_chat, get_messages, send_message, delete_chat
+from api_client import get_cases, get_chats, create_chat, get_messages, send_message, delete_chat
 
 st.set_page_config(page_title="Chat Student", layout="wide")
 
@@ -78,47 +78,64 @@ if st.sidebar.button("🚪 Sign out"):
     )
     st.stop()
 
-if st.sidebar.button("➕ New chat"):
-    chat = create_chat()
-    st.session_state.current_chat_id = chat["id"]
-    st.session_state.messages = []
-    st.rerun()
+st.sidebar.title("🩺 Clinical Cases")
 
-st.sidebar.divider()
+# --- OPTIMIZACIÓN: Solo pedimos a la API si no lo tenemos ya en memoria ---
+if "casos" not in st.session_state:
+    st.session_state.casos = get_cases()
 
+# Usamos una bandera 'refresh_chats' para saber cuándo forzar la recarga
+if "chats" not in st.session_state or st.session_state.get("refresh_chats", False):
+    st.session_state.chats = get_chats()
+    st.session_state.refresh_chats = False # Apagamos la bandera tras recargar
 
-st.sidebar.title("💬 Chats")
+casos = st.session_state.casos
+chats = st.session_state.chats
 
-chats = get_chats()
-
-for chat in chats:
-    col1, col2 = st.sidebar.columns([4, 1])
-
-    # 👉 Botón para ABRIR chat
-    with col1:
-        if st.button(chat["title"], key=f"open_{chat['id']}"):
-            st.session_state.current_chat_id = chat["id"]
-            msgs = get_messages(chat["id"])
-            st.session_state.messages = msgs
+if not casos:
+    st.sidebar.info("There are no clinical cases available yet.")
+else:
+    for caso in casos:
+        badge = "🔴 Evaluable" if caso["es_evaluable"] else "🟢 Practice"
+        st.sidebar.markdown(f"### {caso['nombre_paciente']} <span style='font-size:12px; color:#ccc;'>({badge})</span>", unsafe_allow_html=True)
+        
+        if st.sidebar.button("➕ New Simulation", key=f"new_chat_{caso['id']}"):
+            nuevo_chat = create_chat(caso["id"])
+            st.session_state.current_chat_id = nuevo_chat["id"]
+            st.session_state.messages = []
+            st.session_state.refresh_chats = True  
             st.rerun()
 
-    # 👉 Botón para BORRAR chat
-    with col2:
-        if st.button("🗑️", key=f"delete_{chat['id']}"):
-            delete_chat(chat["id"])
+        chats_del_caso = [c for c in chats if c.get("caso_id") == caso["id"]]
+        
+        for chat in chats_del_caso:
+            col1, col2 = st.sidebar.columns([4, 1])
 
-            # Si borras el chat actual, limpiamos la vista
-            if st.session_state.get("current_chat_id") == chat["id"]:
-                st.session_state.current_chat_id = None
-                st.session_state.messages = []
+            with col1:
+                if st.button(chat["title"], key=f"open_{chat['id']}"):
+                    st.session_state.current_chat_id = chat["id"]
+                    msgs = get_messages(chat["id"])
+                    st.session_state.messages = msgs
+                    st.rerun()
 
-            st.rerun()
+            with col2:
+                if st.button("🗑️", key=f"delete_{chat['id']}"):
+                    delete_chat(chat["id"])
+
+                    # Si borras el chat actual, limpiamos la vista
+                    if st.session_state.get("current_chat_id") == chat["id"]:
+                        st.session_state.current_chat_id = None
+                        st.session_state.messages = []
+                    st.session_state.refresh_chats = True # <--- AÑADE ESTA LÍNEA
+                    st.rerun()
+        
+        st.sidebar.divider()
 
 # ---------- MAIN ----------
 st.title("🧠 CognitiveLab – Student Chat")
 
 if st.session_state.current_chat_id is None:
-    st.info("Choose or create a new chat")
+    st.info("Choose a clinical case on the left to start a simulation.")
     st.stop()
 
 # Mostrar mensajes
@@ -132,18 +149,13 @@ user_input = st.chat_input("Write your message...")
 if user_input:
     chat_id = st.session_state.current_chat_id
 
-# 1. Mostramos el mensaje del usuario en pantalla inmediatamente
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
 
-    # 2. Llamamos al Backend para que haga su magia
     with st.spinner("Pensando respuesta clínica..."):
-        # El backend guarda el mensaje, llama a Ollama, guarda la respuesta y nos la devuelve
         ai_response = send_message(chat_id, user_input)
 
-    # 3. Guardamos y pintamos la respuesta de la IA
     st.session_state.messages.append(ai_response)
     with st.chat_message("assistant"):
         st.markdown(ai_response["content"])
-
