@@ -41,21 +41,43 @@ def get_current_student(
 
 @router.get("/cases")
 def get_cases(db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    casos = db.query(CasoClinico).all()
-    
+    casos = db.query(CasoClinico).filter(CasoClinico.visible == True).all()
+
     resultado = []
     for caso in casos:
         resultado.append({
             "id": caso.id,
             "nombre_paciente": caso.nombre_paciente,
-            "es_evaluable": caso.es_evaluable
+            "es_evaluable": caso.es_evaluable,
+            "fecha_entrega": caso.fecha_entrega.isoformat() if caso.fecha_entrega else None
         })
     return resultado
 
 @router.get("/")
 def get_chats(db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
     chats = db.query(Chat).filter_by(estudiante_id=student.id).order_by(Chat.created_at.desc()).all()
-    return [{"id": chat.id, "title": chat.title, "caso_id": chat.caso_id, "created_at": chat.created_at} for chat in chats]
+    return [{"id": chat.id, "title": chat.title, "caso_id": chat.caso_id, "created_at": chat.created_at, "enviado": chat.enviado, "grade": chat.grade, "feedback": chat.feedback} for chat in chats]
+
+@router.post("/{chat_id}/submit")
+def submit_chat(chat_id: int, db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
+    chat_a_enviar = db.query(Chat).filter(Chat.id == chat_id, Chat.estudiante_id == student.id).first()
+    if not chat_a_enviar:
+        raise HTTPException(status_code=404, detail="Chat not found")
+
+    # 2. MAGIA: Buscamos TODOS los demás chats de este mismo caso y los desmarcamos (enviado = False)
+    db.query(Chat).filter(
+        Chat.estudiante_id == student.id,
+        Chat.caso_id == chat_a_enviar.caso_id,
+        Chat.id != chat_id 
+    ).update({"enviado": False})
+
+    chat_a_enviar.enviado = True
+    db.commit()
+
+    return {"message": "Chat submitted successfully"}
+
+
+
 
 @router.post("/")
 def create_chat(chat_data: ChatCreate, db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):

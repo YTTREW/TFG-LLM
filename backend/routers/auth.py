@@ -127,3 +127,97 @@ def register_user(
         db.close() 
 
     return RedirectResponse("/login", status_code=303)
+
+@router.get("/edit-profile", response_class=HTMLResponse)
+def edit_profile_form(request: Request):
+    role = request.session.get("role")
+    # Si no tiene rol válido, al login
+    if role not in ["profesor", "estudiante"]: 
+        return RedirectResponse("/login")
+    
+    current_username = request.session.get("user")
+
+    # Adaptamos los botones del HTML según quién haya entrado
+    if role == "profesor":
+        back_url = "/dashboard-profesor"
+        back_text = "Back to Dashboard"
+    else:
+        # ¡NUEVO! Construimos la URL exacta de Streamlit usando el token de su sesión
+        token = request.session.get("token")
+        back_url = f"http://localhost:8501?token={token}"
+        back_text = "Back to Menu"
+
+    return templates.TemplateResponse("edit_profile.html", {
+        "request": request, 
+        "current_username": current_username,
+        "action_url": "/edit-profile",
+        "back_url": back_url,
+        "back_text": back_text
+    })
+
+@router.post("/edit-profile")
+def edit_profile_post(
+    request: Request,
+    new_username: str = Form(...),
+    new_password: str = Form(None)
+):
+    role = request.session.get("role")
+    if role not in ["profesor", "estudiante"]: 
+        return RedirectResponse("/login")
+    
+    db = SessionLocal()
+    cambios_realizados = False  
+    
+    try:
+        current_username = request.session.get("user")
+
+        Modelo = Profesor if role == "profesor" else Estudiante
+        usuario = db.query(Modelo).filter_by(username=current_username).first()
+        
+        if not usuario:
+            return RedirectResponse("/login")
+
+        # 1. Comprobar si cambia de usuario
+        if new_username != current_username:
+            usuario_existente = db.query(Modelo).filter_by(username=new_username).first()
+            if usuario_existente:
+                # Si hay error, recargamos con los botones correctos
+                if role == "profesor":
+                    back_url = "/dashboard-profesor"
+                else:
+                    token = request.session.get("token")
+                    back_url = f"http://localhost:8501?token={token}"
+
+                return templates.TemplateResponse("edit_profile.html", {
+                    "request": request, 
+                    "current_username": current_username,
+                    "error": "This username is already taken.",
+                    "action_url": "/edit-profile",
+                    "back_url": back_url,
+                    "back_text": "Back to Menu" if role == "estudiante" else "Back to Dashboard"
+                }, status_code=400)
+            
+            usuario.username = new_username
+            request.session["user"] = new_username
+            cambios_realizados = True  # 
+
+        # 2. Comprobar si cambia la contraseña
+        if new_password and new_password.strip() != "":
+            usuario.password_hash = get_password_hash(new_password)
+            cambios_realizados = True  
+            
+        db.commit()
+    finally:
+        db.close()
+        
+    # --- LÓGICA FINAL DE REDIRECCIÓN ---
+    
+    if cambios_realizados:
+        request.session.clear() 
+        return RedirectResponse("/login", status_code=303)
+    else:
+        if role == "profesor":
+            return RedirectResponse("/dashboard-profesor", status_code=303)
+        else:
+            token = request.session.get("token")
+            return RedirectResponse(f"http://localhost:8501?token={token}", status_code=303)

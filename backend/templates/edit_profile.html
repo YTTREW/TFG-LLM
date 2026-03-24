@@ -18,7 +18,7 @@
     </div>
     {% endif %}
 
-    <form method="post" action="/professor/edit-profile">
+    <form method="post" action="{{ action_url }}">
         <label for="new_username">Username</label>
         <input type="text" id="new_username" name="new_username" value="{{ current_username }}" required>
         
@@ -28,7 +28,7 @@
         <button type="submit" class="btn-primary">Update Profile</button>
     </form>
 
-    <a href="/dashboard-profesor" class="back-link">← Back to Dashboard</a>
+    <a href="{{ back_url }}" class="back-link">← {{ back_text }}</a>
 </div>
 
 </body>

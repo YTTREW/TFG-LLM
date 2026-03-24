@@ -30,6 +30,13 @@ def get_chats():
     res.raise_for_status()  # Esto lanza el 401 si algo falla
     return res.json()
 
+# ---------- Enviar chat al profesor ----------
+def submit_chat(chat_id: int):
+    url = f"{BASE_URL}/{chat_id}/submit"
+    res = requests.post(url, headers=auth_headers())
+    res.raise_for_status()
+    return res.json()
+
 # ---------- MODIFICADO: Crear nuevo chat para un caso específico ----------
 def create_chat(caso_id: int):
     url = f"{BASE_URL}/"

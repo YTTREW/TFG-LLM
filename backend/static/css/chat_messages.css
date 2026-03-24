@@ -19,50 +19,15 @@ h2 {
     text-align: center;
     margin-bottom: 20px;
 }
-/* Header con título + nota */
 .chat-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    flex-direction: column; /* Apila los elementos de arriba a abajo */
+    align-items: center; /* Centra el título */
+    gap: 20px; /* Separación entre el título y el formulario */
+    margin-bottom: 25px;
+    width: 100%;
 }
 
-/* Formulario nota */
-.grade-form {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-/* Input nota */
-.grade-form input {
-    width: 90px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    font-size: 14px;
-    text-align: center;
-    background: rgba(255,255,255,0.15);
-    color: white;
-}
-
-/* Botón guardar */
-.grade-form button {
-    padding: 8px 14px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    background: linear-gradient(to right, #00c6ff, #0072ff);
-    color: white;
-    transition: 0.2s ease;
-}
-
-.grade-form button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,114,255,0.4);
-}
 
 /* Caja glass */
 .messages-box {
@@ -134,16 +99,93 @@ h2 {
     font-weight: 500;
     transition: 0.2s ease;
 }
-/* Quitar flechas en Chrome, Edge, Safari */
-.grade-form input::-webkit-outer-spin-button,
-.grade-form input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+/* --- NUEVO ESTILO DE EVALUACIÓN (Nota + Feedback) --- */
+
+/* Formulario nota */
+.grade-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 24px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%; /* Obliga a la tarjeta a medir lo mismo que el chat */
+    box-sizing: border-box; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Sombra suave para separarlo del fondo */
 }
 
-/* Quitar flechas en Firefox */
-.grade-form input[type=number] {
-    -moz-appearance: textfield;
+/* Fila para separar el label de la nota del input */
+.grade-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Label de la nota y del feedback */
+.grade-form label {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Input nota */
+.grade-form input {
+    width: 80px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    outline: none;
+    font-size: 14px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    font-weight: bold;
+}
+
+/* NUEVO: Textarea del feedback */
+.grade-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    outline: none;
+    font-size: 14px;
+    font-family: inherit;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    resize: vertical; /* Permite al profe estirarlo hacia abajo */
+    min-height: 80px;
+    transition: 0.3s ease;
+}
+
+/* Efecto al pinchar para escribir */
+.grade-form textarea:focus, .grade-form input:focus {
+    border-color: #00c6ff;
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 8px rgba(0, 198, 255, 0.2);
+}
+
+.grade-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Botón guardar (alineado a la derecha) */
+.grade-form button {
+    align-self: flex-end;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    transition: 0.2s ease;
+}
+
+.grade-form button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,114,255,0.4);
 }
 .back-link:hover {
     opacity: 1;

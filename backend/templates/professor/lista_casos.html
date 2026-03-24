@@ -13,12 +13,14 @@
 
     <div class="cases-card"> 
         {% if casos %}
-        <table class="cases-table">
+<table class="cases-table">
             <thead>
                 <tr>
                     <th>Patient Name</th>
                     <th>Age</th>
                     <th>Evaluable</th>
+                    <th>Visible</th>
+                    <th>Deadline</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -28,16 +30,26 @@
                     <td class="patient-name">{{ caso.nombre_paciente }}</td>
                     <td>{{ caso.edad }}</td>
                     <td>
-                        {% if caso.es_evaluable %}
-                            <span class="status-yes">Yes</span>
-                        {% else %}
-                            <span class="status-no">No</span>
-                        {% endif %}
+                        {% if caso.es_evaluable %}<span class="status-yes">Yes</span>{% else %}<span class="status-no">No</span>{% endif %}
                     </td>
                     <td>
-                        <form action="/professor/delete-case/{{ caso.id }}" method="post" style="margin: 0;">
-                            <button class="btn-delete" type="submit">Delete</button>
-                        </form>
+                        {% if caso.visible %}<span class="status-yes">Yes</span>{% else %}<span class="status-no">No</span>{% endif %}
+                    </td>
+                    <td style="font-size: 14px; opacity: 0.9;">
+                        {% if caso.fecha_entrega %}{{ caso.fecha_entrega }}{% else %} - {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; gap: 8px; justify-content: center; align-items: center;">
+                            
+                            <a href="/professor/edit-case/{{ caso.id }}" style="text-decoration: none; display: flex;">
+                                <button class="btn-edit" type="button">Edit</button>
+                            </a>
+                            
+                            <form action="/professor/delete-case/{{ caso.id }}" method="post" style="margin: 0; display: flex;">
+                                <button class="btn-delete" type="submit">Delete</button>
+                            </form>
+                            
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}

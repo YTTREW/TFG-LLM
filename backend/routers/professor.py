@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi import APIRouter, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -43,7 +44,7 @@ def view_student_chats(student_id: int, request: Request):
         if not student:
             return HTMLResponse("Student not found", status_code=404)
         
-        chats = db.query(Chat).filter_by(estudiante_id=student_id).all()
+        chats = db.query(Chat).filter_by(estudiante_id=student_id, enviado=True).all()
     finally:
         db.close()
     
@@ -70,7 +71,7 @@ def open_chat(
     try:
         chat = db.query(Chat).filter_by(
             id=chat_id,
-            estudiante_id=student_id
+            estudiante_id=student_id,
         ).first()
 
 
@@ -98,7 +99,8 @@ def open_chat(
 def assign_grade(
     request: Request,
     chat_id: int,
-    grade: float = Form(...)
+    grade: float = Form(...),
+    feedback: str = Form(None)
 ):
     if request.session.get("role") != "profesor":
         return RedirectResponse("/login", status_code=303)
@@ -114,6 +116,7 @@ def assign_grade(
             raise HTTPException(status_code=400, detail="Invalid grade")
 
         chat.grade = grade
+        chat.feedback = feedback
         db.commit()
 
         return RedirectResponse(
@@ -142,7 +145,9 @@ def create_case_post(
     nombre_paciente: str = Form(...), 
     edad: int = Form(...), 
     problema_descripcion: str = Form(...), 
-    es_evaluable: bool = Form(False) # Si el checkbox no se marca, será False por defecto
+    es_evaluable: bool = Form(False),
+    visible: bool = Form(False),      # NUEVO
+    fecha_entrega: str = Form(None)
 ):
     if request.session.get("role") != "profesor": 
         return RedirectResponse("/login")
@@ -155,6 +160,10 @@ def create_case_post(
         
         if not profesor:
             return RedirectResponse("/login")
+        
+        fecha_obj = None
+        if fecha_entrega: # Si el profesor ha rellenado la fecha
+            fecha_obj = datetime.strptime(fecha_entrega, "%Y-%m-%d").date()
 
         # 2. Creamos el nuevo caso clínico
         nuevo_caso = CasoClinico(
@@ -162,7 +171,9 @@ def create_case_post(
             nombre_paciente=nombre_paciente,
             edad=edad,
             problema_descripcion=problema_descripcion,
-            es_evaluable=es_evaluable
+            es_evaluable=es_evaluable,
+            visible=visible,
+            fecha_entrega=fecha_obj
         )
         
         # 3. Lo guardamos en la base de datos
@@ -220,56 +231,56 @@ def delete_case(request: Request, caso_id: int):
     return RedirectResponse("/professor/cases", status_code=303)
 
 
-@router.get("/professor/edit-profile", response_class=HTMLResponse)
-def edit_profile_form(request: Request):
-    if request.session.get("role") != "profesor": 
+@router.get("/professor/edit-case/{caso_id}", response_class=HTMLResponse)
+def edit_case_form(caso_id: int, request: Request):
+    if request.session.get("role") != "profesor":
         return RedirectResponse("/login")
-    
-    current_username = request.session.get("user")
-    return templates.TemplateResponse(
-        "edit_profile.html", 
-        {
-            "request": request, 
-            "current_username": current_username
-        }
-    )
-
-@router.post("/professor/edit-profile")
-def edit_profile_post(
-    request: Request,
-    new_username: str = Form(...),
-    new_password: str = Form(None)  # Opcional: si lo deja en blanco, no se cambia
-):
-    if request.session.get("role") != "profesor": 
-        return RedirectResponse("/login")
-    
+        
     db = SessionLocal()
     try:
-        current_username = request.session.get("user")
-        profesor = db.query(Profesor).filter_by(username=current_username).first()
-        
-        if not profesor:
-            return RedirectResponse("/login")
-
-        # 1. Si cambia el nombre de usuario, comprobamos que no esté en uso
-        if new_username != current_username:
-            usuario_existente = db.query(Profesor).filter_by(username=new_username).first()
-            if usuario_existente:
-                return templates.TemplateResponse("edit_profile.html", {
-                    "request": request, 
-                    "current_username": current_username,
-                    "error": "This username is already taken."
-                }, status_code=400)
+        # Buscamos el caso. (Podríamos verificar también si pertenece al profe logueado por seguridad)
+        caso = db.query(CasoClinico).filter(CasoClinico.id == caso_id).first()
+        if not caso:
+            return HTMLResponse("Clinical case not found", status_code=404)
             
-            profesor.username = new_username
-            request.session["user"] = new_username  # ¡Súper importante actualizar la sesión actual!
-
-        # 2. Si ha escrito una contraseña nueva, la encriptamos y la guardamos
-        if new_password and new_password.strip() != "":
-            profesor.password_hash = get_password_hash(new_password)
-            
-        db.commit()
+        return templates.TemplateResponse("edit_case.html", {
+            "request": request,
+            "caso": caso
+        })
     finally:
         db.close()
+
+# Endpoint para GUARDAR los cambios
+@router.post("/professor/edit-case/{caso_id}")
+def edit_case_post(
+    caso_id: int,
+    request: Request,
+    es_evaluable: bool = Form(False),
+    visible: bool = Form(False),
+    fecha_entrega: str = Form(None)
+):
+    if request.session.get("role") != "profesor":
+        return RedirectResponse("/login")
         
-    return RedirectResponse("/dashboard-profesor", status_code=303)
+    db = SessionLocal()
+    try:
+        caso = db.query(CasoClinico).filter(CasoClinico.id == caso_id).first()
+        if not caso:
+            return HTMLResponse("Clinical case not found", status_code=404)
+
+        # Actualizamos los booleanos
+        caso.es_evaluable = es_evaluable
+        caso.visible = visible
+        
+        # Procesamos la fecha
+        if fecha_entrega:
+            caso.fecha_entrega = datetime.strptime(fecha_entrega, "%Y-%m-%d").date()
+        else:
+            caso.fecha_entrega = None # Si el profe borra la fecha, la quitamos
+
+        db.commit()
+        
+        # Devolvemos a la lista de casos
+        return RedirectResponse("/professor/cases", status_code=303)
+    finally:
+        db.close()

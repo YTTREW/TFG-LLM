@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Case Settings</title>
+    <link rel="stylesheet" href="/static/css/create_case.css"> 
+    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Edit Settings</h1>
+    <p>Patient: <strong>{{ caso.nombre_paciente }}</strong> ({{ caso.edad }} years old)</p>
+
+    <form method="post" action="/professor/edit-case/{{ caso.id }}">
+        
+        <label for="fecha_entrega">Deadline</label>
+        <input type="date" id="fecha_entrega" name="fecha_entrega" style="width: 100%; margin-bottom: 15px;" value="{{ caso.fecha_entrega if caso.fecha_entrega else '' }}">
+
+        <div class="checkbox-container">
+            <input type="checkbox" name="es_evaluable" value="true" id="evaluable" {% if caso.es_evaluable %}checked{% endif %}>
+            <label for="evaluable">This case is Evaluable</label>
+        </div>
+
+        <div class="checkbox-container" style="margin-top: 10px;">
+            <input type="checkbox" name="visible" value="true" id="visible" {% if caso.visible %}checked{% endif %}>
+            <label for="visible">Visible to students</label>
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 20px;">Save Changes</button>
+    </form>
+
+    <a href="/professor/cases" class="back-link">← Back to my cases</a>
+</div>
+
+</body>
+</html>

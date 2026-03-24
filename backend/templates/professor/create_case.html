@@ -15,16 +15,24 @@
     <form method="post" action="/professor/create-case">
         <input type="text" name="nombre_paciente" placeholder="Patient's Name (e.g., Deidre)" required>
         
-        <input type="number" name="edad" placeholder="Age" required min="5" max="99">
+        <input type="number" name="edad" placeholder="Age (e.g., 24)" required min="5" max="99">
 
-        <textarea name="problema_descripcion" placeholder="Describe the psychological issue, background, and symptoms..." required rows="5"></textarea>
+        <textarea name="problema_descripcion" placeholder="Describe the psychological issue... (e.g., Deidre suffers from severe social anxiety. She recently got promoted and struggles to speak in team meetings, experiencing palpitations and sweating.)" required rows="5"></textarea>
+
+        <label for="fecha_entrega">Deadline</label>
+        <input type="date" id="fecha_entrega" name="fecha_entrega" style="width: 100%; margin-bottom: 15px;">
 
         <div class="checkbox-container">
             <input type="checkbox" name="es_evaluable" value="true" id="evaluable">
             <label for="evaluable">This case is Evaluable</label>
         </div>
 
-        <button type="submit" class="btn-primary">Save Patient</button>
+        <div class="checkbox-container" style="margin-top: 10px;">
+            <input type="checkbox" name="visible" value="true" id="visible" checked>
+            <label for="visible">Visible to students</label>
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 20px;">Save Patient</button>
     </form>
 
     <a href="/dashboard-profesor" class="back-link">← Back to Dashboard</a>
