@@ -18,10 +18,10 @@ templates = Jinja2Templates(directory="backend/templates")
 @router.get("/dashboard-admin", response_class=HTMLResponse)
 def dashboard_admin(request: Request):
     if "user" not in request.session:
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     if request.session.get("role") != "admin":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
     
     return templates.TemplateResponse(
         "dashboard_admin.html",
@@ -33,11 +33,11 @@ def dashboard_admin(request: Request):
 def list_students(request: Request):
 
     if "user" not in request.session:
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     role = request.session.get("role")
     if role not in ["profesor", "admin"]:
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     db = SessionLocal()
     try:
@@ -65,7 +65,7 @@ def list_students(request: Request):
 def delete_student(student_id: int, request: Request):
 
     if request.session.get("role") != "admin":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     db = SessionLocal()
     try:
@@ -83,10 +83,10 @@ def delete_student(student_id: int, request: Request):
 def list_professors(request: Request):
 
     if "user" not in request.session:
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     if request.session.get("role") != "admin":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     db = SessionLocal()
     try:
@@ -108,7 +108,7 @@ def list_professors(request: Request):
 def delete_professor(professor_id: int, request: Request):
 
     if request.session.get("role") != "admin":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     db = SessionLocal()
     try:
@@ -125,7 +125,7 @@ def delete_professor(professor_id: int, request: Request):
 @router.get("/admin/register", response_class=HTMLResponse)
 def create_user_form(request: Request):
     if request.session.get("role") != "admin":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     return templates.TemplateResponse(
         "register_users.html",
@@ -143,7 +143,7 @@ def create_user(
     role: str = Form(...)
 ):
     if request.session.get("role") != "admin":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     db = SessionLocal()
     try:
@@ -158,7 +158,8 @@ def create_user(
                 {
                     "request": request,
                     "error": "Username already exists"
-                }
+                },
+                    status_code=400
             )
 
         hashed_password = get_password_hash(password)

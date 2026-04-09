@@ -20,10 +20,10 @@ templates = Jinja2Templates(directory="backend/templates/professor")
 @router.get("/dashboard-profesor", response_class=HTMLResponse)
 def dashboard_profesor(request: Request):
     if "user" not in request.session:
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     if request.session.get("role") != "profesor":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     return templates.TemplateResponse(
         "dashboard_profesor.html",
@@ -33,10 +33,11 @@ def dashboard_profesor(request: Request):
         }
     )
 
+# Endpoint GET para listar estudiantes con chats enviados
 @router.get("/professor/student/{student_id}/chats", response_class=HTMLResponse)
 def view_student_chats(student_id: int, request: Request):
     if request.session.get("role") != "profesor":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
     
     db = SessionLocal()
     try:
@@ -58,6 +59,7 @@ def view_student_chats(student_id: int, request: Request):
         }
     )
 
+# Endpoint POST para crear un nuevo caso clínico
 @router.get("/professor/student/{student_id}/chat/{chat_id}")
 def open_chat(
     request: Request,
@@ -76,7 +78,7 @@ def open_chat(
 
 
         if not chat:
-            return {"error": "Chat not found"}
+            return {"error": "Chat not found", "status_code": 404}
 
         messages = db.query(Message).filter_by(
             chat_id=chat.id
@@ -95,6 +97,7 @@ def open_chat(
     finally:
         db.close()
 
+# Endpoint POST para asignar nota y feedback a un chat
 @router.post("/professor/chat/{chat_id}/grade")
 def assign_grade(
     request: Request,
@@ -127,10 +130,11 @@ def assign_grade(
     finally:
         db.close()
 
+# Endpoint GET para listar estudiantes con chats enviados
 @router.get("/professor/create-case", response_class=HTMLResponse)
 def create_case_form(request: Request):
     if request.session.get("role") != "profesor": 
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
     
     return templates.TemplateResponse(
         "create_case.html", 
@@ -139,6 +143,7 @@ def create_case_form(request: Request):
         }
     )
 
+# Endpoint POST para crear un nuevo caso clínico
 @router.post("/professor/create-case")
 def create_case_post(
     request: Request, 
@@ -150,22 +155,20 @@ def create_case_post(
     fecha_entrega: str = Form(None)
 ):
     if request.session.get("role") != "profesor": 
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
     
     db = SessionLocal()
     try:
-        # 1. Buscamos quién es el profesor que está creando el caso
         username = request.session.get("user")
         profesor = db.query(Profesor).filter_by(username=username).first()
         
         if not profesor:
-            return RedirectResponse("/login")
+            return RedirectResponse("/login", status_code=303)
         
         fecha_obj = None
-        if fecha_entrega: # Si el profesor ha rellenado la fecha
+        if fecha_entrega: 
             fecha_obj = datetime.strptime(fecha_entrega, "%Y-%m-%d").date()
 
-        # 2. Creamos el nuevo caso clínico
         nuevo_caso = CasoClinico(
             profesor_id=profesor.id,
             nombre_paciente=nombre_paciente,
@@ -176,27 +179,24 @@ def create_case_post(
             fecha_entrega=fecha_obj
         )
         
-        # 3. Lo guardamos en la base de datos
         db.add(nuevo_caso)
         db.commit()
         
-        # Redirigimos al panel del profesor
         return RedirectResponse("/dashboard-profesor", status_code=303)
     finally:
         db.close()
 
+# Endpoint GET para listar casos clínicos del profesor
 @router.get("/professor/cases", response_class=HTMLResponse)
 def list_clinical_cases(request: Request):
     if request.session.get("role") != "profesor": 
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
     
     db = SessionLocal()
     try:
-        # Buscamos al profesor actual
         username = request.session.get("user")
         profesor = db.query(Profesor).filter_by(username=username).first()
         
-        # Obtenemos solo los casos que ha creado este profesor
         casos = db.query(CasoClinico).filter_by(profesor_id=profesor.id).order_by(CasoClinico.created_at.desc()).all()
     finally:
         db.close()
@@ -208,18 +208,17 @@ def list_clinical_cases(request: Request):
             "casos": casos
         }
     )
-
+# Endpoint POST para eliminar un caso clínico
 @router.post("/professor/delete-case/{caso_id}")
 def delete_case(request: Request, caso_id: int):
     if request.session.get("role") != "profesor": 
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
     
     db = SessionLocal()
     try:
         username = request.session.get("user")
         profesor = db.query(Profesor).filter_by(username=username).first()
         
-        # Buscamos el caso asegurándonos de que pertenece a este profesor por seguridad
         caso = db.query(CasoClinico).filter_by(id=caso_id, profesor_id=profesor.id).first()
         
         if caso:
@@ -230,7 +229,7 @@ def delete_case(request: Request, caso_id: int):
         
     return RedirectResponse("/professor/cases", status_code=303)
 
-
+# Endpoint GET para mostrar el formulario de edición de caso clínico
 @router.get("/professor/edit-case/{caso_id}", response_class=HTMLResponse)
 def edit_case_form(caso_id: int, request: Request):
     if request.session.get("role") != "profesor":
@@ -238,7 +237,6 @@ def edit_case_form(caso_id: int, request: Request):
         
     db = SessionLocal()
     try:
-        # Buscamos el caso. (Podríamos verificar también si pertenece al profe logueado por seguridad)
         caso = db.query(CasoClinico).filter(CasoClinico.id == caso_id).first()
         if not caso:
             return HTMLResponse("Clinical case not found", status_code=404)
@@ -250,7 +248,7 @@ def edit_case_form(caso_id: int, request: Request):
     finally:
         db.close()
 
-# Endpoint para GUARDAR los cambios
+# Endpoint POST para GUARDAR los cambios
 @router.post("/professor/edit-case/{caso_id}")
 def edit_case_post(
     caso_id: int,
@@ -260,27 +258,25 @@ def edit_case_post(
     fecha_entrega: str = Form(None)
 ):
     if request.session.get("role") != "profesor":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
         
     db = SessionLocal()
+
     try:
         caso = db.query(CasoClinico).filter(CasoClinico.id == caso_id).first()
         if not caso:
             return HTMLResponse("Clinical case not found", status_code=404)
 
-        # Actualizamos los booleanos
         caso.es_evaluable = es_evaluable
         caso.visible = visible
         
-        # Procesamos la fecha
         if fecha_entrega:
             caso.fecha_entrega = datetime.strptime(fecha_entrega, "%Y-%m-%d").date()
         else:
-            caso.fecha_entrega = None # Si el profe borra la fecha, la quitamos
+            caso.fecha_entrega = None # 
 
         db.commit()
         
-        # Devolvemos a la lista de casos
         return RedirectResponse("/professor/cases", status_code=303)
     finally:
         db.close()

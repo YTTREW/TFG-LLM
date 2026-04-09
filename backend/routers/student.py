@@ -7,13 +7,15 @@ templates = Jinja2Templates(directory="backend/templates")
 
 ############################################
 #                                          #
-#        ENDPOINT DE ESTUDIANTES          #
+#        ENDPOINT DE ESTUDIANTES           #
 #                                          #
 ############################################
+
+# Endpoint GET para cargar dashboard del estudiante
 @router.get("/dashboard-estudiante", response_class=HTMLResponse)
 def dashboard_estudiante(request: Request):
     if "user" not in request.session or request.session.get("role") != "estudiante":
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
 
     username = request.session.get("user", "Student")
 

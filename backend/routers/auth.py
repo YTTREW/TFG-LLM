@@ -13,17 +13,14 @@ templates = Jinja2Templates(directory="backend/templates")
 
 # Verificar credenciales de usuario
 def authenticate_user(username: str, password: str, db):
-    # Buscar en profesores
     profesor = db.query(Profesor).filter_by(username=username).first()
     if profesor and verify_password(password, profesor.password_hash):
         return "profesor"
 
-    # Buscar en estudiantes
     estudiante = db.query(Estudiante).filter_by(username=username).first()
     if estudiante and verify_password(password, estudiante.password_hash):
         return "estudiante"
     
-    # Buscar en administradores
     admin = db.query(Administrador).filter_by(username=username).first()
     if admin and verify_password(password, admin.password_hash):
         return "admin"
@@ -38,7 +35,7 @@ def authenticate_user(username: str, password: str, db):
 # Endpoint GET para redirigir a la página principal
 @router.get("/", response_class=RedirectResponse)
 def root():
-    return RedirectResponse(url="/login")
+    return RedirectResponse(url="/login", status_code=303)
 
 # Endpoint GET para mostrar la página de login 
 @router.get("/login", response_class=HTMLResponse)
@@ -56,9 +53,8 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
                 "request": request,
                 "error": "Incorrect username or password",
                 "username": username  
-            })
+            }, status_code=401)
         
-        # Generar token de sesión
         token = secrets.token_hex(16)
         
         request.session["user"] = username
@@ -68,7 +64,6 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
         db.add(SessionToken(token=token, username=username))
         db.commit()
 
-        # Verificar rol
         if role == "estudiante":
             return RedirectResponse(
                 url=f"http://localhost:8501?token={token}",
@@ -86,9 +81,9 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
 @router.get("/logout")
 def logout(request: Request):
     request.session.clear()
-    return RedirectResponse("/login")
+    return RedirectResponse("/login", status_code=303)
 
-# Endpoint GET para carga página de registro
+# Endpoint GET para cargar página de registro
 @router.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
     return templates.TemplateResponse("register.html", {"request": request})
@@ -104,17 +99,15 @@ def register_user(
 ):
     db = SessionLocal()
     try:
-        # Comprobar si ya existe
         existing_user = db.query(Estudiante).filter_by(username=username).first()
         if existing_user:
             return templates.TemplateResponse("register.html", {
                 "request": request,
                 "error": "Username already exists."
-            })
-        # Crear hash de la contraseña
+            }, status_code=400)
+        
         hashed = get_password_hash(password)
 
-        # Crear usuario y guardar
         estudiante = Estudiante(
                 username=username,
                 password_hash=hashed,
@@ -132,18 +125,16 @@ def register_user(
 @router.get("/edit-profile", response_class=HTMLResponse)
 def edit_profile_form(request: Request):
     role = request.session.get("role")
-    # Si no tiene rol válido, al login
+
     if role not in ["profesor", "estudiante"]: 
         return RedirectResponse("/login")
     
     current_username = request.session.get("user")
 
-    # Adaptamos los botones del HTML según quién haya entrado
     if role == "profesor":
         back_url = "/dashboard-profesor"
         back_text = "Back to Dashboard"
     else:
-        # ¡NUEVO! Construimos la URL exacta de Streamlit usando el token de su sesión
         token = request.session.get("token")
         back_url = f"http://localhost:8501?token={token}"
         back_text = "Back to Menu"
@@ -164,7 +155,7 @@ def edit_profile_post(
 ):
     role = request.session.get("role")
     if role not in ["profesor", "estudiante"]: 
-        return RedirectResponse("/login")
+        return RedirectResponse("/login", status_code=303)
     
     db = SessionLocal()
     cambios_realizados = False  
@@ -176,13 +167,11 @@ def edit_profile_post(
         usuario = db.query(Modelo).filter_by(username=current_username).first()
         
         if not usuario:
-            return RedirectResponse("/login")
+            return RedirectResponse("/login", status_code=303)
 
-        # 1. Comprobar si cambia de usuario
         if new_username != current_username:
             usuario_existente = db.query(Modelo).filter_by(username=new_username).first()
             if usuario_existente:
-                # Si hay error, recargamos con los botones correctos
                 if role == "profesor":
                     back_url = "/dashboard-profesor"
                 else:
@@ -202,7 +191,6 @@ def edit_profile_post(
             request.session["user"] = new_username
             cambios_realizados = True  # 
 
-        # 2. Comprobar si cambia la contraseña
         if new_password and new_password.strip() != "":
             usuario.password_hash = get_password_hash(new_password)
             cambios_realizados = True  
@@ -210,9 +198,7 @@ def edit_profile_post(
         db.commit()
     finally:
         db.close()
-        
-    # --- LÓGICA FINAL DE REDIRECCIÓN ---
-    
+
     if cambios_realizados:
         request.session.clear() 
         return RedirectResponse("/login", status_code=303)
