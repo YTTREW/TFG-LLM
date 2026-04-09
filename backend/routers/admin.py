@@ -42,6 +42,12 @@ def list_students(request: Request):
     db = SessionLocal()
     try:
         students = db.query(Estudiante).all()
+        for student in students:
+            student.pending_count = sum(
+                1 for chat in student.chats 
+                if chat.enviado == True and chat.grade is None
+            )
+
     finally:
         db.close()
 

@@ -135,10 +135,16 @@ else:
             except:
                 creation_date_str = ""
 
-            if chat.get("enviado"):
-             prefix = "✅ " 
+# --- NUEVA LÓGICA DE ICONOS DE ESTADO ---
+            if chat.get("grade") is not None:
+                status_prefix = "⭐ "  # Icono de nota puesta
+                status_label = " (Graded)"
+            elif chat.get("enviado"):
+                status_prefix = "✅ "  # Enviado pero no corregido
+                status_label = " (Submitted)"
             else:
-             prefix = " "
+                status_prefix = "💬 "  # Chat en progreso
+                status_label = ""
             button_title = f"{chat['title']} ({creation_date_str})"
             
             with col1:
@@ -208,10 +214,6 @@ if current_chat and current_chat.get("grade") is not None:
         with st.expander("📝 Check feedback", expanded=True):
             st.write(current_chat["feedback"])
     
-    # Opcional: Si ya está evaluado, a lo mejor no quieres que el alumno siga hablando.
-    # Si quieres bloquear el chat, descomenta esta línea:
-    st.stop()
-
 # Display messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):

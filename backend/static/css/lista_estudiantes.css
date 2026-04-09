@@ -49,6 +49,7 @@ th, td {
     padding: 14px;
     border-bottom: 1px solid rgba(255,255,255,0.2);
 }
+
 /* Hacer cabecera completamente fija y sólida */
 thead {
     position: sticky;
@@ -74,6 +75,14 @@ tr:last-child td {
     border-bottom: none;
 }
 
+/* --- BOTONES DE ACCIÓN --- */
+.action-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px; /* <--- Aumentamos esto para separarlos más */
+}
+
 .btn-delete {
     padding: 8px 14px;
     border: none;
@@ -88,18 +97,6 @@ tr:last-child td {
 .btn-delete:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(255, 0, 0, 0.45);
-}
-
-.back-link {
-    display: inline-block;
-    margin-top: 25px;
-    color: white;
-    text-decoration: none;
-    opacity: 0.8;
-}
-
-.back-link:hover {
-    opacity: 1;
 }
 
 .btn-view {
@@ -119,7 +116,49 @@ tr:last-child td {
     box-shadow: 0 8px 16px rgba(0, 198, 255, 0.4);
 }
 
-/* Footer copyright */
+/* --- NOTIFICACIÓN DE TAREAS PENDIENTES --- */
+.badge-pending {
+    background: linear-gradient(to right, #f59e0b, #d97706);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+    animation: pulse 2s infinite; /* Efecto de latido */
+    white-space: nowrap;
+}
+
+/* Animación de latido */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 6px 15px rgba(245, 158, 11, 0.6);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+    }
+}
+
+/* --- ENLACE DE VUELTA --- */
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    color: white;
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+.back-link:hover {
+    opacity: 1;
+}
+
+/* --- FOOTER COPYRIGHT --- */
 body::after {
     content: "© 2026 CognitiveLab. Todos los derechos reservados.";
     position: absolute;
@@ -130,6 +169,7 @@ body::after {
     color: rgba(255, 255, 255, 0.6);
 }
 
+/* --- SCROLL PERSONALIZADO --- */
 .students-card {
     max-height: 400px;
     overflow-y: auto;

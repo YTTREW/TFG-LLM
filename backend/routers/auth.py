@@ -1,16 +1,17 @@
 from fastapi import APIRouter, Request, Form, Header, HTTPException, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-import secrets
 
-# Importamos desde nuestras nuevas carpetas core y models
 from backend.core.database import SessionLocal
 from backend.core.security import verify_password, get_password_hash
 from backend.models.users import Estudiante, Profesor, Administrador, SessionToken
 
+import secrets
+
 router = APIRouter(tags=["Autenticación"])
 templates = Jinja2Templates(directory="backend/templates")
 
+# Verificar credenciales de usuario
 def authenticate_user(username: str, password: str, db):
     # Buscar en profesores
     profesor = db.query(Profesor).filter_by(username=username).first()
