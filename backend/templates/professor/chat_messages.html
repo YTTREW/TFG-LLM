@@ -1,45 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Chat Messages</title>
-    <link rel="stylesheet" href="/static/css/chat_messages.css">
-    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>Review Chat - {{ chat.title }}</title>
+        <link rel="stylesheet" href="/static/css/professor/chat_messages.css">
+        <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+    </head>
+    <body>
+        <div class="chat-container">
+            <h1>Session Review</h1>
+            <p class="subtitle">{{ chat.title }}</p>
 
-<div class="chat-container">
+            <div class="chat-header">
+                <form action="/professor/chat/{{ chat.id }}/grade" method="post" class="grade-form">
+                    <div class="grade-top-row">
+                        <label for="grade">Final Grade (0 - 10)</label>
+                        <input type="number" id="grade" name="grade" min="0" max="10" step="0.1" value="{{ chat.grade if chat.grade is not none else '' }}" required>
+                    </div>
 
-    <h2>Chat: {{ chat.title }}</h2>
-    <div class="chat-header">
-        <h2>Chat: {{ chat.title }}</h2>
+                    <label for="feedback" class="feedback-label">Professor's Feedback</label>
+                    <textarea id="feedback" name="feedback" placeholder="Write areas for improvement or positive notes...">{{ chat.feedback if chat.feedback else '' }}</textarea>
 
-<form action="/professor/chat/{{ chat.id }}/grade" method="post" class="grade-form">
-    
-    <div class="grade-top-row">
-        <label for="grade">Final Grade (0-10):</label>
-        <input type="number" id="grade" name="grade" min="0" max="10" step="0.1" value="{{ chat.grade if chat.grade is not none else '' }}" required>
-    </div>
+                    <button type="submit" class="btn-save">Save Evaluation</button>
+                </form>
+            </div>
 
-    <label for="feedback" style="margin-top: 5px;">Feedback for the student:</label>
-    <textarea id="feedback" name="feedback" placeholder="Write what the student did well, areas for improvement...">{{ chat.feedback if chat.feedback else '' }}</textarea>
+            <div class="messages-box">
+                {% for msg in messages %}
+                <div class="message {{ msg.role }}">
+                    <div class="message-role">
+                        {% if msg.role == 'assistant' %} 🤖 Virtual Patient {% else %} 🎓 Student {% endif %}
+                    </div>
+                    <div class="message-content">{{ msg.content }}</div>
+                </div>
+                {% endfor %}
+            </div>
 
-    <button type="submit">Save Evaluation</button>
-
-</form>
-    </div>
-
-    <div class="messages-box">
-        {% for msg in messages %}
-        <div class="message {{ msg.role }}">
-            <div class="message-role">{{ msg.role }}</div>
-            <div class="message-content">{{ msg.content }}</div>
+            <a href="/professor/student/{{ chat.student_id }}/chats" class="back-link">
+                ← Back to conversations
+            </a>
         </div>
-        {% endfor %}
-    </div>
-
-    <a href="/professor/student/{{ chat.estudiante_id }}/chats" class="back-link">
-        ← Back to chats
-    </a>
-
-</div>
+    </body>
 </html>

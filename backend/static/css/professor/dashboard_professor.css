@@ -1,0 +1,116 @@
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1e293b; 
+}
+
+/* Contenedor principal */
+.dashboard-container {
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2.6rem;
+    margin-bottom: 12px;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+p {
+    font-size: 1.65rem;
+    margin-bottom: 40px;
+    color: #475569;
+}
+
+/* Tarjeta Efecto Cristal (Glassmorphism) */
+.dashboard-card {
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px); 
+    border: 1px solid rgba(255, 255, 255, 0.7); 
+    padding: 45px 50px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 480px; /* Tamaño accesible */
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Asegurar que el enlace ocupe todo el ancho sin estilos inline */
+a {
+    display: block;
+    width: 100%;
+    text-decoration: none;
+}
+
+/* Botones base mejorados */
+.btn {
+    width: 100%;
+    padding: 16px; /* Área de click amplia */
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+/* Colores sólidos de alto contraste */
+.btn-primary { background: #2563eb; }
+.btn-secondary { background: #0891b2; }
+.btn-accent { background: #7c3aed; }
+.btn-danger { background: #dc2626; }
+
+/* Hover de botones */
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(0,0,0,0.2);
+    filter: brightness(110%);
+}
+
+/* Animación de entrada */
+@keyframes scaleUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    h1 { font-size: 2rem; }
+    .dashboard-card { padding: 30px; gap: 15px; }
+    .btn { padding: 14px; font-size: 1rem; }
+}

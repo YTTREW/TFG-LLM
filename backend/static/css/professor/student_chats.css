@@ -1,0 +1,194 @@
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    color: #1e293b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.6rem;
+    margin-bottom: 8px;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: #475569;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+
+/* Card Efecto Cristal */
+.chats-card {
+    background: rgba(255, 255, 255, 0.638);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 0;
+    max-height: 480px;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Tabla Estilizada */
+.chats-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.chats-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.chats-table th {
+    background: #1e293b;
+    color: white;
+    padding: 18px 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.chats-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    color: #334155;
+    vertical-align: middle;
+}
+
+.chats-table tbody tr:nth-child(even) {
+    background: rgba(241, 245, 249, 0.6);
+}
+
+.chats-table tbody tr:hover {
+    background: #e2e8f0;
+}
+
+.chat-title {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* Badges de Calificación */
+.badge-grade {
+    background: #dcfce7;
+    color: #166534;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.badge-pending {
+    background: #f1f5f9;
+    color: #64748b;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* Botón Open Chat */
+.btn-view {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: #2563eb;
+    color: white;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-view:hover {
+    background: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+}
+
+/* Back Link (Botón secundario centrado) */
+.back-link {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 0 auto;
+    padding: 10px 24px;
+    color: #475569;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.08);
+    transform: translateX(-4px);
+}
+
+/* Estado vacío */
+.empty-state {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Animaciones */
+@keyframes scaleUpFade {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Scroll */
+.chats-card::-webkit-scrollbar { width: 8px; }
+.chats-card::-webkit-scrollbar-track { background: transparent; }
+.chats-card::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 10px; }

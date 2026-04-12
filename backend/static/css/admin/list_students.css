@@ -1,0 +1,265 @@
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    /* Fondo exacto al del dashboard */
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    color: #1e293b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 900px; /* Un poco más ancho para que la tabla respire */
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.6rem;
+    margin-bottom: 25px;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+/* Tarjeta Efecto Cristal (Glassmorphism) */
+.students-card {
+    background: rgba(255, 255, 255, 0.638); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px); 
+    border: 1px solid rgba(255, 255, 255, 0.7); 
+    border-radius: 20px; /* Bordes más redondeados */
+    padding: 0; /* Quitamos el padding para que la tabla llegue a los bordes */
+    max-height: 450px;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Animación de entrada */
+@keyframes scaleUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* --- ESTILOS DE LA TABLA --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 18px 25px;
+    /* Aumentamos la opacidad a 0.12 para que la línea se vea nítida y elegante */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12); 
+    vertical-align: middle;
+}
+
+/* Cabecera completamente fija y con más contraste */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+/* Cabecera oscura para máximo contraste (Ancla visual) */
+th {
+    font-weight: 600;
+    color: #ffffff; /* Texto en blanco */
+    background: #1e293b; /* Azul pizarra muy oscuro y elegante */
+    /* Si prefieres el azul marino de tu diseño original puedes usar: background: #0f2a55; */
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra un poco más marcada */
+    letter-spacing: 0.5px; /* Separamos un pelín las letras para mejorar legibilidad en fondos oscuros */
+}
+
+/* Efecto Cebra (Filas pares con un fondo muy suave) */
+tbody tr:nth-child(even) {
+    background: rgba(241, 245, 249, 0.6); 
+}
+
+/* Efecto hover más notable */
+tbody tr {
+    transition: background 0.2s ease;
+}
+
+tbody tr:hover {
+    background: #e2e8f0; /* Gris un poquito más oscuro al pasar el ratón */
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+.student-name {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+/* --- BOTONES DE ACCIÓN --- */
+.action-container, td > form, td > a {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-delete {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #dc2626; /* Rojo sólido moderno */
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(220, 38, 38, 0.3);
+    background: #ef4444;
+}
+
+.btn-view {
+    display: inline-block;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: #2563eb; /* Azul primary sólido */
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+    background: #3b82f6;
+}
+
+/* --- NOTIFICACIONES (BADGES) --- */
+.badge-pending {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+    animation: pulse 2s infinite; 
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.badge-done {
+    background: #10b981; /* Verde esmeralda para el '✓ Up to date' */
+    color: white;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Animación de latido */
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 6px 15px rgba(245, 158, 11, 0.5); }
+    100% { transform: scale(1); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
+}
+
+/* --- ENLACE DE VUELTA --- */
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 20px; /* Área para hacer click más grande */
+    color: #475569;
+    font-size: 1.15rem; /* Letra visiblemente más grande */
+    font-weight: 700; /* Negrita fuerte */
+    text-decoration: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03); /* Fondo súper sutil por defecto */
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0f172a; /* Texto más oscuro */
+    background: rgba(0, 0, 0, 0.08); /* Fondo un poquito más marcado */
+    transform: translateX(-4px); /* Se mueve un poquito hacia la flecha */
+}
+
+/* --- SCROLL PERSONALIZADO (Adaptado a tema claro) --- */
+.students-card::-webkit-scrollbar {
+    width: 8px;
+}
+
+.students-card::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 10px;
+}
+
+.students-card::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.5); /* Gris azulado sutil */
+    border-radius: 10px;
+}
+
+.students-card::-webkit-scrollbar-thumb:hover {
+    background: rgba(100, 116, 139, 0.8);
+}
+
+.students-card {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.5) rgba(0, 0, 0, 0.03);
+}
+
+/* --- FOOTER COPYRIGHT --- */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* --- ESTADO VACÍO (EMPTY STATE) CON TEXTO REFEDIDO --- */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 20px; /* Caja cuadrada/rectangular bien proporcionada */
+    text-align: center;
+    color: #94a3b8; /* Gris azulado suave */
+}
+
+.empty-icon-text {
+    font-size: 4rem; /* Icono grande */
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.empty-state p {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0;
+    color: #64748b;
+}

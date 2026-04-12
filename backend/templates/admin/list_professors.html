@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Professors List</title>
+        <link rel="stylesheet" href="/static/css/admin/list_professors.css">
+        <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+    </head>
+    <body>
+
+        <div class="page-container">
+            <h1>Professors</h1>
+
+            <div class="professors-card">
+                {% if professors %}
+                <table class="professors-table">
+                    <thead>
+                        <tr>
+                            <th>Professor</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for professor in professors %}
+                        <tr>
+                            <td class="professor-name">
+                                {{ professor.name }} {{ professor.surname }}
+                            </td>
+                            <td>
+                                <form action="/admin/delete-professor/{{ professor.id }}" method="post">
+                                    <button class="btn-delete" type="submit">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                    <div class="empty-state">
+                        <span class="empty-icon-text">👨‍🏫</span>
+                        <p>Professors not found.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <a href="/dashboard-admin" class="back-link">← Back to dashboard</a>
+        </div>
+    </body>
+</html>

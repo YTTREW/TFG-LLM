@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/static/css/auth/edit_profile.css">
+    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Edit Profile</h1>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" action="/edit-profile">
+            <div class="field-group">
+                <label for="new_username">Username</label>
+                <input type="text" id="new_username" name="new_username" value="{{ user.username }}" required>
+            </div>
+
+            <div class="field-group">
+                <label for="new_password">New Password</label>
+                <input type="password" id="new_password" name="new_password" placeholder="Leave blank to keep current">
+            </div>
+
+            <button type="submit" class="btn-primary">Save Changes</button>
+        </form>
+
+        <a href="{{ back_url }}" class="back-link">← {{ back_text }}</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    color: #1e293b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-container {
+    width: 100%;
+    max-width: 1000px; /* Un poco más ancho porque hay muchas columnas */
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.6rem;
+    margin-bottom: 25px;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+/* Tarjeta Efecto Cristal (Glassmorphism) */
+.cases-card {
+    background: rgba(255, 255, 255, 0.638); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px); 
+    border: 1px solid rgba(255, 255, 255, 0.7); 
+    border-radius: 20px; 
+    padding: 0; 
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --- ESTILOS DE LA TABLA --- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12); 
+    vertical-align: middle;
+}
+
+/* Cabecera oscura (Ancla visual) */
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+th {
+    font-weight: 600;
+    color: #ffffff; 
+    background: #1e293b; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+    letter-spacing: 0.5px; 
+}
+
+/* Efecto Cebra y Hover */
+tbody tr:nth-child(even) { background: rgba(241, 245, 249, 0.6); }
+tbody tr { transition: background 0.2s ease; }
+tbody tr:hover { background: #e2e8f0; }
+tr:last-child td { border-bottom: none; }
+
+/* Textos específicos */
+.patient-name {
+    font-weight: 600;
+    color: #0f172a;
+    font-size: 1.1rem;
+}
+
+.deadline-text {
+    font-size: 0.95rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+/* --- BADGES (Etiquetas para Yes/No) --- */
+.badge-yes {
+    background: #dcfce7; /* Verde clarito */
+    color: #166534; /* Texto verde oscuro */
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.badge-no {
+    background: #fee2e2; /* Rojo clarito */
+    color: #991b1b; /* Texto rojo oscuro */
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+/* --- BOTONES DE ACCIÓN --- */
+.action-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.action-container a {
+    text-decoration: none;
+}
+
+.btn-edit {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb; 
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+    background: #3b82f6;
+}
+
+.btn-delete {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #dc2626; 
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-delete:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(220, 38, 38, 0.3);
+    background: #ef4444;
+}
+
+/* --- ENLACE DE VUELTA --- */
+.back-link {
+    display: block; 
+    width: fit-content; 
+    margin: 25px auto 0 auto; 
+    padding: 10px 20px; 
+    color: #475569;
+    font-size: 1.15rem; 
+    font-weight: 700; 
+    text-decoration: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03); 
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0f172a; 
+    background: rgba(0, 0, 0, 0.08); 
+    transform: translateX(-4px); 
+}
+
+/* --- ESTADO VACÍO (EMPTY STATE) --- */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 90px 20px; 
+    text-align: center;
+    color: #94a3b8; 
+}
+
+.empty-icon-text {
+    font-size: 4rem; 
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.empty-state p {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 0;
+    color: #64748b;
+}
+
+/* Animaciones */
+@keyframes scaleUpFade {
+    from { opacity: 0; transform: translateY(30px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Scroll */
+.cases-card::-webkit-scrollbar { width: 8px; }
+.cases-card::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.03); border-radius: 10px; }
+.cases-card::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 10px; }
+.cases-card::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.8); }
+.cases-card { scrollbar-width: thin; scrollbar-color: rgba(148, 163, 184, 0.5) rgba(0, 0, 0, 0.03); }
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}

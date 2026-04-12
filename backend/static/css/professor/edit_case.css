@@ -1,0 +1,177 @@
+/* Reset & Base */
+* { 
+    box-sizing: border-box; 
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; 
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    color: #1e293b; 
+    padding: 20px;
+}
+
+/* Tarjeta Efecto Cristal (Glassmorphism) */
+.form-container {
+    background: rgba(255, 255, 255, 0.638);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    padding: 45px 40px; 
+    border-radius: 20px;
+    width: 100%; 
+    max-width: 450px; 
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+h1 { 
+    margin-top: 0; 
+    margin-bottom: 8px; 
+    color: #0f172a; 
+    font-size: 2.2rem; 
+    letter-spacing: -0.5px; 
+}
+
+p { 
+    color: #475569; 
+    margin-bottom: 30px; 
+    font-size: 1.1rem; 
+}
+
+p strong {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+form { 
+    display: flex; 
+    flex-direction: column; 
+    text-align: left; /* Alineamos las etiquetas a la izquierda */
+}
+
+/* Etiquetas de formulario */
+label[for="deadline"] {
+    display: block;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+/* Input de fecha */
+input[type="date"] {
+    width: 100%;
+    padding: 14px 16px; 
+    border-radius: 12px; 
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    background: rgba(255, 255, 255, 0.9); 
+    font-size: 1rem;
+    color: #0f172a; 
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: all 0.2s ease;
+    outline: none;
+    font-family: inherit;
+}
+
+input[type="date"]:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background: #ffffff;
+}
+
+/* Contenedores de Checkboxes */
+.checkbox-container {
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.6); 
+    padding: 14px 16px; 
+    border-radius: 12px;
+    border: 2px solid rgba(226, 232, 240, 0.6);
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+}
+
+.checkbox-container:hover {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.checkbox-container input[type="checkbox"] { 
+    width: 20px; 
+    height: 20px; 
+    cursor: pointer; 
+    accent-color: #2563eb; 
+}
+
+.checkbox-container label { 
+    font-weight: 600; 
+    cursor: pointer; 
+    user-select: none; 
+    color: #1e293b;
+}
+
+/* Botón principal */
+.btn-primary {
+    width: 100%;
+    margin-top: 15px;
+    padding: 16px; 
+    border: none; 
+    border-radius: 12px;
+    background: #2563eb;
+    color: white; 
+    font-weight: 600; 
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover { 
+    transform: translateY(-3px); 
+    box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4); 
+    background: #3b82f6;
+}
+
+/* Enlace de volver centrado */
+.back-link {
+    display: block; 
+    width: fit-content; 
+    margin: 25px auto 0 auto; 
+    padding: 10px 20px; 
+    color: #475569;
+    font-size: 1.1rem; 
+    font-weight: 700; 
+    text-decoration: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03); 
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0f172a; 
+    background: rgba(0, 0, 0, 0.08); 
+    transform: translateX(-4px); 
+}
+
+/* Animaciones */
+@keyframes scaleUpFade {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}

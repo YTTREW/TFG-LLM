@@ -1,42 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Create Clinical Case</title>
-    <link rel="stylesheet" href="/static/css/create_case.css"> 
-    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Create Clinical Case</title>
+        <link rel="stylesheet" href="/static/css/professor/create_case.css"> 
+        <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+    </head>
+    <body>
+        <div class="form-container">
+            <h1>New Patient Profile</h1>
+            <p>Define the psychological profile for the simulation</p>
 
-<div class="form-container">
-    <h1>New Patient Profile</h1>
-    <p>Define the psychological profile for the simulation</p>
+            <form method="post" action="/professor/create-case">
+                <input type="text" name="patient_name" placeholder="Patient's Name (e.g., Deidre)" required>
+                
+                <input type="number" name="age" placeholder="Age (e.g., 24)" required min="5" max="99">
 
-    <form method="post" action="/professor/create-case">
-        <input type="text" name="nombre_paciente" placeholder="Patient's Name (e.g., Deidre)" required>
-        
-        <input type="number" name="edad" placeholder="Age (e.g., 24)" required min="5" max="99">
+                <textarea name="problem_description" placeholder="Describe the psychological issue... (e.g., Deidre suffers from severe social anxiety. She recently got promoted and struggles to speak in team meetings, experiencing palpitations and sweating.)" required rows="5"></textarea>
 
-        <textarea name="problema_descripcion" placeholder="Describe the psychological issue... (e.g., Deidre suffers from severe social anxiety. She recently got promoted and struggles to speak in team meetings, experiencing palpitations and sweating.)" required rows="5"></textarea>
+                <div class="input-group">
+                    <label for="deadline">Deadline</label>
+                    <input type="date" id="deadline" name="deadline">
+                </div>
 
-        <label for="fecha_entrega">Deadline</label>
-        <input type="date" id="fecha_entrega" name="fecha_entrega" style="width: 100%; margin-bottom: 15px;">
+                <div class="checkbox-container">
+                    <input type="checkbox" name="is_evaluable" value="true" id="evaluable">
+                    <label for="evaluable">This case is Evaluable</label>
+                </div>
 
-        <div class="checkbox-container">
-            <input type="checkbox" name="es_evaluable" value="true" id="evaluable">
-            <label for="evaluable">This case is Evaluable</label>
+                <div class="checkbox-container">
+                    <input type="checkbox" name="is_visible" value="true" id="visible" checked>
+                    <label for="visible">Visible to students</label>
+                </div>
+
+                <button type="submit" class="btn-primary">Save Patient</button>
+            </form>
+
+            <a href="/dashboard-professor" class="back-link">← Back to dashboard</a>
         </div>
-
-        <div class="checkbox-container" style="margin-top: 10px;">
-            <input type="checkbox" name="visible" value="true" id="visible" checked>
-            <label for="visible">Visible to students</label>
-        </div>
-
-        <button type="submit" class="btn-primary" style="margin-top: 20px;">Save Patient</button>
-    </form>
-
-    <a href="/dashboard-profesor" class="back-link">← Back to Dashboard</a>
-</div>
-
-</body>
+    </body>
 </html>

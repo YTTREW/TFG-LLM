@@ -1,0 +1,181 @@
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fondo (Mismo tema claro) */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #1e293b;
+    position: relative;
+    padding-bottom: 60px; /* espacio para el footer */
+}
+
+/* Contenedor principal (Efecto Cristal) */
+.login-container {
+    background: rgba(255, 255, 255, 0.638);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    padding: 45px 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Título */
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+/* Formulario con Flexbox */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    color: #0f172a;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+/* Placeholder */
+input::placeholder {
+    color: #475569;
+    font-weight: 600;
+}
+
+input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background: #ffffff;
+}
+
+/* Botón principal (Sign up) */
+button {
+    width: 100%;
+    padding: 16px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+    background: #3b82f6;
+}
+
+/* Enlace de volver al login */
+.register-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.register-container a {
+    color: #475569;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.register-container a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+/* Mensaje de error (Tema claro) */
+.error-message {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+    padding: 12px 15px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Animaciones */
+@keyframes scaleUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Enlace de volver al login (Estilo consistente) */
+/* Enlace de volver al login (Estilo consistente y CENTRADO) */
+.back-link {
+    display: block; /* Cambiamos a block... */
+    width: fit-content; /* ...ajustamos al tamaño del texto... */
+    margin: 25px auto 0 auto; /* ...y el 'auto' a los lados hace la magia de centrarlo */
+    
+    padding: 10px 20px; 
+    color: #475569;
+    font-size: 1.15rem; 
+    font-weight: 700; 
+    text-decoration: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03); 
+    transition: all 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0f172a; 
+    background: rgba(0, 0, 0, 0.08); 
+    transform: translateX(-4px); 
+}

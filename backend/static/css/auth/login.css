@@ -1,0 +1,220 @@
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Fondo (Mismo tema claro que el resto de la app) */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #1e293b;
+    position: relative;
+    padding-bottom: 60px; /* espacio para el footer */
+}
+
+/* Contenedor login (Efecto Cristal) */
+.login-container {
+    background: rgba(255, 255, 255, 0.638);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    padding: 45px 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Título */
+h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    color: #0f172a;
+    letter-spacing: -0.5px;
+}
+
+/* Formularios estructurados con Flexbox */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Magia: Ocultamos los <br> del HTML para que Flexbox controle el espacio */
+form br {
+    display: none;
+}
+
+/* Inputs */
+input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    background: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    color: #0f172a; /* Texto escrito casi negro para máximo contraste */
+    font-weight: 600;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+/* Placeholder oscuro y legible */
+input::placeholder {
+    color: #475569;
+    font-weight: 600;
+}
+
+input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    background: #ffffff;
+}
+
+/* Botones genéricos */
+button {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Botón principal (Sign in) */
+form[action="/login"] button {
+    border: none;
+    background: #2563eb;
+    color: white;
+}
+
+form[action="/login"] button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+    background: #3b82f6;
+}
+
+/* Separador entre botones */
+.register-container {
+    margin-top: 20px;
+}
+
+/* Botón secundario (Sign up) */
+form[action="/register"] button {
+    background: transparent;
+    border: 2px solid #2563eb; /* Borde azul para que no se pierda */
+    color: #2563eb;
+}
+
+form[action="/register"] button:hover {
+    background: #eff6ff; /* Fondo azul muy muy clarito al pasar el ratón */
+    transform: translateY(-2px);
+}
+
+/* Mensaje de error (Tema claro) */
+.error-message {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+    padding: 12px 15px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}
+
+/* Animaciones */
+@keyframes scaleUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* --- EXTRA UX/UI TWEAKS --- */
+
+/* 1. Logo */
+.login-logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%; /* Lo hace redondo */
+    object-fit: cover;
+    margin: 0 auto 10px auto;
+    display: block;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 2. Forgot Password */
+.forgot-password {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: -10px; /* Lo acerca un poco al input del password */
+    margin-bottom: 5px;
+    transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+    color: #1e3a8a;
+    text-decoration: underline;
+}
+
+/* 3. Separador (Divider) */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0 5px 0; /* Espaciado ajustado */
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Las líneas a los lados del texto */
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(100, 116, 139, 0.3);
+}
+
+.divider::before {
+    margin-right: 15px;
+}
+
+.divider::after {
+    margin-left: 15px;
+}

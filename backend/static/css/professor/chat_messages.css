@@ -1,0 +1,200 @@
+/* Reset & Base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+    color: #1e293b;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 850px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2.4rem;
+    color: #0f172a;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #475569;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* --- TARJETA DE EVALUACIÓN (CRISTAL) --- */
+.grade-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.grade-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.grade-form label {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.grade-form input {
+    width: 90px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    font-size: 1.1rem;
+    text-align: center;
+    font-weight: 700;
+    color: #2563eb;
+    outline: none;
+}
+
+.grade-form textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    font-size: 0.95rem;
+    min-height: 100px;
+    font-family: inherit;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.grade-form textarea:focus, .grade-form input:focus {
+    border-color: #3b82f6;
+    background: white;
+}
+
+.btn-save {
+    align-self: flex-end;
+    background: #2563eb;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
+}
+
+/* --- CAJA DE MENSAJES --- */
+.messages-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.message {
+    max-width: 80%;
+    padding: 15px 20px;
+    border-radius: 18px;
+    line-height: 1.5;
+    position: relative;
+    animation: fadeIn 0.4s ease-out;
+}
+
+.message-role {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    letter-spacing: 0.5px;
+}
+
+/* Paciente (Izquierda) */
+.message.assistant {
+    align-self: flex-start;
+    background: white;
+    color: #1e293b;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.message.assistant .message-role { color: #64748b; }
+
+/* Estudiante (Derecha) */
+.message.user {
+    align-self: flex-end;
+    background: #2563eb;
+    color: white;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
+}
+
+.message.user .message-role { color: rgba(255,255,255,0.8); }
+
+/* Back link */
+.back-link {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 0 auto;
+    padding: 10px 20px;
+    color: #475569;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    transition: 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.08);
+    transform: translateX(-4px);
+}
+
+/* Scrollbar */
+.messages-box::-webkit-scrollbar { width: 6px; }
+.messages-box::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Footer copyright */
+body::after {
+    content: "© 2026 CognitiveLab. All rights reserved.";
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 14px;
+    color: #64748b;
+}

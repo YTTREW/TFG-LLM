@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Case Settings</title>
-    <link rel="stylesheet" href="/static/css/create_case.css"> 
+    <link rel="stylesheet" href="/static/css/professor/edit_case.css"> 
     <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
 </head>
 <body>
 
 <div class="form-container">
     <h1>Edit Settings</h1>
-    <p>Patient: <strong>{{ caso.nombre_paciente }}</strong> ({{ caso.edad }} years old)</p>
+    <p>Patient: <strong>{{ case.patient_name }}</strong> ({{ case.age }} years old)</p>
 
-    <form method="post" action="/professor/edit-case/{{ caso.id }}">
+    <form method="post" action="/professor/edit-case/{{ case.id }}">
         
-        <label for="fecha_entrega">Deadline</label>
-        <input type="date" id="fecha_entrega" name="fecha_entrega" style="width: 100%; margin-bottom: 15px;" value="{{ caso.fecha_entrega if caso.fecha_entrega else '' }}">
+        <label for="deadline">Deadline</label>
+        <input type="date" id="deadline" name="deadline" style="width: 100%; margin-bottom: 15px;" value="{{ case.deadline if case.deadline else '' }}">
 
         <div class="checkbox-container">
-            <input type="checkbox" name="es_evaluable" value="true" id="evaluable" {% if caso.es_evaluable %}checked{% endif %}>
+            <input type="checkbox" name="is_evaluable" value="true" id="evaluable" {% if case.is_evaluable %}checked{% endif %}>
             <label for="evaluable">This case is Evaluable</label>
         </div>
 
         <div class="checkbox-container" style="margin-top: 10px;">
-            <input type="checkbox" name="visible" value="true" id="visible" {% if caso.visible %}checked{% endif %}>
+            <input type="checkbox" name="is_visible" value="true" id="visible" {% if case.is_visible %}checked{% endif %}>
             <label for="visible">Visible to students</label>
         </div>
 
