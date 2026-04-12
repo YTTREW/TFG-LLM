@@ -1,8 +1,8 @@
 import requests
 import streamlit as st
 
-BASE_URL = "http://localhost:8000/api/chats" # URL donde esta alojada la API
-SESSION = requests.Session() # Sesión para mantener conexiones
+BASE_URL = "http://localhost:8000/api/chats"
+SESSION = requests.Session() 
 
 #  ---------- Procesa Token ----------
 def auth_headers():
@@ -24,10 +24,9 @@ def get_cases():
 
 # ---------- Obtener lista de chats ----------
 def get_chats():
-    # FastAPI requiere la barra al final si la ruta es "/"
     url = f"{BASE_URL}/" 
     res = requests.get(url, headers=auth_headers())
-    res.raise_for_status()  # Esto lanza el 401 si algo falla
+    res.raise_for_status()
     return res.json()
 
 # ---------- Enviar chat al profesor ----------
@@ -38,12 +37,12 @@ def submit_chat(chat_id: int):
     return res.json()
 
 # ---------- MODIFICADO: Crear nuevo chat para un caso específico ----------
-def create_chat(caso_id: int):
+def create_chat(clinical_case_id: int):
     url = f"{BASE_URL}/"
     res = requests.post(
         url, 
         headers={**auth_headers(), "Content-Type": "application/json"},
-        json={"caso_id": caso_id} # Enviamos el ID del caso al backend
+        json={"clinical_case_id": clinical_case_id} 
     )
     res.raise_for_status()
     return res.json()
@@ -61,8 +60,8 @@ def send_message(chat_id: int, content: str):
     res = requests.post(
         url,
         headers={**auth_headers(), "Content-Type": "application/json"},
-        json={"content": content}  # Solo enviamos el texto
-    )
+        json={"content": content} 
+    ) 
     res.raise_for_status()
     return res.json() 
 

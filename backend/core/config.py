@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 
-# Carga las variables del .env
 load_dotenv()
 
 # Variables de Base de Datos

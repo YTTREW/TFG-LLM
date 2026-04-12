@@ -4,21 +4,19 @@ from pydantic import BaseModel
 from typing import List
 
 from backend.core.database import get_db
-from backend.models import Estudiante, Chat, Message, SessionToken, CasoClinico
+from backend.models import Student, Chat, Message, SessionToken, ClinicalCase
 from backend.services.llm_service import LLMService
 
 router = APIRouter(prefix="/api/chats", tags=["API de Chats"])
 
-# === AQUÍ ESTÁ LA MAGIA: CREAMOS LA INSTANCIA DE LA IA A NIVEL GLOBAL ===
 llm_model = LLMService()
 
 class MessageCreate(BaseModel):
     content: str
 
 class ChatCreate(BaseModel):
-    caso_id: int
+    clinical_case_id: int
 
-# --- FUNCIONES DE AUTENTICACIÓN ---
 def get_current_student(
     authorization: str = Header(None),
     db: Session = Depends(get_db)
@@ -31,81 +29,99 @@ def get_current_student(
     if not session:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    student = db.query(Estudiante).filter_by(username=session.username).first()
+    student = db.query(Student).filter_by(username=session.username).first()
     if not student:
         raise HTTPException(status_code=401, detail="User not found")
 
     return student
 
-# --- ENDPOINTS ---
+############################################
+#                                          #
+# ENDPOINTS DE CHATS                       #
+#                                          #
+############################################
 
+# Endpoint para obtener todos los casos clínicos disponibles
 @router.get("/cases")
-def get_cases(db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    casos = db.query(CasoClinico).filter(CasoClinico.visible == True).all()
+def get_cases(db: Session = Depends(get_db), student: Student = Depends(get_current_student)):
+    cases = db.query(ClinicalCase).filter(ClinicalCase.is_visible == True).all()
 
-    resultado = []
-    for caso in casos:
-        resultado.append({
-            "id": caso.id,
-            "nombre_paciente": caso.nombre_paciente,
-            "es_evaluable": caso.es_evaluable,
-            "fecha_entrega": caso.fecha_entrega.isoformat() if caso.fecha_entrega else None
+    result = []
+    for case in cases:
+        result.append({
+            "id": case.id,
+            "patient_name": case.patient_name,
+            "is_evaluable": case.is_evaluable,
+            "delivery_date": case.deadline.isoformat() if case.deadline else None
         })
-    return resultado
+    return result
 
+# Endpoint para obtener todos los chats del estudiante
 @router.get("/")
-def get_chats(db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    chats = db.query(Chat).filter_by(estudiante_id=student.id).order_by(Chat.created_at.desc()).all()
-    return [{"id": chat.id, "title": chat.title, "caso_id": chat.caso_id, "created_at": chat.created_at, "enviado": chat.enviado, "grade": chat.grade, "feedback": chat.feedback} for chat in chats]
+def get_chats(db: Session = Depends(get_db), student: Student = Depends(get_current_student)):
+    chats = db.query(Chat).filter_by(student_id=student.id).order_by(Chat.created_at.desc()).all()
+    return [
+        {
+            "id": chat.id, 
+            "title": chat.title,
+            "clinical_case_id": chat.clinical_case_id,
+            "created_at": chat.created_at, 
+            "is_submitted": chat.is_submitted, 
+            "grade": chat.grade, 
+            "feedback": chat.feedback
+        } for chat in chats
+    ]
 
+# Endpoint para marcar un chat como enviado
 @router.post("/{chat_id}/submit")
-def submit_chat(chat_id: int, db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    chat_a_enviar = db.query(Chat).filter(Chat.id == chat_id, Chat.estudiante_id == student.id).first()
-    if not chat_a_enviar:
+def submit_chat(chat_id: int, db: Session = Depends(get_db), student: Student = Depends(get_current_student)):
+    chat_to_submit = db.query(Chat).filter(Chat.id == chat_id, Chat.student_id == student.id).first()
+
+    if not chat_to_submit:
         raise HTTPException(status_code=404, detail="Chat not found")
 
-    # 2. MAGIA: Buscamos TODOS los demás chats de este mismo caso y los desmarcamos (enviado = False)
     db.query(Chat).filter(
-        Chat.estudiante_id == student.id,
-        Chat.caso_id == chat_a_enviar.caso_id,
+        Chat.student_id == student.id,
+        Chat.clinical_case_id == chat_to_submit.clinical_case_id,
         Chat.id != chat_id 
-    ).update({"enviado": False})
+    ).update({"is_submitted": False})
 
-    chat_a_enviar.enviado = True
+    chat_to_submit.is_submitted = True
     db.commit()
 
     return {"message": "Chat submitted successfully"}
 
 
-
-
+# Endpoint para crear un nuevo chat basado en un caso clínico específico
 @router.post("/")
-def create_chat(chat_data: ChatCreate, db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    caso = db.query(CasoClinico).filter_by(id=chat_data.caso_id).first()
-    if not caso:
+def create_chat(chat_data: ChatCreate, db: Session = Depends(get_db), student: Student = Depends(get_current_student)):
+    clinical_case = db.query(ClinicalCase).filter_by(id=chat_data.clinical_case_id).first()
+    if not clinical_case:
         raise HTTPException(status_code=404, detail="Caso clínico no encontrado")
 
-    prefijo = "Evaluable: " if caso.es_evaluable else "Simulación: "
-    titulo_chat = f"{prefijo}{caso.nombre_paciente}"
+    prefix = "Evaluable: " if clinical_case.is_evaluable else "Simulation: "
+    chat_title = f"{prefix}{clinical_case.patient_name}"
 
-    nuevo_chat = Chat(estudiante_id=student.id, caso_id=caso.id, title=titulo_chat)
-    db.add(nuevo_chat)
+    new_chat = Chat(student_id=student.id, clinical_case_id=clinical_case.id, title=chat_title)
+    db.add(new_chat)
     db.commit()
-    db.refresh(nuevo_chat)
+    db.refresh(new_chat)
 
-    return {"id": nuevo_chat.id, "title": nuevo_chat.title, "caso_id": nuevo_chat.caso_id}
+    return {"id": new_chat.id, "title": new_chat.title, "clinical_case_id": new_chat.clinical_case_id}
 
+# Endpoint para obtener los mensajes de un chat específico
 @router.get("/{chat_id}")
-def get_chat_messages(chat_id: int, db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.estudiante_id == student.id).first()
+def get_chat_messages(chat_id: int, db: Session = Depends(get_db), student: Student = Depends(get_current_student)):
+    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.student_id == student.id).first()
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
 
     return [{"role": msg.role, "content": msg.content, "created_at": msg.created_at.isoformat()} for msg in chat.messages]
 
+# Endpoint para enviar un mensaje en un chat específico 
 @router.post("/{chat_id}/messages")
-def send_message(chat_id: int, message: MessageCreate, db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.estudiante_id == student.id).first()
+def send_message(chat_id: int, message: MessageCreate, db: Session = Depends(get_db), student: Student = Depends(get_current_student)):
+    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.student_id == student.id).first()
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
 
@@ -115,14 +131,13 @@ def send_message(chat_id: int, message: MessageCreate, db: Session = Depends(get
 
     chat_history = db.query(Message).filter(Message.chat_id == chat.id).order_by(Message.id.asc()).all()
     
-    caso = db.query(CasoClinico).filter(CasoClinico.id == chat.caso_id).first()
+    clinical_case = db.query(ClinicalCase).filter(ClinicalCase.id == chat.clinical_case_id).first()
 
-    # === AQUÍ USAMOS LA INSTANCIA GLOBAL ===
     ia_response_text = llm_model.get_response(
         chat_history=chat_history,
-        nombre_paciente=caso.nombre_paciente,
-        edad=caso.edad,
-        problema=caso.problema_descripcion
+        patient_name=clinical_case.patient_name,
+        age=clinical_case.age,
+        problem_description=clinical_case.problem_description
     )
 
     ia_msg = Message(chat_id=chat.id, role="assistant", content=ia_response_text)
@@ -131,9 +146,10 @@ def send_message(chat_id: int, message: MessageCreate, db: Session = Depends(get
 
     return {"role": ia_msg.role, "content": ia_msg.content, "created_at": ia_msg.created_at.isoformat()}
 
+# Endpoint para eliminar un chat específico
 @router.delete("/{chat_id}")
-def delete_chat(chat_id: int, db: Session = Depends(get_db), student: Estudiante = Depends(get_current_student)):
-    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.estudiante_id == student.id).first()
+def delete_chat(chat_id: int, db: Session = Depends(get_db), student: Student = Depends(get_current_student)):
+    chat = db.query(Chat).filter(Chat.id == chat_id, Chat.student_id == student.id).first()
     if not chat:
         raise HTTPException(status_code=404, detail="Chat not found")
 

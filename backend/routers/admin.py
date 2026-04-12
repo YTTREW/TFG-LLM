@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from httpcore import request
 
 from backend.core.database import SessionLocal
 from backend.core.security import get_password_hash
-from backend.models import Estudiante, Profesor
-
+from backend.models.users import Student, Professor
 router = APIRouter(tags=["Administrador"])
 templates = Jinja2Templates(directory="backend/templates")
 
@@ -14,6 +14,7 @@ templates = Jinja2Templates(directory="backend/templates")
 #       ENDPOINTS DE ADMINISTRADOR         #
 #                                          #
 ############################################
+
 # Endpoint GET para cargar dashboard del admin
 @router.get("/dashboard-admin", response_class=HTMLResponse)
 def dashboard_admin(request: Request):
@@ -24,7 +25,7 @@ def dashboard_admin(request: Request):
         return RedirectResponse("/login", status_code=303)
     
     return templates.TemplateResponse(
-        "dashboard_admin.html",
+        "admin/dashboard_admin.html",
         {"request": request, "username": request.session.get("user")}
     )
 
@@ -36,23 +37,23 @@ def list_students(request: Request):
         return RedirectResponse("/login", status_code=303)
 
     role = request.session.get("role")
-    if role not in ["profesor", "admin"]:
+    if role not in ["professor", "admin"]:
         return RedirectResponse("/login", status_code=303)
 
     db = SessionLocal()
     try:
-        students = db.query(Estudiante).all()
+        students = db.query(Student).all()
         for student in students:
             student.pending_count = sum(
                 1 for chat in student.chats 
-                if chat.enviado == True and chat.grade is None
+                if chat.is_submitted == True and chat.grade is None
             )
 
     finally:
         db.close()
 
     return templates.TemplateResponse(
-        "lista_estudiantes.html",
+        "admin/list_students.html",
         {
             "request": request,
             "students": students, 
@@ -69,7 +70,7 @@ def delete_student(student_id: int, request: Request):
 
     db = SessionLocal()
     try:
-        student = db.query(Estudiante).filter_by(id=student_id).first()
+        student = db.query(Student).filter_by(id=student_id).first()
         if student:
             db.delete(student)
             db.commit()
@@ -90,12 +91,12 @@ def list_professors(request: Request):
 
     db = SessionLocal()
     try:
-        professors = db.query(Profesor).all()
+        professors = db.query(Professor).all()
     finally:
         db.close()
 
     return templates.TemplateResponse(
-        "lista_profesores.html",
+        "admin/list_professors.html",
         {
             "request": request,
             "professors": professors,
@@ -112,7 +113,7 @@ def delete_professor(professor_id: int, request: Request):
 
     db = SessionLocal()
     try:
-        professor = db.query(Profesor).filter_by(id=professor_id).first()
+        professor = db.query(Professor).filter_by(id=professor_id).first()
         if professor:
             db.delete(professor)
             db.commit()
@@ -128,7 +129,7 @@ def create_user_form(request: Request):
         return RedirectResponse("/login", status_code=303)
 
     return templates.TemplateResponse(
-        "register_users.html",
+        "admin/register_users.html",
         {"request": request}
     )
 
@@ -136,8 +137,8 @@ def create_user_form(request: Request):
 @router.post("/admin/register")
 def create_user(
     request: Request,
-    nombre: str = Form(...),
-    apellidos: str = Form(...),
+    name: str = Form(...),
+    surname: str = Form(...),
     username: str = Form(...),
     password: str = Form(...),
     role: str = Form(...)
@@ -147,14 +148,14 @@ def create_user(
 
     db = SessionLocal()
     try:
-        existing_student = db.query(Estudiante).filter_by(username=username).first()
+        existing_student = db.query(Student).filter_by(username=username).first()
 
-        existing_professor = db.query(Profesor).filter_by(username=username).first()
+        existing_professor = db.query(Professor).filter_by(username=username).first()
 
         if existing_student or existing_professor:
             print("Username already exists")
             return templates.TemplateResponse(
-                "register_users.html",
+                "admin/register_users.html",
                 {
                     "request": request,
                     "error": "Username already exists"
@@ -164,25 +165,32 @@ def create_user(
 
         hashed_password = get_password_hash(password)
 
-        if role == "estudiante":
-            user = Estudiante(
+        if role == "student":
+            user = Student(
                 username=username,
                 password_hash=hashed_password,
-                nombre=nombre,
-                apellidos=apellidos,
-                role="estudiante"
+                name=name,
+                surname=surname,
+                role="student"
             )
 
-        elif role == "profesor":
-            user = Profesor(
+        elif role == "professor":
+            user = Professor(
                 username=username,
                 password_hash=hashed_password,
-                nombre=nombre,
-                apellidos=apellidos,
-                role="profesor"
+                name=name,
+                surname=surname,
+                role="professor"
             )
         else:
-            return {"error": "Invalid role"}
+            return templates.TemplateResponse(
+                "admin/register_users.html",
+                {
+                    "request": request,
+                    "error": "Invalid role selected"
+                },
+                status_code=400
+            )
 
         db.add(user)
         db.commit()

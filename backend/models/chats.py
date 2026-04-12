@@ -4,28 +4,26 @@ from datetime import datetime
 from backend.core.database import Base 
 
 
-class CasoClinico(Base):
-    __tablename__ = "casos_clinicos"
+class ClinicalCase(Base):
+    __tablename__ = "clinical_cases"
 
     id = Column(Integer, primary_key=True, index=True)
     
-    profesor_id = Column(Integer, ForeignKey("profesores.id", ondelete="CASCADE"), nullable=False)
-    
+    professor_id = Column(Integer, ForeignKey("professors.id", ondelete="CASCADE"), nullable=False)
 
-    nombre_paciente = Column(String, nullable=False)
-    edad = Column(Integer, nullable=False)
-    problema_descripcion = Column(Text, nullable=False) 
+    patient_name = Column(String, nullable=False)
+    age = Column(Integer, nullable=False)
+    problem_description = Column(Text, nullable=False) 
     
-    es_evaluable = Column(Boolean, default=False)
+    is_evaluable = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    visible = Column(Boolean, default=True) 
-    fecha_entrega = Column(Date, nullable=True) 
+    is_visible = Column(Boolean, default=True) 
+    deadline = Column(Date, nullable=True) 
 
     # Relaciones
-    profesor = relationship("Profesor", back_populates="casos")
-    chats = relationship("Chat", back_populates="caso", cascade="all, delete-orphan")
-
+    professor = relationship("Professor", back_populates="clinical_cases")
+    chats = relationship("Chat", back_populates="clinical_case", cascade="all, delete-orphan")
 
 class Chat(Base):
     __tablename__ = "chats"
@@ -33,22 +31,22 @@ class Chat(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     # Relación con Estudiante
-    estudiante_id = Column(
+    student_id = Column(
         Integer,
-        ForeignKey("estudiantes.id", ondelete="CASCADE"),
+        ForeignKey("students.id", ondelete="CASCADE"),
         nullable=False
     )
-    caso_id = Column(Integer, ForeignKey("casos_clinicos.id", ondelete="CASCADE"), nullable=False)
+    clinical_case_id = Column(Integer, ForeignKey("clinical_cases.id", ondelete="CASCADE"), nullable=False)
 
-    title = Column(String, default="Nuevo chat")
+    title = Column(String, default="New chat")
     created_at = Column(DateTime, default=datetime.utcnow)
     grade = Column(Float, nullable=True)
     feedback = Column(Text, nullable=True)
-    enviado = Column(Boolean, default=False)
-    feedback = Column(Text, nullable=True)
+    is_submitted = Column(Boolean, default=False)
 
     # Relaciones
-    caso = relationship("CasoClinico", back_populates="chats")
+    student = relationship("Student", back_populates="chats")
+    clinical_case = relationship("ClinicalCase", back_populates="chats")
     messages = relationship(
         "Message",
         back_populates="chat",
@@ -66,7 +64,7 @@ class Message(Base):
         nullable=False
     )
 
-    role = Column(String, nullable=False)  # "user" | "assistant"
+    role = Column(String, nullable=False) 
     content = Column(Text, nullable=False)
 
     created_at = Column(DateTime, default=datetime.utcnow)

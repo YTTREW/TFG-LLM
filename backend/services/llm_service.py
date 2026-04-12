@@ -1,13 +1,14 @@
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_ollama import ChatOllama
 
+# Prompt base para el LLM
 SYSTEM_PROMPT_TEMPLATE = """
 You are having a conversation that simulates a therapy session where a psychologist asks you a series of questions.
-You are playing the role of a patient named {nombre}, who is {edad} years old. 
-Your main psychological issue/background is: {problema}.
+You are playing the role of a patient named {patient_name}, who is {age} years old. 
+Your main psychological issue/background is: {problem_description}.
 
 This interaction must reflect how a real patient would naturally respond in a first therapy appointment. In real-life sessions, patients rarely provide a complete, structured, and coherent explanation of their thoughts, emotions, bodily sensations, and behaviours all at once. 
-When asked broad questions (e.g., "What brings you here today?"), give a brief and somewhat vague answer related to your issue ({problema}). Force the psychologist to ask follow-up questions to extract the details.
+When asked broad questions (e.g., "What brings you here today?"), give a brief and somewhat vague answer related to your issue ({problem_description}). Force the psychologist to ask follow-up questions to extract the details.
 
 Your responses should not sound like a case summary. Instead, they should feel slightly fragmented and spontaneous, as if you are thinking while speaking. It is natural to hesitate or struggle to find the right words. Specifically, you must struggle to link your physical sensations to your cognitive fears; describe your experience as confusing rather than perfectly analysed.
 
@@ -21,24 +22,20 @@ class LLMService:
     def __init__(self):
         self.llm = ChatOllama(model="llama3", temperature=0.7)
 
-    def get_response(self, chat_history, nombre_paciente: str, edad: int, problema: str) -> str:
-        # 1. Rellenamos la plantilla del prompt con los datos reales del caso clínico
-        prompt_personalizado = SYSTEM_PROMPT_TEMPLATE.format(
-            nombre=nombre_paciente,
-            edad=edad,
-            problema=problema
+    def get_response(self, chat_history, patient_name: str, age: int, problem_description: str) -> str:
+        custom_prompt = SYSTEM_PROMPT_TEMPLATE.format(
+            patient_name=patient_name,
+            age=age,
+            problem_description=problem_description
         )
         
-        # 2. Metemos el System Prompt siempre al principio
-        messages = [SystemMessage(content=prompt_personalizado)]
+        messages = [SystemMessage(content=custom_prompt)]
         
-        # 3. Añadimos el historial que viene de la base de datos
         for msg in chat_history:
             if msg.role == "user":
                 messages.append(HumanMessage(content=msg.content))
             else:
                 messages.append(AIMessage(content=msg.content))
         
-        # 4. Llamamos a la IA
         response = self.llm.invoke(messages)
         return response.content

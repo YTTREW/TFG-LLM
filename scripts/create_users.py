@@ -1,14 +1,14 @@
 from passlib.context import CryptContext
 from sqlalchemy import create_engine
 from backend.core.database import SessionLocal
-from backend.models.users import Administrador
+from backend.models.users import Administrator
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 engine = create_engine("postgresql://tfg_user:tfg_password@localhost:5432/tfg_db")
 db = SessionLocal()
 
-admin = Administrador(
+admin = Administrator(
     username="admin",
     password_hash=pwd_context.hash("admin1234"),
     name="Pedro",

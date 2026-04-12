@@ -1,10 +1,11 @@
+from aiohttp import request
 from fastapi import APIRouter, Request, Form, Header, HTTPException, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from backend.core.database import SessionLocal
 from backend.core.security import verify_password, get_password_hash
-from backend.models.users import Estudiante, Profesor, Administrador, SessionToken
+from backend.models.users import Student, Professor, Administrator, SessionToken
 
 import secrets
 
@@ -13,15 +14,15 @@ templates = Jinja2Templates(directory="backend/templates")
 
 # Verificar credenciales de usuario
 def authenticate_user(username: str, password: str, db):
-    profesor = db.query(Profesor).filter_by(username=username).first()
-    if profesor and verify_password(password, profesor.password_hash):
-        return "profesor"
+    professor = db.query(Professor).filter_by(username=username).first()
+    if professor and verify_password(password, professor.password_hash):
+        return "professor"
 
-    estudiante = db.query(Estudiante).filter_by(username=username).first()
-    if estudiante and verify_password(password, estudiante.password_hash):
-        return "estudiante"
+    student = db.query(Student).filter_by(username=username).first()
+    if student and verify_password(password, student.password_hash):
+        return "student"
     
-    admin = db.query(Administrador).filter_by(username=username).first()
+    admin = db.query(Administrator).filter_by(username=username).first()
     if admin and verify_password(password, admin.password_hash):
         return "admin"
 
@@ -40,7 +41,7 @@ def root():
 # Endpoint GET para mostrar la página de login 
 @router.get("/login", response_class=HTMLResponse)
 def login_page(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse("auth/login.html", {"request": request})
 
 # Endpoint POST para autenticar al usuario y cargar su dashboard
 @router.post("/login", response_class=HTMLResponse)
@@ -49,7 +50,7 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
     try:
         role = authenticate_user(username, password, db)
         if not role:
-            return templates.TemplateResponse("login.html", {
+            return templates.TemplateResponse("auth/login.html", {
                 "request": request,
                 "error": "Incorrect username or password",
                 "username": username  
@@ -64,7 +65,7 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
         db.add(SessionToken(token=token, username=username))
         db.commit()
 
-        if role == "estudiante":
+        if role == "student":
             return RedirectResponse(
                 url=f"http://localhost:8501?token={token}",
                 status_code=303
@@ -72,7 +73,7 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
         elif role == "admin":
             return RedirectResponse("/dashboard-admin", status_code=303)
         else:
-            return RedirectResponse("/dashboard-profesor", status_code=303)
+            return RedirectResponse("/dashboard-professor", status_code=303)
 
     finally:
         db.close()
@@ -86,36 +87,36 @@ def logout(request: Request):
 # Endpoint GET para cargar página de registro
 @router.get("/register", response_class=HTMLResponse)
 def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+    return templates.TemplateResponse("auth/register.html", {"request": request})
 
 # Endpoint POST para registrar un nuevo usuario
 @router.post("/register")
 def register_user(
-     request: Request,
+    request: Request,
     username: str = Form(...),
     password: str = Form(...),
-    nombre: str = Form(...),
-    apellidos: str = Form(...),
+    name: str = Form(...),
+    surname: str = Form(...),
 ):
     db = SessionLocal()
     try:
-        existing_user = db.query(Estudiante).filter_by(username=username).first()
+        existing_user = db.query(Student).filter_by(username=username).first()
         if existing_user:
-            return templates.TemplateResponse("register.html", {
+            return templates.TemplateResponse("auth/register.html", {
                 "request": request,
                 "error": "Username already exists."
             }, status_code=400)
         
         hashed = get_password_hash(password)
 
-        estudiante = Estudiante(
+        student = Student(
                 username=username,
                 password_hash=hashed,
-                nombre=nombre,
-                apellidos=apellidos,
-                role="estudiante"
+                name=name,
+                surname=surname,
+                role="student"
             )
-        db.add(estudiante)
+        db.add(student)
         db.commit()
     finally:
         db.close() 
@@ -126,22 +127,31 @@ def register_user(
 def edit_profile_form(request: Request):
     role = request.session.get("role")
 
-    if role not in ["profesor", "estudiante"]: 
+    if role not in ["professor", "student"]: 
         return RedirectResponse("/login")
     
     current_username = request.session.get("user")
-
-    if role == "profesor":
-        back_url = "/dashboard-profesor"
+    
+    # --- NUEVA LÓGICA PARA BUSCAR AL USUARIO ---
+    db = SessionLocal()
+    model = Professor if role == "professor" else Student
+    user_obj = db.query(model).filter_by(username=current_username).first()
+    db.close()
+    
+    if not user_obj:
+        return RedirectResponse("/login")
+    
+    if role == "professor":
+        back_url = "/dashboard-professor"
         back_text = "Back to Dashboard"
     else:
         token = request.session.get("token")
         back_url = f"http://localhost:8501?token={token}"
         back_text = "Back to Menu"
 
-    return templates.TemplateResponse("edit_profile.html", {
+    return templates.TemplateResponse("auth/edit_profile.html", {
         "request": request, 
-        "current_username": current_username,
+        "user": user_obj,
         "action_url": "/edit-profile",
         "back_url": back_url,
         "back_text": back_text
@@ -154,57 +164,57 @@ def edit_profile_post(
     new_password: str = Form(None)
 ):
     role = request.session.get("role")
-    if role not in ["profesor", "estudiante"]: 
+    if role not in ["professor", "student"]: 
         return RedirectResponse("/login", status_code=303)
     
     db = SessionLocal()
-    cambios_realizados = False  
+    new_data = False  
     
     try:
         current_username = request.session.get("user")
 
-        Modelo = Profesor if role == "profesor" else Estudiante
-        usuario = db.query(Modelo).filter_by(username=current_username).first()
+        model = Professor if role == "professor" else Student
+        user = db.query(model).filter_by(username=current_username).first()
         
-        if not usuario:
+        if not user:
             return RedirectResponse("/login", status_code=303)
 
         if new_username != current_username:
-            usuario_existente = db.query(Modelo).filter_by(username=new_username).first()
-            if usuario_existente:
-                if role == "profesor":
-                    back_url = "/dashboard-profesor"
+            existing_user = db.query(model).filter_by(username=new_username).first()
+            if existing_user:
+                if role == "professor":
+                    back_url = "/dashboard-professor"
                 else:
                     token = request.session.get("token")
                     back_url = f"http://localhost:8501?token={token}"
 
-                return templates.TemplateResponse("edit_profile.html", {
+                return templates.TemplateResponse("auth/edit_profile.html", {
                     "request": request, 
                     "current_username": current_username,
                     "error": "This username is already taken.",
                     "action_url": "/edit-profile",
                     "back_url": back_url,
-                    "back_text": "Back to Menu" if role == "estudiante" else "Back to Dashboard"
+                    "back_text": "Back to Menu" if role == "student" else "Back to Dashboard"
                 }, status_code=400)
             
-            usuario.username = new_username
+            user.username = new_username
             request.session["user"] = new_username
-            cambios_realizados = True  # 
+            new_data = True  
 
         if new_password and new_password.strip() != "":
-            usuario.password_hash = get_password_hash(new_password)
-            cambios_realizados = True  
+            user.password_hash = get_password_hash(new_password)
+            new_data = True  
             
         db.commit()
     finally:
         db.close()
 
-    if cambios_realizados:
+    if new_data:
         request.session.clear() 
         return RedirectResponse("/login", status_code=303)
     else:
-        if role == "profesor":
-            return RedirectResponse("/dashboard-profesor", status_code=303)
+        if role == "professor":
+            return RedirectResponse("/dashboard-professor", status_code=303)
         else:
             token = request.session.get("token")
             return RedirectResponse(f"http://localhost:8501?token={token}", status_code=303)

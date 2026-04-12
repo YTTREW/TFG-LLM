@@ -1,12 +1,12 @@
-from .users import Profesor, Estudiante, Administrador, SessionToken
-from .chats import Chat, Message, CasoClinico
+from .users import Professor, Student, Administrator, SessionToken
+from .chats import Chat, Message, ClinicalCase
 
 __all__ = [
-    "Profesor", 
-    "Estudiante", 
-    "Administrador", 
+    "Professor", 
+    "Student", 
+    "Administrator", 
     "SessionToken", 
     "Chat",
-    "CasoClinico", 
+    "ClinicalCase", 
     "Message"
 ]

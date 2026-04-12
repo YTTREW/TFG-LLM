@@ -3,35 +3,34 @@ from ..core.database import Base
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-class Profesor(Base):
-    __tablename__ = "profesores"
+class Professor(Base):
+    __tablename__ = "professors"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
     role = Column(String, default="profesor")
-    nombre = Column(String)
-    apellidos = Column(String)
-    casos = relationship("CasoClinico", back_populates="profesor", cascade="all, delete-orphan")
-    
-class Estudiante(Base):
-    __tablename__ = "estudiantes"
+    name = Column(String)
+    surname = Column(String)
+
+    # Relaciones
+    clinical_cases = relationship("ClinicalCase", back_populates="professor", cascade="all, delete-orphan")
+
+class Student(Base):
+    __tablename__ = "students"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     password_hash = Column(String, nullable=False)
     role = Column(String, default="estudiante")
-    nombre = Column(String)
-    apellidos = Column(String)
+    name = Column(String)
+    surname = Column(String)
 
-    chats = relationship(
-        "Chat",
-        backref="estudiante",
-        cascade="all, delete-orphan"
-    )
+    # Relaciones
+    chats = relationship("Chat", back_populates="student", cascade="all, delete-orphan")
 
-class Administrador(Base):
-    __tablename__ = "administradores"
+class Administrator(Base):
+    __tablename__ = "administrators"
 
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)

@@ -4,51 +4,96 @@ from datetime import datetime
 
 st.set_page_config(page_title="Chat Student", layout="wide")
 
-# Styles 
-st.markdown(
-    """
+# Inyectar CSS avanzado para coherencia visual total
+st.markdown("""
     <style>
-    /* App background with gradient */
+    /* 1. FONDO GLOBAL */
     .stApp {
-        background: linear-gradient(135deg, #0b1d3a, #0f2a55, #0d3b70);
-        color: white;  /* White text */
+        background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
     }
 
-    /* Sidebar */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(135deg, #0d2a50, #102f70, #1a3b90);
-        color: white;
+    /* 2. TÍTULOS PRINCIPALES (Forzamos el color oscuro sí o sí) */
+    div.block-container h1, 
+    div.block-container h2, 
+    div.block-container h3 {
+        color: #0f172a !important;
+        font-weight: 800 !important;
     }
 
-    /* Primary buttons */
-    button[kind="primary"] {
-        background-color: #1a3a5c;
-        color: white;
-        border-radius: 8px;
-        border: none;
+    /* 3. NOTA DE EVALUACIÓN (Grade) - Fondo verde claro, letra verde oscura */
+    div[data-testid="stAlert"] {
+        background-color: #dcfce7 !important;
+        border: 1px solid #16a34a !important;
+        border-radius: 10px !important;
+    }
+    div[data-testid="stAlert"] * {
+        color: #14532d !important;
+        font-weight: 700 !important;
     }
 
-    /* Text inputs */
-    .stTextInput>div>div>input {
-        background-color: #0f2a55;
-        color: white;
-        border: 1px solid #1a3a5c;
-        border-radius: 4px;
+    /* 4. EXPANDER DE FEEDBACK (Arreglo del fondo negro) */
+    /* La caja principal */
+    details[data-testid="stExpander"] {
+        background-color: #ffffff !important;
+        border: 2px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        overflow: hidden; /* Evita que el fondo sobresalga */
+    }
+    
+    /* La barra donde haces clic (Check feedback) */
+    details[data-testid="stExpander"] summary,
+    details[data-testid="stExpander"] summary p,
+    details[data-testid="stExpander"] summary span {
+        background-color: #f8fafc !important; /* Un gris muuuy clarito */
+        color: #0f172a !important;
+        font-weight: 700 !important;
+    }
+    
+    /* El área interior donde está el texto del feedback */
+    div[data-testid="stExpanderDetails"], 
+    div[data-testid="stExpanderDetails"] p {
+        background-color: #ffffff !important; /* Blanco puro */
+        color: #1e293b !important; /* Texto oscuro */
     }
 
-    /* Optional scrollbars */
-    ::-webkit-scrollbar {
-        width: 8px;
+    /* 5. SIDEBAR OSCURA */
+    section[data-testid="stSidebar"] {
+        background-color: #1e293b !important;
     }
-    ::-webkit-scrollbar-thumb {
-        background-color: #1a3a5c;
-        border-radius: 4px;
+    section[data-testid="stSidebar"] * {
+        color: #ffffff !important;
+    }
+    section[data-testid="stSidebar"] hr {
+        border-color: rgba(255,255,255,0.2) !important;
+    }
+
+    /* 6. CHAT BUBBLES - Burbujas blancas, texto oscuro */
+    div[data-testid="stChatMessage"] {
+        background-color: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 15px !important;
+    }
+    div[data-testid="stChatMessage"] * {
+        color: #0f172a !important;
+    }
+
+    /* 7. BOTONES PRINCIPALES */
+    .stButton>button {
+        background: #2563eb !important;
+        color: white !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
+    }
+
+    .footer-text {
+        text-align: center;
+        color: #475569;
+        font-size: 14px;
+        margin-top: 40px;
+        font-weight: 700;
     }
     </style>
-    """,
-    unsafe_allow_html=True
-)
-
+    """, unsafe_allow_html=True)
 # ---------- AUTH ----------
 if "token" not in st.session_state:
     token_param = st.query_params.get("token")
@@ -66,7 +111,6 @@ if "current_chat_id" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
 
 # ---------- SIDEBAR ----------
 
@@ -95,7 +139,7 @@ if "cases" not in st.session_state:
 # Use a 'refresh_chats' flag to force reload when needed
 if "chats" not in st.session_state or st.session_state.get("refresh_chats", False):
     st.session_state.chats = get_chats()
-    st.session_state.refresh_chats = False # Turn off flag after reload
+    st.session_state.refresh_chats = False 
 
 cases = st.session_state.cases
 chats = st.session_state.chats
@@ -104,17 +148,15 @@ if not cases:
     st.sidebar.info("There are no clinical cases available yet.")
 else:
     for case in cases:
-        # Note: 'es_evaluable', 'fecha_entrega', and 'nombre_paciente' are kept in Spanish 
-        # because they are the exact keys coming from the database/API response.
-        badge = "🔴 Evaluable" if case["es_evaluable"] else "🟢 Practice"
+        badge = "🔴 Evaluable" if case["is_evaluable"] else "🟢 Practice"
 
-        if case.get("fecha_entrega"):
-            parts = case["fecha_entrega"].split("-")
+        if case.get("deadline"):
+            parts = case["deadline"].split("-")
             deadline_str = f" | Deadline: {parts[2]}/{parts[1]}/{parts[0]}"
         else:
             deadline_str = ""
 
-        st.sidebar.markdown(f"### {case['nombre_paciente']} <span style='font-size:12px; color:#ccc;'>({badge}{deadline_str})</span>", unsafe_allow_html=True)
+        st.sidebar.markdown(f"### {case['patient_name']} <span style='font-size:12px; color:#ccc;'>({badge}{deadline_str})</span>", unsafe_allow_html=True)
         
         if st.sidebar.button("➕ New Simulation", key=f"new_chat_{case['id']}"):
             new_chat = create_chat(case["id"])
@@ -123,13 +165,12 @@ else:
             st.session_state.refresh_chats = True  
             st.rerun()
 
-        case_chats = [c for c in chats if c.get("caso_id") == case["id"]]
+        case_chats = [c for c in chats if c.get("clinical_case_id") == case["id"]]
         
         for chat in case_chats:
             col1, col2 = st.sidebar.columns([4, 1])
 
             try:
-                # Extract and format the chat creation date
                 date_obj = datetime.fromisoformat(chat["created_at"])
                 creation_date_str = date_obj.strftime("%d/%m/%Y")
             except:
@@ -137,15 +178,15 @@ else:
 
 # --- NUEVA LÓGICA DE ICONOS DE ESTADO ---
             if chat.get("grade") is not None:
-                status_prefix = "⭐ "  # Icono de nota puesta
+                status_prefix = "⭐ "  
                 status_label = " (Graded)"
             elif chat.get("enviado"):
-                status_prefix = "✅ "  # Enviado pero no corregido
+                status_prefix = "✅ "  
                 status_label = " (Submitted)"
             else:
-                status_prefix = "💬 "  # Chat en progreso
+                status_prefix = "💬 " 
                 status_label = ""
-            button_title = f"{chat['title']} ({creation_date_str})"
+            button_title = f"{status_prefix}{chat['title']} ({creation_date_str}){status_label}"
             
             with col1:
                 if st.button(button_title, key=f"open_{chat['id']}"):
@@ -168,7 +209,6 @@ else:
 
 # ---------- MAIN ----------
 
-# Dynamic logic for the "Virtual Patient: [Name]" title
 if st.session_state.current_chat_id is None:
     st.title("🧠 CognitiveLab")
     st.info("Choose a clinical case on the left to start a simulation.")
@@ -181,11 +221,11 @@ if current_chat:
     patient_name = title_parts[-1] if len(title_parts) > 1 else current_chat["title"]
 
 # 1. Buscamos a qué caso pertenece el chat actual
-    caso_id_actual = current_chat.get("caso_id")
+    current_case_id = current_chat.get("clinical_case_id")
     
     # 2. Comprobamos si ALGÚN chat de ESTE CASO ya está marcado como enviado
-    chats_del_mismo_caso = [c for c in st.session_state.chats if c.get("caso_id") == caso_id_actual]
-    chat_ya_enviado = next((c for c in chats_del_mismo_caso if c.get("enviado") == True), None)
+    chats_case = [c for c in st.session_state.chats if c.get("clinical_case_id") == current_case_id]
+    chat_submitted = next((c for c in chats_case if c.get("is_submitted") == True), None)
 
     col_titulo, col_boton = st.columns([3, 1])
     with col_titulo:
@@ -195,10 +235,10 @@ if current_chat:
         # Damos un poco de margen para alinear con el título
         st.write("") 
         st.write("")
-        if current_chat.get("enviado"):
+        if current_chat.get("is_submitted"):
             st.success("✅ Submitted for Evaluation")
             # CASO B: El alumno NO ha enviado este, pero SÍ ha enviado otro de este mismo paciente
-        elif chat_ya_enviado:
+        elif chat_submitted:
             st.info("🔒 Submitted in another chat")
         else:
             if st.button("📤 Submit to Professor", use_container_width=True):
@@ -220,15 +260,14 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
 
 # Input
-chat_bloqueado = current_chat.get("enviado", False) if current_chat else False
+chat_locked = current_chat.get("is_submitted", False) if current_chat else False
 
 # 2. Cambiamos el texto del input dependiendo de si está bloqueado o no
-texto_input = "🔒 Chat submitted for evaluation. You cannot send more messages." if chat_bloqueado else "Write your message..."
-user_input = st.chat_input(texto_input, disabled=chat_bloqueado)
+texto_input = "🔒 Chat submitted for evaluation. You cannot send more messages." if chat_locked else "Write your message..."
+user_input = st.chat_input(texto_input, disabled=chat_locked)
 
 if user_input:
     chat_id = st.session_state.current_chat_id
-
     st.session_state.messages.append({"role": "user", "content": user_input})
     with st.chat_message("user"):
         st.markdown(user_input)
