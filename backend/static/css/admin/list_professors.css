@@ -30,6 +30,31 @@ h1 {
     letter-spacing: -0.5px;
 }
 
+h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Separación entre el texto y el contador */
+}
+
+.table-toolbar {
+    display: flex;
+    justify-content: flex-end; /* Lo alinea a la derecha justo encima de la tabla */
+    width: 100%;
+    margin-bottom: 10px;
+    padding-right: 10px;
+}
+
+.badge-count {
+    background: rgba(255, 255, 255, 0.6);
+    color: #1e293b;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
 /* Tarjeta Efecto Cristal (Glassmorphism) */
 .professors-card {
     background: rgba(255, 255, 255, 0.638); 

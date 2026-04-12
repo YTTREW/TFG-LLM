@@ -9,7 +9,11 @@
     <body>
 
         <div class="page-container">
-            <h1>Professors</h1>
+            <h1>Professors List</h1>
+
+            <div class="table-toolbar">
+                <span class="badge-count">Total: {{ professors | length }}</span>
+            </div>
 
             <div class="professors-card">
                 {% if professors %}
