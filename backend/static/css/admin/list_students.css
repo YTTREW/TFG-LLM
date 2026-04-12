@@ -1,4 +1,3 @@
-/* Reset & Base */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,7 +7,6 @@
 
 body {
     min-height: 100vh;
-    /* Fondo exacto al del dashboard */
     background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
     color: #1e293b;
     display: flex;
@@ -18,7 +16,7 @@ body {
 
 .page-container {
     width: 100%;
-    max-width: 900px; /* Un poco más ancho para que la tabla respire */
+    max-width: 900px;
     padding: 20px;
     text-align: center;
 }
@@ -30,21 +28,19 @@ h1 {
     letter-spacing: -0.5px;
 }
 
-/* Tarjeta Efecto Cristal (Glassmorphism) */
 .students-card {
     background: rgba(255, 255, 255, 0.638); 
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px); 
     border: 1px solid rgba(255, 255, 255, 0.7); 
-    border-radius: 20px; /* Bordes más redondeados */
-    padding: 0; /* Quitamos el padding para que la tabla llegue a los bordes */
+    border-radius: 20px;
+    padding: 0; 
     max-height: 450px;
     overflow-y: auto;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Animación de entrada */
 @keyframes scaleUpFade {
     from {
         opacity: 0;
@@ -56,7 +52,6 @@ h1 {
     }
 }
 
-/* --- ESTILOS DE LA TABLA --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -65,48 +60,40 @@ table {
 
 th, td {
     padding: 18px 25px;
-    /* Aumentamos la opacidad a 0.12 para que la línea se vea nítida y elegante */
     border-bottom: 1px solid rgba(0, 0, 0, 0.12); 
     vertical-align: middle;
 }
 
-/* Cabecera completamente fija y con más contraste */
 thead {
     position: sticky;
     top: 0;
     z-index: 20;
 }
 
-/* Cabecera oscura para máximo contraste (Ancla visual) */
 th {
     font-weight: 600;
-    color: #ffffff; /* Texto en blanco */
-    background: #1e293b; /* Azul pizarra muy oscuro y elegante */
-    /* Si prefieres el azul marino de tu diseño original puedes usar: background: #0f2a55; */
-    
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); /* Sombra un poco más marcada */
-    letter-spacing: 0.5px; /* Separamos un pelín las letras para mejorar legibilidad en fondos oscuros */
+    color: #ffffff; 
+    background: #1e293b; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+    letter-spacing: 0.5px; 
 }
 
-/* Efecto Cebra (Filas pares con un fondo muy suave) */
 tbody tr:nth-child(even) {
     background: rgba(241, 245, 249, 0.6); 
 }
 
-/* Efecto hover más notable */
 tbody tr {
     transition: background 0.2s ease;
 }
 
 tbody tr:hover {
-    background: #e2e8f0; /* Gris un poquito más oscuro al pasar el ratón */
+    background: #e2e8f0; 
 }
 
 tr:last-child td {
     border-bottom: none;
 }
 
-/* Empuja un poco el contenido de la última columna hacia la izquierda */
 th:last-child, 
 td:last-child {
     padding-right: 35px;
@@ -118,7 +105,6 @@ td:last-child {
     font-size: 1.1rem;
 }
 
-/* --- BOTONES DE ACCIÓN --- */
 .action-container, td > form, td > a {
     display: flex;
     align-items: center;
@@ -129,7 +115,7 @@ td:last-child {
     padding: 10px 16px;
     border: none;
     border-radius: 8px;
-    background: #dc2626; /* Rojo sólido moderno */
+    background: #dc2626; 
     color: white;
     font-weight: 600;
     cursor: pointer;
@@ -146,7 +132,7 @@ td:last-child {
     display: inline-block;
     padding: 10px 16px;
     border-radius: 8px;
-    background: #2563eb; /* Azul primary sólido */
+    background: #2563eb; 
     color: white;
     font-weight: 600;
     font-size: 14px;
@@ -160,7 +146,6 @@ td:last-child {
     background: #3b82f6;
 }
 
-/* --- NOTIFICACIONES (BADGES) --- */
 .badge-pending {
     background: linear-gradient(135deg, #f59e0b, #d97706);
     color: white;
@@ -175,7 +160,7 @@ td:last-child {
 }
 
 .badge-done {
-    background: #10b981; /* Verde esmeralda para el '✓ Up to date' */
+    background: #10b981; 
     color: white;
     padding: 6px 14px;
     border-radius: 20px;
@@ -184,48 +169,42 @@ td:last-child {
     display: inline-block;
 }
 
-/* Animación de latido */
 @keyframes pulse {
     0% { transform: scale(1); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
     50% { transform: scale(1.05); box-shadow: 0 6px 15px rgba(245, 158, 11, 0.5); }
     100% { transform: scale(1); box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3); }
 }
 
-/* --- ENLACE DE VUELTA --- */
 .back-link {
     display: inline-block;
     margin-top: 25px;
-    padding: 10px 20px; /* Área para hacer click más grande */
+    padding: 10px 20px; 
     color: #475569;
-    font-size: 1.15rem; /* Letra visiblemente más grande */
-    font-weight: 700; /* Negrita fuerte */
+    font-size: 1.15rem; 
+    font-weight: 700; 
     text-decoration: none;
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.03); /* Fondo súper sutil por defecto */
+    background: rgba(0, 0, 0, 0.03);
     transition: all 0.2s ease;
 }
 
 .back-link:hover {
-    color: #0f172a; /* Texto más oscuro */
-    background: rgba(0, 0, 0, 0.08); /* Fondo un poquito más marcado */
-    transform: translateX(-4px); /* Se mueve un poquito hacia la flecha */
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.08); 
+    transform: translateX(-4px); 
 }
 
-/* --- SCROLL PERSONALIZADO (Flotante y elegante) --- */
 .students-card::-webkit-scrollbar {
-    /* Lo hacemos más ancho en código para tener margen interno */
     width: 16px; 
 }
 
 .students-card::-webkit-scrollbar-track {
-    /* Fondo totalmente transparente para que no ensucie la tabla */
     background: transparent; 
 }
 
 .students-card::-webkit-scrollbar-thumb {
     background-color: rgba(148, 163, 184, 0.5);
     border-radius: 10px;
-    /* EL TRUCO: Borde transparente que "empuja" el color hacia adentro */
     border: 4px solid transparent; 
     background-clip: padding-box; 
 }
@@ -240,7 +219,6 @@ td:last-child {
     scrollbar-color: rgba(148, 163, 184, 0.5) transparent;
 }
 
-/* --- FOOTER COPYRIGHT --- */
 body::after {
     content: "© 2026 CognitiveLab. All rights reserved.";
     position: absolute;
@@ -251,19 +229,17 @@ body::after {
     color: #64748b;
 }
 
-/* --- ESTADO VACÍO (EMPTY STATE) CON TEXTO REFEDIDO --- */
 .empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 90px 20px; /* Caja cuadrada/rectangular bien proporcionada */
-    text-align: center;
-    color: #94a3b8; /* Gris azulado suave */
+    padding: 90px 20px; 
+    color: #94a3b8; 
 }
 
 .empty-icon-text {
-    font-size: 4rem; /* Icono grande */
+    font-size: 4rem; 
     margin-bottom: 20px;
     opacity: 0.8;
 }
@@ -275,17 +251,16 @@ body::after {
     color: #64748b;
 }
 
-/* --- CONTADOR DE USUARIOS (Badge en el título) --- */
 h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px; /* Separación entre el texto y el contador */
+    gap: 15px; 
 }
 
 .table-toolbar {
     display: flex;
-    justify-content: flex-end; /* Lo alinea a la derecha justo encima de la tabla */
+    justify-content: flex-end; 
     width: 100%;
     margin-bottom: 10px;
     padding-right: 10px;
@@ -300,4 +275,62 @@ h1 {
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.8);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* --- BARRA DE HERRAMIENTAS (Toolbar) --- */
+.table-toolbar {
+    display: flex;
+    justify-content: space-between; /* Uno a cada lado */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 0 5px; /* Un pelín de margen lateral para que se alinee con la tabla */
+    flex-wrap: wrap; /* Por si lo ven en el móvil, que se ponga uno debajo del otro */
+    gap: 15px;
+}
+
+/* Contador (Izquierda) */
+.total-count {
+    color: #475569;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.total-count strong {
+    color: #2563eb;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+/* Buscador (Derecha) */
+.search-container {
+    flex: 1; /* Ocupa el espacio disponible */
+    max-width: 320px; /* No deja que el buscador se haga gigante */
+    display: flex;
+    justify-content: flex-end;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    font-size: 0.95rem;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+}
+
+#searchInput:focus {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+#searchInput::placeholder {
+    color: #94a3b8;
+    font-weight: 500;
 }

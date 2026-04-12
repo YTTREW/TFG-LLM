@@ -11,9 +11,15 @@
         <div class="page-container">
             <h1>Professors List</h1>
 
-            <div class="table-toolbar">
-                <span class="badge-count">Total: {{ professors | length }}</span>
+        <div class="table-toolbar">
+            <div class="total-count">
+                Total registered: <strong>{{ professors | length }}</strong>
             </div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Search professor..." onkeyup="filterTable()">
+            </div>
+        </div>
 
             <div class="professors-card">
                 {% if professors %}
@@ -52,4 +58,15 @@
             <a href="/dashboard-admin" class="back-link">← Back to dashboard</a>
         </div>
     </body>
+    <script>
+    function filterTable() {
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(input) ? "" : "none";
+        });
+    }
+    </script>
 </html>
