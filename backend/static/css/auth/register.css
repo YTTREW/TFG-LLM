@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,7 +5,6 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Fondo (Mismo tema claro) */
 body {
     min-height: 100vh;
     background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
@@ -16,10 +14,9 @@ body {
     justify-content: center;
     color: #1e293b;
     position: relative;
-    padding-bottom: 60px; /* espacio para el footer */
+    padding-bottom: 60px; 
 }
 
-/* Contenedor principal (Efecto Cristal) */
 .login-container {
     background: rgba(255, 255, 255, 0.638);
     backdrop-filter: blur(16px);
@@ -33,7 +30,6 @@ body {
     animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Título */
 h2 {
     text-align: center;
     margin-bottom: 30px;
@@ -42,14 +38,12 @@ h2 {
     letter-spacing: -0.5px;
 }
 
-/* Formulario con Flexbox */
 form {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-/* Inputs */
 input {
     width: 100%;
     padding: 14px 16px;
@@ -63,7 +57,6 @@ input {
     outline: none;
 }
 
-/* Placeholder */
 input::placeholder {
     color: #475569;
     font-weight: 600;
@@ -75,7 +68,6 @@ input:focus {
     background: #ffffff;
 }
 
-/* Botón principal (Sign up) */
 button {
     width: 100%;
     padding: 16px;
@@ -96,7 +88,6 @@ button:hover {
     background: #3b82f6;
 }
 
-/* Enlace de volver al login */
 .register-container {
     text-align: center;
     margin-top: 25px;
@@ -115,7 +106,6 @@ button:hover {
     text-decoration: underline;
 }
 
-/* Mensaje de error (Tema claro) */
 .error-message {
     background-color: #fee2e2;
     color: #991b1b;
@@ -129,7 +119,6 @@ button:hover {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Footer copyright */
 body::after {
     content: "© 2026 CognitiveLab. All rights reserved.";
     position: absolute;
@@ -140,7 +129,6 @@ body::after {
     color: #64748b;
 }
 
-/* Animaciones */
 @keyframes scaleUpFade {
     from {
         opacity: 0;
@@ -157,12 +145,10 @@ body::after {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Enlace de volver al login (Estilo consistente) */
-/* Enlace de volver al login (Estilo consistente y CENTRADO) */
 .back-link {
-    display: block; /* Cambiamos a block... */
-    width: fit-content; /* ...ajustamos al tamaño del texto... */
-    margin: 25px auto 0 auto; /* ...y el 'auto' a los lados hace la magia de centrarlo */
+    display: block; 
+    width: fit-content; 
+    margin: 25px auto 0 auto; 
     
     padding: 10px 20px; 
     color: #475569;

@@ -1,55 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Student Chats</title>
-    <link rel="stylesheet" href="/static/css/professor/student_chats.css">
-    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
-</head>
-<body>
-    <div class="page-container">
-        <h1>Conversations: {{ student.name }} {{ student.surname }}</h1>
-        <p class="subtitle">Reviewing simulation history and grades</p>
+    <head>
+        <meta charset="UTF-8">
+        <title>Student Chats</title>
+        <link rel="stylesheet" href="/static/css/professor/student_chats.css">
+        <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+    </head>
+    <body>
+        <div class="page-container">
+            <h1>Conversations: {{ student.name }} {{ student.surname }}</h1>
+            <p class="subtitle">Reviewing simulation history and grades</p>
 
-        <div class="chats-card">
-            {% if chats %}
-            <table class="chats-table">
-                <thead>
-                    <tr>
-                        <th>Chat ID</th>
-                        <th>Case Title</th>
-                        <th>Grade</th> 
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for chat in chats %}
-                    <tr>
-                        <td>#{{ chat.id }}</td>
-                        <td class="chat-title">{{ chat.title }}</td>
-                        <td>
-                            {% if chat.grade is not none %}
-                                <span class="badge-grade">{{ chat.grade }} / 10</span>
-                            {% else %}
-                                <span class="badge-pending">Pending</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="/professor/student/{{ student.id }}/chat/{{ chat.id }}" class="btn-view">Open Chat</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <div class="empty-state">
-                <span class="empty-icon">💬</span>
-                <p>No conversations found for this student.</p>
-            </div>        
-            {% endif %}
+            <div class="chats-card">
+                {% if chats %}
+                <table class="chats-table">
+                    <thead>
+                        <tr>
+                            <th>Chat ID</th>
+                            <th>Case Title</th>
+                            <th>Grade</th> 
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for chat in chats %}
+                        <tr>
+                            <td>#{{ chat.id }}</td>
+                            <td class="chat-title">{{ chat.title }}</td>
+                            <td>
+                                {% if chat.grade is not none %}
+                                    <span class="badge-grade">{{ chat.grade }} / 10</span>
+                                {% else %}
+                                    <span class="badge-pending">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="/professor/student/{{ student.id }}/chat/{{ chat.id }}" class="btn-view">Open Chat</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-state">
+                    <span class="empty-icon">💬</span>
+                    <p>No conversations found for this student.</p>
+                </div>        
+                {% endif %}
+            </div>
+
+            <a href="/students" class="back-link">← Back to students</a>
         </div>
-
-        <a href="/students" class="back-link">← Back to students</a>
-    </div>
-</body>
+    </body>
 </html>

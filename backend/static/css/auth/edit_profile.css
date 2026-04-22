@@ -1,4 +1,3 @@
-/* Reset & Base */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,7 +7,6 @@
 
 body {
     min-height: 100vh;
-    /* Fondo exacto al del resto de la app */
     background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
     display: flex;
     justify-content: center;
@@ -18,7 +16,6 @@ body {
     padding: 20px;
 }
 
-/* Tarjeta Efecto Cristal (Glassmorphism) */
 .form-container {
     background: rgba(255, 255, 255, 0.638);
     backdrop-filter: blur(16px);
@@ -41,15 +38,13 @@ h1 {
     letter-spacing: -0.5px;
 }
 
-/* Formulario */
 form {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Espacio uniforme entre campos */
-    text-align: left; /* Para que los labels se alineen a la izquierda */
+    gap: 20px;
+    text-align: left; 
 }
 
-/* Etiquetas (Labels) en negrita */
 label {
     display: block;
     font-weight: 700;
@@ -59,7 +54,6 @@ label {
     padding-left: 4px;
 }
 
-/* Inputs de texto y password */
 input[type="text"], 
 input[type="password"] {
     width: 100%;
@@ -85,13 +79,12 @@ input:focus {
     background: #ffffff;
 }
 
-/* Botón Principal */
 .btn-primary {
     margin-top: 10px;
     padding: 16px;
     border: none;
     border-radius: 12px;
-    background: #2563eb; /* Azul sólido moderno */
+    background: #2563eb; 
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
@@ -105,7 +98,6 @@ input:focus {
     background: #3b82f6;
 }
 
-/* Enlace de vuelta centrado y consistente */
 .back-link {
     display: block;
     width: fit-content;
@@ -126,7 +118,6 @@ input:focus {
     transform: translateX(-4px);
 }
 
-/* Animación de entrada */
 @keyframes scaleUpFade {
     from {
         opacity: 0;
@@ -138,7 +129,6 @@ input:focus {
     }
 }
 
-/* Footer copyright */
 body::after {
     content: "© 2026 CognitiveLab. All rights reserved.";
     position: absolute;
@@ -149,7 +139,6 @@ body::after {
     color: #64748b;
 }
 
-/* Ajustes Responsive */
 @media (max-width: 480px) {
     .form-container {
         padding: 30px 25px;

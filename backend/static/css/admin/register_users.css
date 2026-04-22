@@ -6,7 +6,6 @@
 body {
     min-height: 100vh;
     margin: 0;
-    /* Fondo exacto al del dashboard */
     background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
     display: flex;
     justify-content: center;
@@ -14,7 +13,6 @@ body {
     color: #1e293b;
 }
 
-/* Tarjeta Efecto Cristal */
 .form-container {
     background: rgba(255, 255, 255, 0.638);
     backdrop-filter: blur(16px);
@@ -23,7 +21,7 @@ body {
     padding: 45px 40px;
     border-radius: 20px;
     width: 100%;
-    max-width: 420px; /* Un poco más ancha para respirar mejor */
+    max-width: 420px; 
     text-align: center;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -40,47 +38,42 @@ h1 {
 form {
     display: flex;
     flex-direction: column;
-    gap: 18px; /* Separación un poco mayor entre campos */
+    gap: 18px; 
 }
 
-/* Estilos de los campos de texto y select */
 input, select {
     padding: 14px 16px;
     border-radius: 12px;
     border: 2px solid rgba(226, 232, 240, 0.8);
     background: rgba(255, 255, 255, 0.9);
     font-size: 1rem;
-    color: #0f172a; /* Texto escrito casi negro para máximo contraste */
-    font-weight: 600; /* <-- Añadimos grosor al texto que escribe el usuario */
+    color: #0f172a; 
+    font-weight: 600; 
     transition: all 0.2s ease;
     outline: none;
 }
 
-/* El texto de "fondo" (Name, Surname, etc.) */
 input::placeholder {
-    color: #475569; /* Gris mucho más oscuro y definido */
-    font-weight: 600; /* <-- Lo ponemos en negrita/semi-bold */
+    color: #475569; 
+    font-weight: 600; 
 }
 
-/* Opcional: Para que la opción por defecto "Select role" también destaque */
 select {
     color: #475569; 
 }
 
-/* Efecto focus para saber dónde estás escribiendo */
 input:focus, select:focus {
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
     background: #ffffff;
 }
 
-/* Botón de crear */
 .btn-primary {
     margin-top: 10px;
     padding: 16px;
     border: none;
     border-radius: 12px;
-    background: #2563eb; /* Azul sólido */
+    background: #2563eb; 
     color: white;
     font-weight: 600;
     font-size: 1.1rem;
@@ -97,26 +90,25 @@ input:focus, select:focus {
 .back-link {
     display: inline-block;
     margin-top: 25px;
-    padding: 10px 20px; /* Área para hacer click más grande */
+    padding: 10px 20px; 
     color: #475569;
-    font-size: 1.15rem; /* Letra visiblemente más grande */
-    font-weight: 700; /* Negrita fuerte */
+    font-size: 1.15rem; 
+    font-weight: 700; 
     text-decoration: none;
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.03); /* Fondo súper sutil por defecto */
+    background: rgba(0, 0, 0, 0.03);
     transition: all 0.2s ease;
 }
 
 .back-link:hover {
-    color: #0f172a; /* Texto más oscuro */
-    background: rgba(0, 0, 0, 0.08); /* Fondo un poquito más marcado */
-    transform: translateX(-4px); /* Se mueve un poquito hacia la flecha */
+    color: #0f172a; 
+    background: rgba(0, 0, 0, 0.08); 
+    transform: translateX(-4px); 
 }
 
-/* Mensaje de error adaptado al tema claro */
 .error-message {
-    background-color: #fee2e2; /* Fondo rojo pastel */
-    color: #991b1b; /* Texto rojo oscuro */
+    background-color: #fee2e2;
+    color: #991b1b; 
     border: 1px solid #f87171;
     padding: 12px 15px;
     margin-bottom: 20px;
@@ -127,7 +119,6 @@ input:focus, select:focus {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Footer copyright */
 body::after {
     content: "© 2026 CognitiveLab. All rights reserved.";
     position: absolute;
@@ -138,7 +129,6 @@ body::after {
     color: #64748b;
 }
 
-/* Animaciones */
 @keyframes scaleUpFade {
     from {
         opacity: 0;

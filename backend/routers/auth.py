@@ -123,6 +123,7 @@ def register_user(
 
     return RedirectResponse("/login", status_code=303)
 
+# Endpoint GET para cargar formulario de edición de perfil
 @router.get("/edit-profile", response_class=HTMLResponse)
 def edit_profile_form(request: Request):
     role = request.session.get("role")
@@ -132,7 +133,6 @@ def edit_profile_form(request: Request):
     
     current_username = request.session.get("user")
     
-    # --- NUEVA LÓGICA PARA BUSCAR AL USUARIO ---
     db = SessionLocal()
     model = Professor if role == "professor" else Student
     user_obj = db.query(model).filter_by(username=current_username).first()
@@ -157,6 +157,7 @@ def edit_profile_form(request: Request):
         "back_text": back_text
     })
 
+# Endpoint POST para actualizar el perfil del usuario
 @router.post("/edit-profile")
 def edit_profile_post(
     request: Request,

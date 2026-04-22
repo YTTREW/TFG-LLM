@@ -1,4 +1,3 @@
-/* Reset básico */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,7 +5,6 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Fondo (Mismo tema claro que el resto de la app) */
 body {
     min-height: 100vh;
     background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
@@ -16,10 +14,9 @@ body {
     justify-content: center;
     color: #1e293b;
     position: relative;
-    padding-bottom: 60px; /* espacio para el footer */
+    padding-bottom: 60px; 
 }
 
-/* Contenedor login (Efecto Cristal) */
 .login-container {
     background: rgba(255, 255, 255, 0.638);
     backdrop-filter: blur(16px);
@@ -33,7 +30,6 @@ body {
     animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Título */
 h2 {
     text-align: center;
     margin-bottom: 30px;
@@ -42,19 +38,16 @@ h2 {
     letter-spacing: -0.5px;
 }
 
-/* Formularios estructurados con Flexbox */
 form {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-/* Magia: Ocultamos los <br> del HTML para que Flexbox controle el espacio */
 form br {
     display: none;
 }
 
-/* Inputs */
 input {
     width: 100%;
     padding: 14px 16px;
@@ -62,13 +55,12 @@ input {
     border: 2px solid rgba(226, 232, 240, 0.8);
     background: rgba(255, 255, 255, 0.9);
     font-size: 1rem;
-    color: #0f172a; /* Texto escrito casi negro para máximo contraste */
+    color: #0f172a; 
     font-weight: 600;
     transition: all 0.2s ease;
     outline: none;
 }
 
-/* Placeholder oscuro y legible */
 input::placeholder {
     color: #475569;
     font-weight: 600;
@@ -80,7 +72,6 @@ input:focus {
     background: #ffffff;
 }
 
-/* Botones genéricos */
 button {
     width: 100%;
     padding: 16px;
@@ -91,7 +82,6 @@ button {
     transition: all 0.3s ease;
 }
 
-/* Botón principal (Sign in) */
 form[action="/login"] button {
     border: none;
     background: #2563eb;
@@ -104,24 +94,21 @@ form[action="/login"] button:hover {
     background: #3b82f6;
 }
 
-/* Separador entre botones */
 .register-container {
     margin-top: 20px;
 }
 
-/* Botón secundario (Sign up) */
 form[action="/register"] button {
     background: transparent;
-    border: 2px solid #2563eb; /* Borde azul para que no se pierda */
+    border: 2px solid #2563eb; 
     color: #2563eb;
 }
 
 form[action="/register"] button:hover {
-    background: #eff6ff; /* Fondo azul muy muy clarito al pasar el ratón */
+    background: #eff6ff; 
     transform: translateY(-2px);
 }
 
-/* Mensaje de error (Tema claro) */
 .error-message {
     background-color: #fee2e2;
     color: #991b1b;
@@ -135,7 +122,6 @@ form[action="/register"] button:hover {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Footer copyright */
 body::after {
     content: "© 2026 CognitiveLab. All rights reserved.";
     position: absolute;
@@ -146,7 +132,6 @@ body::after {
     color: #64748b;
 }
 
-/* Animaciones */
 @keyframes scaleUpFade {
     from {
         opacity: 0;
@@ -162,27 +147,25 @@ body::after {
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
-/* --- EXTRA UX/UI TWEAKS --- */
 
-/* 1. Logo */
+
 .login-logo {
     width: 70px;
     height: 70px;
-    border-radius: 50%; /* Lo hace redondo */
+    border-radius: 50%; 
     object-fit: cover;
     margin: 0 auto 10px auto;
     display: block;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* 2. Forgot Password */
 .forgot-password {
     text-align: right;
     font-size: 0.9rem;
     color: #2563eb;
     text-decoration: none;
     font-weight: 600;
-    margin-top: -10px; /* Lo acerca un poco al input del password */
+    margin-top: -10px; 
     margin-bottom: 5px;
     transition: color 0.2s ease;
 }
@@ -192,18 +175,16 @@ body::after {
     text-decoration: underline;
 }
 
-/* 3. Separador (Divider) */
 .divider {
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 25px 0 5px 0; /* Espaciado ajustado */
+    margin: 25px 0 5px 0; 
     color: #64748b;
     font-size: 0.9rem;
     font-weight: 600;
 }
 
-/* Las líneas a los lados del texto */
 .divider::before,
 .divider::after {
     content: '';

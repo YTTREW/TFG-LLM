@@ -277,19 +277,17 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-/* --- BARRA DE HERRAMIENTAS (Toolbar) --- */
 .table-toolbar {
     display: flex;
-    justify-content: space-between; /* Uno a cada lado */
+    justify-content: space-between; 
     align-items: center;
     width: 100%;
     margin-bottom: 15px;
-    padding: 0 5px; /* Un pelín de margen lateral para que se alinee con la tabla */
-    flex-wrap: wrap; /* Por si lo ven en el móvil, que se ponga uno debajo del otro */
+    padding: 0 5px; 
+    flex-wrap: wrap; 
     gap: 15px;
 }
 
-/* Contador (Izquierda) */
 .total-count {
     color: #475569;
     font-size: 1.1rem;
@@ -302,10 +300,9 @@ h1 {
     font-weight: 800;
 }
 
-/* Buscador (Derecha) */
 .search-container {
-    flex: 1; /* Ocupa el espacio disponible */
-    max-width: 320px; /* No deja que el buscador se haga gigante */
+    flex: 1; 
+    max-width: 320px; 
     display: flex;
     justify-content: flex-end;
 }

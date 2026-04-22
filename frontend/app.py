@@ -4,7 +4,6 @@ from datetime import datetime
 
 st.set_page_config(page_title="Chat Student", layout="wide")
 
-# Inyectar CSS avanzado para coherencia visual total
 st.markdown("""
     <style>
     /* 1. FONDO GLOBAL */
@@ -94,6 +93,7 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
+
 # ---------- AUTH ----------
 if "token" not in st.session_state:
     token_param = st.query_params.get("token")
@@ -132,11 +132,9 @@ with col_logout:
 
 st.sidebar.title("🩺 Clinical Cases")
 
-# --- OPTIMIZATION: Fetch from API only if not in memory ---
 if "cases" not in st.session_state:
     st.session_state.cases = get_cases()
 
-# Use a 'refresh_chats' flag to force reload when needed
 if "chats" not in st.session_state or st.session_state.get("refresh_chats", False):
     st.session_state.chats = get_chats()
     st.session_state.refresh_chats = False 
@@ -176,7 +174,6 @@ else:
             except:
                 creation_date_str = ""
 
-# --- NUEVA LÓGICA DE ICONOS DE ESTADO ---
             if chat.get("grade") is not None:
                 status_prefix = "⭐ "  
                 status_label = " (Graded)"
@@ -220,10 +217,8 @@ if current_chat:
     title_parts = current_chat["title"].split(": ")
     patient_name = title_parts[-1] if len(title_parts) > 1 else current_chat["title"]
 
-# 1. Buscamos a qué caso pertenece el chat actual
     current_case_id = current_chat.get("clinical_case_id")
     
-    # 2. Comprobamos si ALGÚN chat de ESTE CASO ya está marcado como enviado
     chats_case = [c for c in st.session_state.chats if c.get("clinical_case_id") == current_case_id]
     chat_submitted = next((c for c in chats_case if c.get("is_submitted") == True), None)
 
@@ -232,12 +227,10 @@ if current_chat:
         st.title(f"🧠 Virtual Patient: {patient_name}")
             
     with col_boton:
-        # Damos un poco de margen para alinear con el título
         st.write("") 
         st.write("")
         if current_chat.get("is_submitted"):
             st.success("✅ Submitted for Evaluation")
-            # CASO B: El alumno NO ha enviado este, pero SÍ ha enviado otro de este mismo paciente
         elif chat_submitted:
             st.info("🔒 Submitted in another chat")
         else:
@@ -254,15 +247,12 @@ if current_chat and current_chat.get("grade") is not None:
         with st.expander("📝 Check feedback", expanded=True):
             st.write(current_chat["feedback"])
     
-# Display messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# Input
 chat_locked = current_chat.get("is_submitted", False) if current_chat else False
 
-# 2. Cambiamos el texto del input dependiendo de si está bloqueado o no
 texto_input = "🔒 Chat submitted for evaluation. You cannot send more messages." if chat_locked else "Write your message..."
 user_input = st.chat_input(texto_input, disabled=chat_locked)
 

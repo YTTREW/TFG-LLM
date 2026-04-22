@@ -8,13 +8,12 @@ from fastapi import Depends, Header, HTTPException
 from pydantic import BaseModel
 from fastapi import Header, HTTPException
 
-# Todos los endpoints empiezan con /api/chats
 router = APIRouter(prefix="/api/chats", tags=["Chats"])
 class MessageCreate(BaseModel):
     role: str
     content: str
 
-# ----------- Abrir sesión BD ----------
+# Abrir sesión BD
 def get_db():
     db = SessionLocal()
     try:
@@ -22,7 +21,7 @@ def get_db():
     finally:
         db.close()
 
-# ---------- Obtener estudiante actual ----------
+# Obtener estudiante actual
 def get_current_student(
     authorization: str = Header(None),
     db: Session = Depends(get_db)
@@ -129,6 +128,7 @@ def save_message(
         "content": new_msg.content
     }
 
+# Endpoint para eliminar un chat
 @router.delete("/{chat_id}")
 def delete_chat(
     chat_id: int,
@@ -151,6 +151,7 @@ def delete_chat(
 
     return {"message": "Chat deleted successfully"}
 
+# Endpoint para cerrar sesión
 @router.get("/logout")
 def logout(request: Request, db: Session = Depends(get_db)):
     token = request.session.get("token")

@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from backend.core.database import Base 
 
-
+# Modelos para casos clínicos, chats y mensajes
 class ClinicalCase(Base):
     __tablename__ = "clinical_cases"
 
@@ -21,7 +21,6 @@ class ClinicalCase(Base):
     is_visible = Column(Boolean, default=True) 
     deadline = Column(Date, nullable=True) 
 
-    # Relaciones
     professor = relationship("Professor", back_populates="clinical_cases")
     chats = relationship("Chat", back_populates="clinical_case", cascade="all, delete-orphan")
 
@@ -30,7 +29,6 @@ class Chat(Base):
 
     id = Column(Integer, primary_key=True, index=True)
 
-    # Relación con Estudiante
     student_id = Column(
         Integer,
         ForeignKey("students.id", ondelete="CASCADE"),
@@ -44,7 +42,6 @@ class Chat(Base):
     feedback = Column(Text, nullable=True)
     is_submitted = Column(Boolean, default=False)
 
-    # Relaciones
     student = relationship("Student", back_populates="chats")
     clinical_case = relationship("ClinicalCase", back_populates="chats")
     messages = relationship(
@@ -69,5 +66,4 @@ class Message(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # Relaciones
     chat = relationship("Chat", back_populates="messages")

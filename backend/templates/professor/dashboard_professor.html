@@ -1,39 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Professor Dashboard</title>
-    <link rel="stylesheet" href="/static/css/professor/dashboard_professor.css">
-    <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Professor Dashboard</title>
+        <link rel="stylesheet" href="/static/css/professor/dashboard_professor.css">
+        <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+    </head>
+    <body>
+        <div class="dashboard-container">
+            <h1>Professor Dashboard</h1>
+            <p>Welcome, {{ username }}</p>
 
-    <div class="dashboard-container">
-        <h1>Professor Dashboard</h1>
-        <p>Welcome, {{ username }}</p>
+            <div class="dashboard-card">
+                <a href="/professor/create-case">
+                    <button class="btn btn-primary">Create Clinical Case</button>
+                </a>
 
-        <div class="dashboard-card">
-            <a href="/professor/create-case">
-                <button class="btn btn-primary">Create Clinical Case</button>
-            </a>
+                <a href="/professor/cases">
+                    <button class="btn btn-secondary">View My Cases</button>
+                </a>
 
-            <a href="/professor/cases">
-                <button class="btn btn-secondary">View My Cases</button>
-            </a>
+                <a href="/students">
+                    <button class="btn btn-accent">View Students</button>
+                </a>
 
-            <a href="/students">
-                <button class="btn btn-accent">View Students</button>
-            </a>
+                <a href="/edit-profile">
+                    <button class="btn btn-secondary">Edit Profile</button>
+                </a>
 
-            <a href="/edit-profile">
-                <button class="btn btn-secondary">Edit Profile</button>
-            </a>
-
-            <a href="/logout">
-                <button class="btn btn-danger">Sign out</button>
-            </a>
+                <a href="/logout">
+                    <button class="btn btn-danger">Sign out</button>
+                </a>
+            </div>
         </div>
-    </div>
-
-</body>
+    </body>
 </html>

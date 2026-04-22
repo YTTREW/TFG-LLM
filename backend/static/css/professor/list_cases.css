@@ -1,4 +1,3 @@
-/* Reset & Base */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -17,7 +16,7 @@ body {
 
 .page-container {
     width: 100%;
-    max-width: 1000px; /* Un poco más ancho porque hay muchas columnas */
+    max-width: 1000px;
     padding: 20px;
     text-align: center;
 }
@@ -29,7 +28,6 @@ h1 {
     letter-spacing: -0.5px;
 }
 
-/* Tarjeta Efecto Cristal (Glassmorphism) */
 .cases-card {
     background: rgba(255, 255, 255, 0.638); 
     backdrop-filter: blur(16px);
@@ -44,7 +42,6 @@ h1 {
     animation: scaleUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* --- ESTILOS DE LA TABLA --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -57,7 +54,6 @@ th, td {
     vertical-align: middle;
 }
 
-/* Cabecera oscura (Ancla visual) */
 thead {
     position: sticky;
     top: 0;
@@ -72,13 +68,11 @@ th {
     letter-spacing: 0.5px; 
 }
 
-/* Efecto Cebra y Hover */
 tbody tr:nth-child(even) { background: rgba(241, 245, 249, 0.6); }
 tbody tr { transition: background 0.2s ease; }
 tbody tr:hover { background: #e2e8f0; }
 tr:last-child td { border-bottom: none; }
 
-/* Textos específicos */
 .patient-name {
     font-weight: 600;
     color: #0f172a;
@@ -91,10 +85,9 @@ tr:last-child td { border-bottom: none; }
     font-weight: 500;
 }
 
-/* --- BADGES (Etiquetas para Yes/No) --- */
 .badge-yes {
-    background: #dcfce7; /* Verde clarito */
-    color: #166534; /* Texto verde oscuro */
+    background: #dcfce7; 
+    color: #166534; 
     padding: 4px 10px;
     border-radius: 12px;
     font-size: 0.85rem;
@@ -102,15 +95,14 @@ tr:last-child td { border-bottom: none; }
 }
 
 .badge-no {
-    background: #fee2e2; /* Rojo clarito */
-    color: #991b1b; /* Texto rojo oscuro */
+    background: #fee2e2; 
+    color: #991b1b; 
     padding: 4px 10px;
     border-radius: 12px;
     font-size: 0.85rem;
     font-weight: 700;
 }
 
-/* --- BOTONES DE ACCIÓN --- */
 .action-container {
     display: flex;
     align-items: center;
@@ -155,7 +147,6 @@ tr:last-child td { border-bottom: none; }
     background: #ef4444;
 }
 
-/* --- ENLACE DE VUELTA --- */
 .back-link {
     display: block; 
     width: fit-content; 
@@ -176,7 +167,6 @@ tr:last-child td { border-bottom: none; }
     transform: translateX(-4px); 
 }
 
-/* --- ESTADO VACÍO (EMPTY STATE) --- */
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -200,20 +190,17 @@ tr:last-child td { border-bottom: none; }
     color: #64748b;
 }
 
-/* Animaciones */
 @keyframes scaleUpFade {
     from { opacity: 0; transform: translateY(30px) scale(0.98); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* Scroll */
 .cases-card::-webkit-scrollbar { width: 8px; }
 .cases-card::-webkit-scrollbar-track { background: rgba(0, 0, 0, 0.03); border-radius: 10px; }
 .cases-card::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 10px; }
 .cases-card::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.8); }
 .cases-card { scrollbar-width: thin; scrollbar-color: rgba(148, 163, 184, 0.5) rgba(0, 0, 0, 0.03); }
 
-/* Footer copyright */
 body::after {
     content: "© 2026 CognitiveLab. All rights reserved.";
     position: absolute;
