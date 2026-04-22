@@ -1,0 +1,37 @@
+# --- Python ---
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Variables de Entorno ---
+.env
+.flaskenv
+
+# --- Base de Datos ---
+
+*.db
+*.sqlite3
+
+# --- IDEs / Editores ---
+.vscode/
+.idea/
+.project
+.pydevproject
+.settings/
+
+# --- Streamlit ---
+.streamlit/config.toml
+.streamlit/credentials.toml
+
+# --- Sistema Operativo ---
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- Distribución / Empaquetado ---
+dist/
+build/
+*.egg-info/
