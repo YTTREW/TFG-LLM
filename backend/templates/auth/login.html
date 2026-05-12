@@ -6,30 +6,30 @@
         <link rel="stylesheet" href="/static/css/auth/login.css">
         <title>Sign in</title>
     </head>
-    <body>
-    <div class="login-container">
-        <img src="/static/images/logoWeb.jpg" alt="CognitiveLab Logo" class="login-logo">
-        <h2>CognitiveLab</h2>
+        <body>
+        <div class="login-container">
+            <img src="/static/images/logoWeb.jpg" alt="CognitiveLab Logo" class="login-logo">
+            <h2>CognitiveLab</h2>
 
-        {% if error %}
-        <div class="error-message">{{ error }}</div>
-        {% endif %}
+            {% if error %}
+            <div class="error-message">{{ error }}</div>
+            {% endif %}
 
-        <form action="/login" method="post">
-            <input type="text" name="username" placeholder="User" required>
-            <input type="password" name="password" placeholder="Password" required>        
-            <button type="submit">Sign in</button>
-        </form>
-
-        <div class="divider">
-            <span>New to CognitiveLab?</span>
-        </div>
-
-        <div class="register-container">
-            <form action="/register">
-                <button type="submit">Sign up</button>
+            <form action="/login" method="post">
+                <input type="text" name="username" placeholder="User" required>
+                <input type="password" name="password" placeholder="Password" required>        
+                <button type="submit">Sign in</button>
             </form>
+
+            <div class="divider">
+                <span>New to CognitiveLab?</span>
+            </div>
+
+            <div class="register-container">
+                <form action="/register">
+                    <button type="submit">Sign up</button>
+                </form>
+            </div>
         </div>
-    </div>
     </body>
 </html>

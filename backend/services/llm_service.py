@@ -1,5 +1,8 @@
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langchain_ollama import ChatOllama
+import os
+
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://host.docker.internal:11434")
 
 # Prompt base para el LLM
 SYSTEM_PROMPT_TEMPLATE = """
@@ -25,7 +28,7 @@ You are not analysing yourself; you are simply trying to explain how things feel
 
 class LLMService:
     def __init__(self):
-        self.llm = ChatOllama(model="llama3", temperature=0.7)
+        self.llm = ChatOllama(model="llama3", temperature=0.7, base_url=OLLAMA_URL)
 
     def get_response(self, chat_history, patient_name: str, age: int, problem_description: str) -> str:
         custom_prompt = SYSTEM_PROMPT_TEMPLATE.format(

@@ -52,7 +52,7 @@ def get_cases(db: Session = Depends(get_db), student: Student = Depends(get_curr
             "id": case.id,
             "patient_name": case.patient_name,
             "is_evaluable": case.is_evaluable,
-            "delivery_date": case.deadline.isoformat() if case.deadline else None
+            "deadline": case.deadline.isoformat() if case.deadline else None
         })
     return result
 

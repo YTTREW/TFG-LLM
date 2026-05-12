@@ -30,40 +30,50 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* 4. EXPANDER DE FEEDBACK (Arreglo del fondo negro) */
-    /* La caja principal */
-    details[data-testid="stExpander"] {
+/* 4. EXPANDER DE FEEDBACK (Área principal - Blanco) */
+    div.block-container details[data-testid="stExpander"] {
         background-color: #ffffff !important;
         border: 2px solid #e2e8f0 !important;
         border-radius: 10px !important;
-        overflow: hidden; /* Evita que el fondo sobresalga */
+        overflow: hidden;
     }
-    
-    /* La barra donde haces clic (Check feedback) */
-    details[data-testid="stExpander"] summary,
-    details[data-testid="stExpander"] summary p,
-    details[data-testid="stExpander"] summary span {
-        background-color: #f8fafc !important; /* Un gris muuuy clarito */
+    div.block-container details[data-testid="stExpander"] summary,
+    div.block-container details[data-testid="stExpander"] summary p,
+    div.block-container details[data-testid="stExpander"] summary span {
+        background-color: #f8fafc !important;
         color: #0f172a !important;
         font-weight: 700 !important;
     }
-    
-    /* El área interior donde está el texto del feedback */
-    div[data-testid="stExpanderDetails"], 
-    div[data-testid="stExpanderDetails"] p {
-        background-color: #ffffff !important; /* Blanco puro */
-        color: #1e293b !important; /* Texto oscuro */
+    div.block-container div[data-testid="stExpanderDetails"] {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
     }
 
-    /* 5. SIDEBAR OSCURA */
+    /* 5. SIDEBAR Y SUS DESPLEGABLES (Oscuro) */
     section[data-testid="stSidebar"] {
         background-color: #1e293b !important;
     }
     section[data-testid="stSidebar"] * {
         color: #ffffff !important;
     }
-    section[data-testid="stSidebar"] hr {
-        border-color: rgba(255,255,255,0.2) !important;
+    /* Estilo específico para los desplegables de los Casos Clínicos */
+    section[data-testid="stSidebar"] details[data-testid="stExpander"] {
+        background-color: #0f172a !important; /* Un azul ligeramente más oscuro que la sidebar */
+        border: 1px solid #334155 !important;
+        border-radius: 8px !important;
+        margin-bottom: 10px !important; /* Separación entre casos */
+    }
+    section[data-testid="stSidebar"] details[data-testid="stExpander"] summary,
+    section[data-testid="stSidebar"] details[data-testid="stExpander"] summary p {
+        background-color: transparent !important;
+        font-size: 20px !important; 
+        font-weight: 800 !important;
+    }
+    /* Reducir el espacio interior del desplegable en la sidebar */
+    section[data-testid="stSidebar"] div[data-testid="stExpanderDetails"] {
+        background-color: transparent !important;
+        padding-top: 0.5rem !important; 
+        padding-bottom: 0.5rem !important;
     }
 
     /* 6. CHAT BUBBLES - Burbujas blancas, texto oscuro */
@@ -76,20 +86,50 @@ st.markdown("""
         color: #0f172a !important;
     }
 
-    /* 7. BOTONES PRINCIPALES */
-    .stButton>button {
+/* 7. BOTONES PRINCIPALES (Normales) */
+    button[kind="secondary"] {
         background: #2563eb !important;
         color: white !important;
         font-weight: 700 !important;
         border-radius: 10px !important;
+        border: 1px solid #1d4ed8 !important;
     }
 
-    .footer-text {
-        text-align: center;
-        color: #475569;
-        font-size: 14px;
-        margin-top: 40px;
-        font-weight: 700;
+    /* 8. BOTONES DESTACADOS (Graded - Verdes y con animación) */
+    button[kind="primary"] {
+        background: linear-gradient(45deg, #16a34a, #22c55e) !important;
+        color: white !important;
+        font-weight: 800 !important;
+        border-radius: 10px !important;
+        border: none !important;
+        animation: pulse_green 2s infinite !important;
+    }
+
+    /* Animación de latido (Pulso) para los evaluados */
+    @keyframes pulse_green {
+        0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+            
+    /* Estilo para los recuadros de estado dentro del expander */
+    .status-box {
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #334155;
+    }
+    .status-evaluable {
+        background-color: #450a0a !important; /* Rojo muy oscuro */
+        border-left: 5px solid #ef4444 !important;
+    }
+    .status-practice {
+        background-color: #064e3b !important; /* Verde muy oscuro */
+        border-left: 5px solid #10b981 !important;
+    }
+    .status-box p {
+        margin: 0 !important;
+        font-size: 14px !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -113,15 +153,14 @@ if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # ---------- SIDEBAR ----------
-
-col_profile, col_logout = st.sidebar.columns(2)
+col_margin1, col_profile, col_spacer, col_logout, col_margin2 = st.sidebar.columns([0.5, 3, 1.5, 3, 0.5])
 
 with col_profile:
-    if st.button("👤"):
+    if st.button("👤 ", use_container_width=True):
         st.markdown('<meta http-equiv="refresh" content="0; url=http://localhost:8000/edit-profile">', unsafe_allow_html=True)
 
 with col_logout:
-    if st.button("🚪"):
+    if st.button("🚪 ", use_container_width=True):
         st.session_state.clear()
         st.query_params.clear() 
         st.markdown(
@@ -130,6 +169,7 @@ with col_logout:
         )
         st.stop()
 
+st.sidebar.write("")
 st.sidebar.title("🩺 Clinical Cases")
 
 if "cases" not in st.session_state:
@@ -146,63 +186,84 @@ if not cases:
     st.sidebar.info("There are no clinical cases available yet.")
 else:
     for case in cases:
-        badge = "🔴 Evaluable" if case["is_evaluable"] else "🟢 Practice"
+        is_eval = case.get("is_evaluable", False)
 
         if case.get("deadline"):
             parts = case["deadline"].split("-")
-            deadline_str = f" | Deadline: {parts[2]}/{parts[1]}/{parts[0]}"
+            deadline_date = f"{parts[2]}/{parts[1]}/{parts[0]}"
         else:
-            deadline_str = ""
+            deadline_date = "No deadline"
 
-        st.sidebar.markdown(f"### {case['patient_name']} <span style='font-size:12px; color:#ccc;'>({badge}{deadline_str})</span>", unsafe_allow_html=True)
+        expander_title = f"📂 {case['patient_name']}"
         
-        if st.sidebar.button("➕ New Simulation", key=f"new_chat_{case['id']}"):
-            new_chat = create_chat(case["id"])
-            st.session_state.current_chat_id = new_chat["id"]
-            st.session_state.messages = []
-            st.session_state.refresh_chats = True  
-            st.rerun()
-
-        case_chats = [c for c in chats if c.get("clinical_case_id") == case["id"]]
-        
-        for chat in case_chats:
-            col1, col2 = st.sidebar.columns([4, 1])
-
-            try:
-                date_obj = datetime.fromisoformat(chat["created_at"])
-                creation_date_str = date_obj.strftime("%d/%m/%Y")
-            except:
-                creation_date_str = ""
-
-            if chat.get("grade") is not None:
-                status_prefix = "⭐ "  
-                status_label = " (Graded)"
-            elif chat.get("enviado"):
-                status_prefix = "✅ "  
-                status_label = " (Submitted)"
+        with st.sidebar.expander(expander_title):
+            if is_eval:
+                st.markdown(f"""
+                    <div class="status-box status-evaluable">
+                        <p style="color: #fca5a5; font-weight: bold;">⚠️ EVALUABLE</p>
+                        <p style="color: #ffffff;">📅 Deadline: {deadline_date}</p>
+                    </div>
+                """, unsafe_allow_html=True)
             else:
-                status_prefix = "💬 " 
-                status_label = ""
-            button_title = f"{status_prefix}{chat['title']} ({creation_date_str}){status_label}"
+                st.markdown(f"""
+                    <div class="status-box status-practice">
+                        <p style="color: #6ee7b7; font-weight: bold;">🟢 PRACTICE</p>
+                        
+                    </div>
+                """, unsafe_allow_html=True)
+
+            st.write("") 
             
-            with col1:
-                if st.button(button_title, key=f"open_{chat['id']}"):
-                    st.session_state.current_chat_id = chat["id"]
-                    msgs = get_messages(chat["id"])
-                    st.session_state.messages = msgs
-                    st.rerun()
+            if st.button("➕ New Simulation", key=f"new_chat_{case['id']}", use_container_width=True):
+                new_chat = create_chat(case["id"])
+                st.session_state.current_chat_id = new_chat["id"]
+                st.session_state.messages = []
+                st.session_state.refresh_chats = True  
+                st.rerun()
 
-            with col2:
-                if st.button("🗑️", key=f"delete_{chat['id']}"):
-                    delete_chat(chat["id"])
+            case_chats = [c for c in chats if c.get("clinical_case_id") == case["id"]]
+            if case_chats:
+                st.markdown("<div style='margin: 10px 0px; border-bottom: 1px solid #334155;'></div>", unsafe_allow_html=True)
+            for chat in case_chats:
+                col1, col2 = st.columns([4, 1])
 
-                    if st.session_state.get("current_chat_id") == chat["id"]:
-                        st.session_state.current_chat_id = None
-                        st.session_state.messages = []
-                    st.session_state.refresh_chats = True 
-                    st.rerun()
-        
-        st.sidebar.divider()
+                try:
+                    date_obj = datetime.fromisoformat(chat["created_at"])
+                    creation_date_str = date_obj.strftime("%d/%m/%Y")
+                except:
+                    creation_date_str = ""
+
+                is_graded = chat.get("grade") is not None
+                is_submitted = chat.get("is_submitted") or chat.get("enviado")
+
+                if chat.get("grade") is not None:
+                    btn_type = "primary"
+                elif chat.get("enviado"):
+                    btn_type = "secondary"
+                else:
+                    status_label = ""
+                    btn_type = "secondary"
+                
+                button_title = f"{chat['title']} ({creation_date_str}){status_label}"
+                
+                with col1:
+                    if st.button(button_title, key=f"open_{chat['id']}", use_container_width=True, type=btn_type):
+                        st.session_state.current_chat_id = chat["id"]
+                        msgs = get_messages(chat["id"])
+                        st.session_state.messages = msgs
+                        st.rerun()
+
+                with col2:
+                    disable_delete = is_submitted or is_graded
+                    help_msg = "Cannot delete: already submitted" if disable_delete else "Delete simulation"
+                    if st.button("🗑️", key=f"delete_{chat['id']}", use_container_width=True, disabled=disable_delete, help=help_msg):
+                        delete_chat(chat["id"])
+
+                        if st.session_state.get("current_chat_id") == chat["id"]:
+                            st.session_state.current_chat_id = None
+                            st.session_state.messages = []
+                        st.session_state.refresh_chats = True 
+                        st.rerun()
 
 # ---------- MAIN ----------
 

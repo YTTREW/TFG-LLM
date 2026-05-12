@@ -1,8 +1,12 @@
+import os
 import requests
 import streamlit as st
 
-BASE_URL = "http://localhost:8000/api/chats"
-SESSION = requests.Session() 
+BACKEND_HOST = os.getenv("BACKEND_URL", "http://localhost:8000")
+
+BASE_URL = f"{BACKEND_HOST}/api/chats"
+
+SESSION = requests.Session()
 
 # Procesa Token
 def auth_headers():

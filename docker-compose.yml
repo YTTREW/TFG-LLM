@@ -1,6 +1,7 @@
 version: "3.9"
 
 services:
+# --- BASE DE DATOS (PostgreSQL) ---
   postgres:
     image: postgres:16
     container_name: postgres_tfg
@@ -13,6 +14,32 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+# --- BACKEND (FastAPI) ---
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    container_name: fastapi_tfg
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://tfg_user:tfg_password@postgres:5432/tfg_db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres  
+
+  # --- FRONTEND (Streamlit) ---
+  streamlit:
+    build: ./frontend 
+    container_name: streamlit_tfg
+    restart: always
+    environment:
+      - BACKEND_URL=http://backend:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend 
 
 volumes:
   postgres_data:
