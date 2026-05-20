@@ -99,8 +99,7 @@ def create_chat(chat_data: ChatCreate, db: Session = Depends(get_db), student: S
     if not clinical_case:
         raise HTTPException(status_code=404, detail="Caso clínico no encontrado")
 
-    prefix = "Evaluable: " if clinical_case.is_evaluable else "Simulation: "
-    chat_title = f"{prefix}{clinical_case.patient_name}"
+    chat_title = f"{clinical_case.patient_name}"
 
     new_chat = Chat(student_id=student.id, clinical_case_id=clinical_case.id, title=chat_title)
     db.add(new_chat)
