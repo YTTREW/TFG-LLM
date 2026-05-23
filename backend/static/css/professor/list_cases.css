@@ -54,6 +54,19 @@ th, td {
     vertical-align: middle;
 }
 
+th:last-child {
+    text-align: center;
+}
+
+
+td:last-child {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    align-items: center;
+}
+
 thead {
     position: sticky;
     top: 0;
@@ -145,6 +158,23 @@ tr:last-child td { border-bottom: none; }
     transform: translateY(-2px);
     box-shadow: 0 8px 15px rgba(220, 38, 38, 0.3);
     background: #ef4444;
+}
+
+.btn-try {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #7c3aed; 
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-try:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(124, 58, 237, 0.3);
+    background: #8b5cf6;
 }
 
 .back-link {

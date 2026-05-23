@@ -190,3 +190,36 @@ body::after {
     font-size: 14px;
     color: #64748b;
 }
+
+.chat-header {
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+}
+
+.chat-header p {
+    color: #64748b;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+/* Botón morado específico para iniciar la evaluación */
+.chat-header .btn-save {
+    text-decoration: none;
+    display: inline-block;
+    background-color: #581c87; /* Morado académico */
+    color: #ffffff;
+    padding: 12px 24px;
+    font-weight: 700;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.chat-header .btn-save:hover {
+    background-color: #441569; /* Morado más oscuro al pasar el ratón */
+    transform: translateY(-1px); /* Efecto sutil de elevación */
+}

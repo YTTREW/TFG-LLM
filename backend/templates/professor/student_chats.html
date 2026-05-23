@@ -29,7 +29,7 @@
                             <td class="chat-title">{{ chat.title }}</td>
                             <td>
                                 {% if chat.grade is not none %}
-                                    <span class="badge-grade">{{ chat.grade }} / 10</span>
+                                    <span class="badge-grade">{{ '%0.0f' % chat.grade if chat.grade % 1 == 0 else chat.grade }} / 10</span>
                                 {% else %}
                                     <span class="badge-pending">Pending</span>
                                 {% endif %}

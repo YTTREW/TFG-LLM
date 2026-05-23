@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from backend.core.database import SessionLocal
 from backend.models import Student, Chat, Message, ClinicalCase, Professor
 from backend.core.security import get_password_hash
+from backend.services.llm_service import LLMService
 
 router = APIRouter(tags=["Profesor"])
 templates = Jinja2Templates(directory="backend/templates")
@@ -278,5 +279,132 @@ def edit_case_post(
         db.commit()
         
         return RedirectResponse("/professor/cases", status_code=303)
+    finally:
+        db.close()
+
+# Endpoint GET para mostrar el formulario de evaluación de un chat
+@router.get("/professor/chat/{chat_id}/evaluate") 
+def show_evaluation_form(
+    chat_id: int, 
+    request: Request
+):
+    if request.session.get("role") != "professor":
+        return RedirectResponse("/login", status_code=303)
+
+    db = SessionLocal()
+    try:
+        chat = db.query(Chat).filter_by(id=chat_id).first()
+        if not chat:
+            return HTMLResponse("Chat not found", status_code=404)
+        
+        return templates.TemplateResponse(
+            "professor/evaluate_chat.html", 
+            {"request": request, "chat": chat}
+        )
+    finally:
+        db.close() 
+
+# Endpoint POST para procesar calcular la nota
+@router.post("/professor/chat/{chat_id}/submit-evaluation")
+def submit_evaluation(
+    request: Request,
+    chat_id: int,
+    q1: int = Form(...),
+    q2: int = Form(...),
+    q3: int = Form(...),
+    q4: int = Form(...),
+    q5: int = Form(...),
+    q6: int = Form(...),
+    q7: int = Form(...),
+    q8: int = Form(...),
+    q9: int = Form(...),
+    q10: int = Form(...),
+    q11: int = Form(...),
+    q12: int = Form(...),
+    q13: int = Form(...),
+    q14: int = Form(...),
+    q15: int = Form(...),
+    q16: int = Form(...),
+    global_feedback: str = Form(None)
+):
+    if request.session.get("role") != "professor":
+        return RedirectResponse("/login", status_code=303)
+
+    db = SessionLocal()
+    try:
+        chat = db.query(Chat).filter_by(id=chat_id).first()
+        if not chat:
+            raise HTTPException(status_code=404, detail="Chat no encontrado")
+
+        respuestas = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16]
+        media = sum(respuestas) / len(respuestas)
+
+ 
+        nota_final = round((media - 1) * 2.5, 1)
+
+        if nota_final.is_integer():
+            nota_final = int(nota_final)
+
+        chat.grade = nota_final
+        chat.feedback = global_feedback
+        
+        db.commit()
+
+        return RedirectResponse(
+            url=f"/professor/student/{chat.student_id}/chats", 
+            status_code=303
+        )
+
+    finally:
+        db.close()
+
+@router.post("/professor/test-chat")
+def professor_test_chat(
+    request: Request,
+    case_id: int = Form(...),
+    history: str = Form(...)  # Historial en JSON desde Streamlit
+):
+
+    import json
+    historial_lista = json.loads(history)
+
+    # Clase temporal para simular objetos de base de datos o Pydantic
+    # para que tu LLMService pueda hacer 'msg.role' y 'msg.content' sin dar error
+    class MessageDictToObject:
+        def __init__(self, role, content):
+            self.role = role
+            self.content = content
+
+    db = SessionLocal()
+    try:
+        # 1. Obtener los datos reales del caso clínico
+        clinical_case = db.query(ClinicalCase).filter_by(id=case_id).first()
+        if not clinical_case:
+            raise HTTPException(status_code=404, detail="Caso clínico no encontrado")
+
+        # 2. Transformar los diccionarios del JSON en objetos legibles para LangChain
+        # y filtrar cualquier SystemMessage residual por si acaso
+        history_objects = [
+            MessageDictToObject(msg["role"], msg["content"]) 
+            for msg in historial_lista 
+            if msg.get("role") != "system"
+        ]
+
+        # 3. Instanciar tu servicio LLM
+        llm_service = LLMService()
+
+        # 4. Generar la respuesta usando tu propia lógica
+        ai_content = llm_service.get_response(
+            chat_history=history_objects,
+            patient_name=clinical_case.patient_name,
+            age=clinical_case.age,
+            problem_description=clinical_case.problem_description
+        )
+
+        return {"role": "assistant", "content": ai_content}
+
+    except Exception as e:
+        # Si Ollama está apagado o falla, mostramos el error elegantemente en el chat
+        return {"role": "assistant", "content": f"⚠️ LLM Error: {str(e)}"}
     finally:
         db.close()

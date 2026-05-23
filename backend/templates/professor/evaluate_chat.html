@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Evaluation Rubric - {{ chat.title }}</title>
+        <link rel="stylesheet" href="/static/css/professor/evaluate_chat.css">
+        <link rel="icon" type="image/png" href="/static/images/logoWeb.jpg">
+    </head>
+    <body>
+        <div class="chat-container" style="max-width: 700px;">
+            <h1>Clinical Skills Evaluation</h1>
+            <p class="subtitle">Evaluating Session: {{ chat.title }}</p>
+
+            <div id="validation-error" class="error-message" style="display: none;">
+                Please answer all questions before moving to the next section.
+            </div>
+            <form action="/professor/chat/{{ chat.id }}/submit-evaluation" method="post" id="rubricForm">
+                
+                <div class="step active" id="step1">
+                    <h3>Section 1: Collaboration & Active Listening (1/3)</h3>
+                    <hr>
+                    
+                    <div class="question-block">
+                        <p class="question-text">1. Did the student foster a collaborative partnership with the patient, acting as a facilitator rather than an authoritative figure?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q1" value="1" required> 1 (INCOMPETENT)</label>
+                            <label><input type="radio" name="q1" value="2"> 2</label>
+                            <label><input type="radio" name="q1" value="3"> 3</label>
+                            <label><input type="radio" name="q1" value="4"> 4</label>
+                            <label><input type="radio" name="q1" value="5"> 5 (PROFICIENT)</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">2. Did the student effectively use both simple and complex reflections to acknowledge and validate the patient's concerns?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q2" value="1" required> 1</label>
+                            <label><input type="radio" name="q2" value="2"> 2</label>
+                            <label><input type="radio" name="q2" value="3"> 3</label>
+                            <label><input type="radio" name="q2" value="4"> 4</label>
+                            <label><input type="radio" name="q2" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">3. Did the student use capsule summaries appropriately throughout the conversation to clarify and consolidate information?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q3" value="1" required> 1</label>
+                            <label><input type="radio" name="q3" value="2"> 2</label>
+                            <label><input type="radio" name="q3" value="3"> 3</label>
+                            <label><input type="radio" name="q3" value="4"> 4</label>
+                            <label><input type="radio" name="q3" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">4. Did the student provide clear and comprehensive major summaries at key transition points or to structure the session?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q4" value="1" required> 1</label>
+                            <label><input type="radio" name="q4" value="2"> 2</label>
+                            <label><input type="radio" name="q4" value="3"> 3</label>
+                            <label><input type="radio" name="q4" value="4"> 4</label>
+                            <label><input type="radio" name="q4" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">5. Did the student maintain a balanced ratio between asking questions and providing feedback, avoiding an interrogative or rigid style?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q5" value="1" required> 1</label>
+                            <label><input type="radio" name="q5" value="2"> 2</label>
+                            <label><input type="radio" name="q5" value="3"> 3</label>
+                            <label><input type="radio" name="q5" value="4"> 4</label>
+                            <label><input type="radio" name="q5" value="5"> 5</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step" id="step2">
+                    <h3>Section 2: Empathy & Therapeutic Stance (2/3)</h3>
+                    <hr>
+                    
+                    <div class="question-block">
+                        <p class="question-text">6. Did the student effectively communicate empathy and understanding through appropriate verbal responses</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q6" value="1" required> 1</label>
+                            <label><input type="radio" name="q6" value="2"> 2</label>
+                            <label><input type="radio" name="q6" value="3"> 3</label>
+                            <label><input type="radio" name="q6" value="4"> 4</label>
+                            <label><input type="radio" name="q6" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">7. Did the student demonstrate appropriate non-verbal behavior (e.g., active listening cues, pauses, and tone)?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q7" value="1" required> 1</label>
+                            <label><input type="radio" name="q7" value="2"> 2</label>
+                            <label><input type="radio" name="q7" value="3"> 3</label>
+                            <label><input type="radio" name="q7" value="4"> 4</label>
+                            <label><input type="radio" name="q7" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">8. Did the student maintain a normalizing and completely non-judgemental stance toward the patient's experiences?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q8" value="1" required> 1</label>
+                            <label><input type="radio" name="q8" value="2"> 2</label>
+                            <label><input type="radio" name="q8" value="3"> 3</label>
+                            <label><input type="radio" name="q8" value="4"> 4</label>
+                            <label><input type="radio" name="q8" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">9. Did the student convey genuine warmth, compassion, and respect throughout the interaction?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q9" value="1" required> 1</label>
+                            <label><input type="radio" name="q9" value="2"> 2</label>
+                            <label><input type="radio" name="q9" value="3"> 3</label>
+                            <label><input type="radio" name="q9" value="4"> 4</label>
+                            <label><input type="radio" name="q9" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">10. Did the student pace the session appropriately, allowing the patient enough time to process and respond without rushing?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q10" value="1" required> 1</label>
+                            <label><input type="radio" name="q10" value="2"> 2</label>
+                            <label><input type="radio" name="q10" value="3"> 3</label>
+                            <label><input type="radio" name="q10" value="4"> 4</label>
+                            <label><input type="radio" name="q10" value="5"> 5</label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="step" id="step3">
+                    <h3>Section 3: Clinical Assessment & Problem Exploration (3/3)</h3>
+                    <hr>
+                    
+                    <div class="question-block">
+                        <p class="question-text">11. Did the student demonstrate effective questioning skills, balancing open-ended and closed questions appropriately?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q11" value="1" required> 1</label>
+                            <label><input type="radio" name="q11" value="2"> 2</label>
+                            <label><input type="radio" name="q11" value="3"> 3</label>
+                            <label><input type="radio" name="q11" value="4"> 4</label>
+                            <label><input type="radio" name="q11" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">12. Did the student successfully elicit a clear, detailed, and comprehensive description of the presenting problem?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q12" value="1" required> 1</label>
+                            <label><input type="radio" name="q12" value="2"> 2</label>
+                            <label><input type="radio" name="q12" value="3"> 3</label>
+                            <label><input type="radio" name="q12" value="4"> 4</label>
+                            <label><input type="radio" name="q12" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">13. Did the student effectively explore and elicit the physical or bodily symptoms associated with the problem?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q13" value="1" required> 1</label>
+                            <label><input type="radio" name="q13" value="2"> 2</label>
+                            <label><input type="radio" name="q13" value="3"> 3</label>
+                            <label><input type="radio" name="q13" value="4"> 4</label>
+                            <label><input type="radio" name="q13" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">14. Did the student successfully identify and elicit the behavioral changes or actions related to the problem?"</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q14" value="1" required> 1</label>
+                            <label><input type="radio" name="q14" value="2"> 2</label>
+                            <label><input type="radio" name="q14" value="3"> 3</label>
+                            <label><input type="radio" name="q14" value="4"> 4</label>
+                            <label><input type="radio" name="q14" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">15. Did the student adequately explore and draw out the patient's key thoughts or cognitions regarding the problem?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q15" value="1" required> 1</label>
+                            <label><input type="radio" name="q15" value="2"> 2</label>
+                            <label><input type="radio" name="q15" value="3"> 3</label>
+                            <label><input type="radio" name="q15" value="4"> 4</label>
+                            <label><input type="radio" name="q15" value="5"> 5</label>
+                        </div>
+                    </div>
+                    <div class="question-block">
+                        <p class="question-text">16. "Did the student effectively elicit and clarify the specific emotions the patient associates with the presenting problem?</p>
+                        <div class="options-group">
+                            <label><input type="radio" name="q16" value="1" required> 1</label>
+                            <label><input type="radio" name="q16" value="2"> 2</label>
+                            <label><input type="radio" name="q16" value="3"> 3</label>
+                            <label><input type="radio" name="q16" value="4"> 4</label>
+                            <label><input type="radio" name="q16" value="5"> 5</label>
+                        </div>
+                    </div>
+
+                    <div class="question-block">
+                        <p class="question-text">17. Global Feedback / Areas for Improvement</p>
+                        <textarea name="global_feedback" style="width: 100%; height: 80px;" placeholder="Write notes here..."></textarea>
+                    </div>
+                </div>
+
+
+                <div class="nav-buttons">
+                    <button type="button" class="btn-nav" id="prevBtn" onclick="changeStep(-1)" disabled>← Previous</button>
+                    <button type="button" class="btn-nav" id="nextBtn" onclick="changeStep(1)">Next →</button>
+                    <button type="submit" class="btn-save" id="submitBtn" style="display: none;">Submit Evaluation</button>
+                </div>
+            </form>
+            <a href="/professor/student/{{ chat.student_id }}/chat/{{ chat.id }}"" class="back-link">
+                ← Back to chat review
+            </a>
+        </div>
+
+        <script>
+            let currentStep = 1;
+            const totalSteps = 3; 
+            function changeStep(increment) {
+                const activeStepEl = document.getElementById(`step${currentStep}`);
+                const inputs = activeStepEl.querySelectorAll('input[required]');
+                const errorDiv = document.getElementById('validation-error');
+                
+                if (increment === 1) {
+                    for (let input of inputs) {
+                        const name = input.name;
+                        const checked = activeStepEl.querySelector(`input[name="${name}"]:checked`);
+                        if (!checked) {
+                            errorDiv.style.display = 'block';
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            return; 
+                        }
+                    }
+                }
+
+                errorDiv.style.display = 'none';
+
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                
+                currentStep += increment;
+                
+                document.getElementById(`step${currentStep}`).classList.add('active');
+
+                document.getElementById('prevBtn').disabled = (currentStep === 1);
+                
+                if (currentStep === totalSteps) {
+                    document.getElementById('nextBtn').style.display = 'none';
+                    document.getElementById('submitBtn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('nextBtn').style.display = 'inline-block';
+                    document.getElementById('submitBtn').style.display = 'none';
+                }
+            }
+        </script>
+    </body>
+</html>

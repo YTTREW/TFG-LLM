@@ -1,6 +1,7 @@
 import os
 import requests
 import streamlit as st
+import json
 
 BACKEND_HOST = os.getenv("BACKEND_URL", "http://localhost:8000")
 
@@ -75,3 +76,24 @@ def delete_chat(chat_id: int):
     res = requests.delete(url, headers=auth_headers())
     res.raise_for_status()
     return res.json()
+
+def send_professor_test_message(case_id, history_list):
+    payload = {
+        "case_id": case_id,
+        "history": json.dumps(history_list)
+    }
+    
+    # TRUCO: Le quitamos el '/api/chats' al BASE_URL si lo tiene, 
+    # para apuntar directamente a la raíz del backend
+    root_url = BASE_URL.replace("/api/chats", "")
+    target_url = f"{root_url}/professor/test-chat"
+    
+    try:
+        response = requests.post(target_url, data=payload) 
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {"role": "assistant", "content": f"Error del servidor: {response.status_code} - {response.text}"}
+    except Exception as e:
+        return {"role": "assistant", "content": f"Error de conexión: {str(e)}"}

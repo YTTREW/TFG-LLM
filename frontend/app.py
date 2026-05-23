@@ -254,6 +254,63 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+
+# ====================================
+# Interfaz del Profesor
+# ====================================
+if "preview_case_id" in st.query_params:
+    case_id = int(st.query_params["preview_case_id"])
+    
+    if st.session_state.get("last_preview_id") != case_id:
+        st.session_state.preview_messages = []
+        st.session_state.last_preview_id = case_id
+
+    if "preview_messages" not in st.session_state:
+        st.session_state.preview_messages = []
+    
+    col_margin1, col_back, col_margin2 = st.sidebar.columns([0.5, 6, 0.5])
+    
+    with col_back:
+        if st.button("🔙 Back to Cases", use_container_width=True):
+            st.markdown(
+                '<meta http-equiv="refresh" content="0; url=http://localhost:8000/professor/cases">',
+                unsafe_allow_html=True
+            )
+            
+    st.sidebar.write("")
+
+    st.title("Case Preview Mode")
+    st.info("You are testing this clinical case. This conversation is temporary and will NOT be saved in the database.")
+
+    if "preview_messages" not in st.session_state:
+        st.session_state.preview_messages = []
+
+    for msg in st.session_state.preview_messages:
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
+
+    if prompt := st.chat_input("Test the virtual patient..."):
+        st.session_state.preview_messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        with st.spinner("Generating response..."):
+            # IMPORTANTE: Importamos la nueva función del api_client
+            from api_client import send_professor_test_message
+            
+            # Mandamos todo el historial acumulado en memoria RAM al backend
+            ai_response = send_professor_test_message(case_id, st.session_state.preview_messages)
+            response = ai_response["content"]
+            
+        with st.chat_message("assistant"):
+            st.markdown(response)
+        st.session_state.preview_messages.append({"role": "assistant", "content": response})
+
+    st.stop()
+
+# ====================================
+# Interfaz del Alumno
+# ====================================
 # ---------- AUTH ----------
 if "token" not in st.session_state:
     token_param = st.query_params.get("token")

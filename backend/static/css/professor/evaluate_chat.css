@@ -1,0 +1,218 @@
+body {
+    background-color: #f8fafc;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: #1e293b;
+}
+
+.chat-container {
+    max-width: 750px;
+    margin: 40px auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+}
+
+h1 {
+    font-size: 26px;
+    color: #0f172a;
+    margin-bottom: 6px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+
+h3 {
+    color: #581c87;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+hr {
+    border: 0;
+    border-top: 2px solid #f1f5f9;
+    margin-bottom: 30px;
+}
+
+.question-block {
+    margin-bottom: 24px;
+    padding: 22px;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.question-block:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+}
+
+.question-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #334155;
+    margin-top: 0;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.options-group {
+    display: flex;
+    justify-content: space-between;
+    background: #ffffff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+}
+
+.options-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #475569;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.options-group label:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.options-group input[type="radio"] {
+    accent-color: #3b82f6; 
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+}
+
+textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    font-family: inherit;
+    font-size: 14px;
+    color: #1e293b;
+    resize: vertical;
+    box-sizing: border-box;
+    margin-top: 6px;
+    transition: all 0.2s;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 35px;
+    padding-top: 25px;
+    border-top: 2px solid #f1f5f9;
+}
+
+.btn-nav {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.btn-nav:hover {
+    background-color: #2563eb;
+}
+
+.btn-nav:disabled {
+    background-color: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.btn-save {
+    background-color: #16a34a;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px; 
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background-color 0.2s;
+    box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.2);
+}
+
+.btn-save:hover {
+    background-color: #15803d;
+}
+
+.back-link {
+    display: block;
+    width: fit-content;
+    margin: 30px auto 0 auto;
+    padding: 10px 20px;
+    color: #475569;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.03);
+    transition: 0.2s ease;
+}
+
+.back-link:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.08);
+    transform: translateX(-4px); 
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #f87171;
+    padding: 12px 15px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.step { 
+    display: none; 
+}
+
+.step.active { 
+    display: block; 
+}
