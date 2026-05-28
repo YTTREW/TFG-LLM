@@ -362,14 +362,13 @@ def submit_evaluation(
 def professor_test_chat(
     request: Request,
     case_id: int = Form(...),
-    history: str = Form(...)  # Historial en JSON desde Streamlit
+    history: str = Form(...)  
 ):
 
     import json
     historial_lista = json.loads(history)
 
-    # Clase temporal para simular objetos de base de datos o Pydantic
-    # para que tu LLMService pueda hacer 'msg.role' y 'msg.content' sin dar error
+
     class MessageDictToObject:
         def __init__(self, role, content):
             self.role = role
@@ -377,23 +376,19 @@ def professor_test_chat(
 
     db = SessionLocal()
     try:
-        # 1. Obtener los datos reales del caso clínico
         clinical_case = db.query(ClinicalCase).filter_by(id=case_id).first()
         if not clinical_case:
             raise HTTPException(status_code=404, detail="Caso clínico no encontrado")
 
-        # 2. Transformar los diccionarios del JSON en objetos legibles para LangChain
-        # y filtrar cualquier SystemMessage residual por si acaso
+        # 2.  los diccionarios del JSON en objetos legibles para LangChain
         history_objects = [
             MessageDictToObject(msg["role"], msg["content"]) 
             for msg in historial_lista 
             if msg.get("role") != "system"
         ]
 
-        # 3. Instanciar tu servicio LLM
         llm_service = LLMService()
 
-        # 4. Generar la respuesta usando tu propia lógica
         ai_content = llm_service.get_response(
             chat_history=history_objects,
             patient_name=clinical_case.patient_name,
@@ -404,7 +399,6 @@ def professor_test_chat(
         return {"role": "assistant", "content": ai_content}
 
     except Exception as e:
-        # Si Ollama está apagado o falla, mostramos el error elegantemente en el chat
         return {"role": "assistant", "content": f"⚠️ LLM Error: {str(e)}"}
     finally:
         db.close()
