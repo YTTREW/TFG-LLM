@@ -6,12 +6,10 @@ st.set_page_config(page_title="Chat Student", layout="wide")
 
 st.markdown("""
     <style>
-/* 1. FONDO GLOBAL */
     .stApp {
         background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
     }
 
-    /* 2. TÍTULOS PRINCIPALES (Forzamos el color oscuro sí o sí) */
     div.block-container h1, 
     div.block-container h2, 
     div.block-container h3 {
@@ -19,7 +17,6 @@ st.markdown("""
         font-weight: 800 !important;
     }
 
-    /* 3. NOTA DE EVALUACIÓN (Grade) - Fondo verde claro, letra verde oscura */
     div[data-testid="stAlert"] {
         background-color: #dcfce7 !important;
         border: 1px solid #16a34a !important;
@@ -30,7 +27,6 @@ st.markdown("""
         font-weight: 700 !important;
     }
 
-    /* FORZAR COLORES DE LOS TEXTOS DE ESTADO (Para ganarle al blanco global) */
     .status-text-evaluable {
         color: #f87171 !important; /* Rojo pastel brillante muy visible */
         font-weight: 900 !important;
@@ -41,10 +37,7 @@ st.markdown("""
         font-weight: 900 !important;
         font-size: 15px !important;
     }
-
-/* 4. EXPANDER DE FEEDBACK (Letras oscuras y legibles) */
     
-    /* 1. Recuadro general (Borde azul para destacar) */
     .main [data-testid="stExpander"] {
         border: 2px solid #3b82f6 !important; /* Borde azul vibrante */
         border-radius: 8px !important;
@@ -53,13 +46,11 @@ st.markdown("""
         overflow: hidden !important;
     }
 
-    /* 2. Fondo de la cabecera (Azul claro para diferenciarlo del chat) */
     .main [data-testid="stExpander"] summary {
         background-color: #bfdbfe !important; 
         padding: 10px 15px !important;
     }
 
-    /* 3. ¡TEXTO OSCURO PARA QUE SE LEA PERFECTAMENTE! */
     .main [data-testid="stExpander"] summary,
     .main [data-testid="stExpander"] summary p,
     .main [data-testid="stExpander"] summary span,
@@ -71,18 +62,15 @@ st.markdown("""
         background-color: transparent !important; 
     }
 
-    /* 4. Interior del recuadro (Donde va el comentario) */
     .main [data-testid="stExpander"] [data-testid="stExpanderDetails"] {
         background-color: #ffffff !important;
         padding: 15px !important;
     }
 
-    /* 5. Texto del comentario del profesor */
     .main [data-testid="stExpander"] [data-testid="stExpanderDetails"] * {
         color: #1e293b !important;
     }
 
-    /* 5. SIDEBAR Y SUS DESPLEGABLES (Oscuro) */
     section[data-testid="stSidebar"] {
         background-color: #1e293b !important;
     }
@@ -96,7 +84,6 @@ st.markdown("""
         margin-bottom: 10px !important; 
     }
     
-    /* FORZAR TAMAÑO DEL TÍTULO DE CASOS CLÍNICOS (OPCIÓN BLINDADA) */
     section[data-testid="stSidebar"] [data-testid="stExpander"] summary p,
     section[data-testid="stSidebar"] [data-testid="stExpander"] summary span,
     section[data-testid="stSidebar"] details summary * {
@@ -106,14 +93,12 @@ st.markdown("""
         line-height: 1.5 !important;
     }
     
-    /* Reducir el espacio interior del desplegable en la sidebar */
     section[data-testid="stSidebar"] div[data-testid="stExpanderDetails"] {
         background-color: transparent !important;
         padding-top: 0.5rem !important; 
         padding-bottom: 0.5rem !important;
     }
 
-    /* 6. CHAT BUBBLES - Burbujas blancas, texto oscuro */
     div[data-testid="stChatMessage"] {
         background-color: #ffffff !important;
         border: 1px solid #e2e8f0 !important;
@@ -123,7 +108,6 @@ st.markdown("""
         color: #0f172a !important;
     }
 
-    /* 7. BOTONES PRINCIPALES (Secundarios - Morado con efecto Zoom) */
     button[kind="secondary"] {
         background: #581c87 !important; /* Morado oscuro elegante */
         color: white !important;
@@ -139,7 +123,6 @@ st.markdown("""
         box-shadow: 0 6px 10px rgba(107, 33, 168, 0.3) !important; /* Sombra para acompañar el zoom */
     }
             
-    /* 8. BOTONES DESTACADOS (Graded - Verde fijo, sin animación) */
     button[kind="primary"] {
         background: linear-gradient(45deg, #16a34a, #22c55e) !important;
         color: white !important;
@@ -155,7 +138,6 @@ st.markdown("""
         box-shadow: 0 6px 10px rgba(0,0,0,0.3) !important;
     }
             
-    /* Estilo para los recuadros de estado dentro del expander */
     .status-box {
         padding: 12px;
         border-radius: 8px;
@@ -175,8 +157,6 @@ st.markdown("""
         font-size: 14px !important;
     }
             
-    /* 9. BOTÓN DE BORRAR (Papelera en rojo oscuro elegante) */
-    /* Apuntamos directamente a los botones de la segunda columna (col2) dentro del desplegable */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(2) button {
         background: linear-gradient(145deg, #7f1d1d, #991b1b) !important; /* Degradado rojo oscuro/cereza */
         color: white !important;
@@ -185,7 +165,6 @@ st.markdown("""
         transition: all 0.2s ease-in-out !important;
     }
 
-    /* Efecto al pasar el ratón (solo se aplica si NO está bloqueado) */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(2) button:hover:not(:disabled) {
         background: linear-gradient(145deg, #991b1b, #b91c1c) !important; /* Rojo un poco más vivo */
         border-color: #7f1d1d !important;
@@ -193,7 +172,6 @@ st.markdown("""
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
     }
 
-    /* Estilo para cuando el botón está deshabilitado (cuando ya está evaluado/enviado) */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(2) button:disabled {
         background: #292524 !important; /* Un gris/marrón muy oscuro y neutro */
         border: 1px solid #44403c !important;
@@ -201,8 +179,6 @@ st.markdown("""
         opacity: 0.6 !important;
     }
             
-    /* 11. CHAT ACTIVO (Sin vibración y con efecto de hundido) */
-    /* Cuando el botón verde (Graded) es el chat actual (está deshabilitado) */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="primary"]:disabled {
         background: #16a34a !important; /* Verde sólido para que no brille tanto */
         color: white !important;
@@ -211,15 +187,12 @@ st.markdown("""
         border: 1px solid #14532d !important;
     }
 
-    /* Opcional: Hacemos lo mismo para los botones normales/morados por si abres un chat de práctica */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="secondary"]:disabled {
         opacity: 1 !important;
         box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5) !important; /* Efecto hundido */
         filter: brightness(0.85) !important; /* Lo oscurece un poquito para dar sensación de profundidad */
     }
             
-    /* 10. BOTONES SUPERIORES (Perfil y Logout - Visibles y Grandes) */
-    /* Regla general para hacerlos MÁS GRANDES (Alto y tamaño de emoji) */
     section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type button {
         padding: 15px 0px !important; /* Los hace mucho más altos */
         font-size: 28px !important; /* Hace que el emoji se vea gigante */
@@ -228,7 +201,6 @@ st.markdown("""
         transition: all 0.2s ease-in-out !important;
     }
 
-    /* Botón de PERFIL (Columna 2) -> Azul vibrante */
     section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-child(2) button {
         background: linear-gradient(135deg, #3b82f6, #2563eb) !important; /* Azul eléctrico */
         border: 1px solid #60a5fa !important;
@@ -295,10 +267,8 @@ if "preview_case_id" in st.query_params:
             st.markdown(prompt)
 
         with st.spinner("Generating response..."):
-            # IMPORTANTE: Importamos la nueva función del api_client
             from api_client import send_professor_test_message
             
-            # Mandamos todo el historial acumulado en memoria RAM al backend
             ai_response = send_professor_test_message(case_id, st.session_state.preview_messages)
             response = ai_response["content"]
             

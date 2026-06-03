@@ -83,8 +83,6 @@ def send_professor_test_message(case_id, history_list):
         "history": json.dumps(history_list)
     }
     
-    # TRUCO: Le quitamos el '/api/chats' al BASE_URL si lo tiene, 
-    # para apuntar directamente a la raíz del backend
     root_url = BASE_URL.replace("/api/chats", "")
     target_url = f"{root_url}/professor/test-chat"
     
