@@ -358,6 +358,7 @@ def submit_evaluation(
     finally:
         db.close()
 
+# Endpoint POST para usar el chat de prueba del profesor
 @router.post("/professor/test-chat")
 def professor_test_chat(
     request: Request,
@@ -367,7 +368,6 @@ def professor_test_chat(
 
     import json
     historial_lista = json.loads(history)
-
 
     class MessageDictToObject:
         def __init__(self, role, content):
@@ -380,7 +380,6 @@ def professor_test_chat(
         if not clinical_case:
             raise HTTPException(status_code=404, detail="Caso clínico no encontrado")
 
-        # 2.  los diccionarios del JSON en objetos legibles para LangChain
         history_objects = [
             MessageDictToObject(msg["role"], msg["content"]) 
             for msg in historial_lista 

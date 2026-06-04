@@ -69,8 +69,8 @@ a {
 }
 
 .btn-primary { background: #2563eb; }
-.btn-secondary { background: #0891b2; }
-.btn-accent { background: #7c3aed; }
+.btn-secondary { background: #2563eb; }
+.btn-accent { background: #2563eb; }
 .btn-danger { background: #dc2626; }
 
 .btn:hover {

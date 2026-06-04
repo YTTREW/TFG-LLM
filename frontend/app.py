@@ -28,18 +28,18 @@ st.markdown("""
     }
 
     .status-text-evaluable {
-        color: #f87171 !important; /* Rojo pastel brillante muy visible */
+        color: #f87171 !important;
         font-weight: 900 !important;
         font-size: 15px !important;
     }
     .status-text-practice {
-        color: #4ade80 !important; /* Verde pastel brillante muy visible */
+        color: #4ade80 !important;
         font-weight: 900 !important;
         font-size: 15px !important;
     }
     
     .main [data-testid="stExpander"] {
-        border: 2px solid #3b82f6 !important; /* Borde azul vibrante */
+        border: 2px solid #3b82f6 !important;
         border-radius: 8px !important;
         background-color: #ffffff !important;
         margin-bottom: 20px !important;
@@ -55,8 +55,8 @@ st.markdown("""
     .main [data-testid="stExpander"] summary p,
     .main [data-testid="stExpander"] summary span,
     .main [data-testid="stExpander"] summary svg {
-        color: #0f172a !important; /* Azul marino muy oscuro / casi negro */
-        fill: #0f172a !important; /* Flecha oscura */
+        color: #0f172a !important;
+        fill: #0f172a !important; 
         font-weight: 800 !important;
         font-size: 16px !important;
         background-color: transparent !important; 
@@ -109,7 +109,7 @@ st.markdown("""
     }
 
     button[kind="secondary"] {
-        background: #581c87 !important; /* Morado oscuro elegante */
+        background: #581c87 !important;
         color: white !important;
         font-weight: 700 !important;
         border-radius: 10px !important;
@@ -118,9 +118,9 @@ st.markdown("""
     }
     
     button[kind="secondary"]:hover {
-        background: #6b21a8 !important; /* Se aclara un poco */
-        transform: scale(1.02) !important; /* ¡AQUÍ ESTÁ EL EFECTO DE AUMENTO! */
-        box-shadow: 0 6px 10px rgba(107, 33, 168, 0.3) !important; /* Sombra para acompañar el zoom */
+        background: #6b21a8 !important; 
+        transform: scale(1.02) !important; 
+        box-shadow: 0 6px 10px rgba(107, 33, 168, 0.3) !important; 
     }
             
     button[kind="primary"] {
@@ -129,99 +129,134 @@ st.markdown("""
         font-weight: 800 !important;
         border-radius: 10px !important;
         border: 1px solid #14532d !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.2) !important; /* Sombra estática para destacar */
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2) !important; 
         transition: all 0.2s ease-in-out !important;
     }
 
     button[kind="primary"]:hover {
-        transform: scale(1.02) !important; /* Crece un pelín al pasar el ratón */
+        transform: scale(1.02) !important; 
         box-shadow: 0 6px 10px rgba(0,0,0,0.3) !important;
     }
             
-    .status-box {
+.status-box {
         padding: 12px;
         border-radius: 8px;
         margin-bottom: 15px;
-        border: 1px solid #334155;
+        background-color: transparent !important; 
     }
     .status-evaluable {
-        background-color: #450a0a !important; /* Rojo muy oscuro */
-        border-left: 5px solid #ef4444 !important;
+        border: 2px solid #ef4444 !important; 
     }
     .status-practice {
-        background-color: #064e3b !important; /* Verde muy oscuro */
-        border-left: 5px solid #10b981 !important;
+        border: 2px solid #10b981 !important; 
     }
     .status-box p {
         margin: 0 !important;
         font-size: 14px !important;
     }
-            
+
+    /* =======================================================
+       1. BOTÓN NEW SIMULATION (Transparente punteado)
+       ======================================================= */
+    div[data-testid="stExpanderDetails"] button[kind="secondary"] {
+        background: transparent !important;
+        border: 2px dashed #94a3b8 !important; 
+        color: #475569 !important; 
+        font-weight: 700 !important;
+        border-radius: 10px !important;
+        box-shadow: none !important;
+        transition: all 0.2s ease-in-out !important;
+    }
+
+    div[data-testid="stExpanderDetails"] button[kind="secondary"]:hover {
+        border-color: #3b82f6 !important;
+        color: #3b82f6 !important;
+        background: #eff6ff !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* =======================================================
+       2. BOTONES CHAT SUBMITTED (Morado - SOLO COLUMNA 1)
+       ======================================================= */
+    div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="secondary"] {
+        background: #581c87 !important; 
+        color: white !important;
+        border: 1px solid #3b0764 !important;
+        border-style: solid !important; 
+        box-shadow: none !important;
+    }
+    
+    div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="secondary"]:hover {
+        background: #6b21a8 !important; 
+        color: white !important;
+        transform: scale(1.02) !important; 
+        box-shadow: 0 6px 10px rgba(107, 33, 168, 0.3) !important; 
+    }
+
+    div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="secondary"]:disabled {
+        opacity: 1 !important;
+        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5) !important; 
+        filter: brightness(0.85) !important; 
+    }
+
+    /* =======================================================
+       3. BOTÓN PAPELERA (Rojo - SOLO COLUMNA 2)
+       ======================================================= */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(2) button {
-        background: linear-gradient(145deg, #7f1d1d, #991b1b) !important; /* Degradado rojo oscuro/cereza */
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important; 
         color: white !important;
         border: 1px solid #450a0a !important;
+        border-style: solid !important;
         border-radius: 10px !important;
         transition: all 0.2s ease-in-out !important;
     }
 
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(2) button:hover:not(:disabled) {
-        background: linear-gradient(145deg, #991b1b, #b91c1c) !important; /* Rojo un poco más vivo */
+        background: linear-gradient(145deg, #991b1b, #b91c1c) !important; 
         border-color: #7f1d1d !important;
-        transform: scale(1.05) !important; /* Hace un pequeñísimo zoom de advertencia */
+        transform: scale(1.05) !important;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+        color: white !important;
     }
 
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(2) button:disabled {
-        background: #292524 !important; /* Un gris/marrón muy oscuro y neutro */
+        background: #292524 !important; 
         border: 1px solid #44403c !important;
         color: #78716c !important;
         opacity: 0.6 !important;
     }
-            
-    div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="primary"]:disabled {
-        background: #16a34a !important; /* Verde sólido para que no brille tanto */
-        color: white !important;
-        opacity: 1 !important; /* Evita que Streamlit lo vuelva transparente */
-        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5) !important; /* Sombra interior (botón hundido) */
-        border: 1px solid #14532d !important;
-    }
 
-    div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="secondary"]:disabled {
-        opacity: 1 !important;
-        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.5) !important; /* Efecto hundido */
-        filter: brightness(0.85) !important; /* Lo oscurece un poquito para dar sensación de profundidad */
-    }
-            
+    /* =======================================================
+       4. BOTONES DEL SIDEBAR (Perfil y Salir)
+       ======================================================= */
     section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type button {
-        padding: 15px 0px !important; /* Los hace mucho más altos */
-        font-size: 28px !important; /* Hace que el emoji se vea gigante */
+        padding: 15px 0px !important; 
+        font-size: 28px !important; 
         line-height: 1 !important;
         border-radius: 12px !important;
         transition: all 0.2s ease-in-out !important;
     }
 
-    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-child(2) button {
-        background: linear-gradient(135deg, #3b82f6, #2563eb) !important; /* Azul eléctrico */
+    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-child(2):nth-last-child(4) button {
+        background: linear-gradient(135deg, #3b82f6, #2563eb) !important; 
         border: 1px solid #60a5fa !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
     }
     
-    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-child(2) button:hover {
-        background: linear-gradient(135deg, #60a5fa, #3b82f6) !important; /* Más claro al pasar el ratón */
-        transform: scale(1.08) !important; /* Efecto zoom */
+    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-child(2):nth-last-child(4) button:hover {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6) !important; 
+        transform: scale(1.08) !important; 
     }
 
-    /* Botón de SALIR (Columna 4) -> Rojo vibrante */
-    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-child(4) button {
-        background: linear-gradient(135deg, #ef4444, #dc2626) !important; /* Rojo vivo */
+    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-last-child(2) button {
+        background: linear-gradient(135deg, #ef4444, #dc2626) !important; 
         border: 1px solid #f87171 !important;
         box-shadow: 0 4px 6px rgba(0,0,0,0.3) !important;
     }
 
-    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-child(4) button:hover {
-        background: linear-gradient(135deg, #f87171, #ef4444) !important; /* Más claro al pasar el ratón */
-        transform: scale(1.08) !important; /* Efecto zoom */
+    section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type div[data-testid="column"]:nth-last-child(2) button:hover {
+        background: linear-gradient(135deg, #f87171, #ef4444) !important; 
+        transform: scale(1.08) !important;
     }
     </style>
     """, unsafe_allow_html=True)
