@@ -16,7 +16,7 @@ El proyecto está construido bajo una arquitectura distribuida que separa la ló
 
 ## ✨ Funcionalidades Principales
 
-### 1. Control de Acceso Basado en Roles (RBAC)
+### 1. Control de Acceso Basado en Roles
 * **Administrador:** Alta, baja y gestión de cuentas de profesores y estudiantes.
 * **Profesor:** Creación y configuración de casos clínicos (pacientes virtuales), gestión de plazos de entrega y evaluación de simulaciones.
 * **Estudiante:** Acceso a la interfaz de simulaciones para interactuar con los casos clínicos activos.
