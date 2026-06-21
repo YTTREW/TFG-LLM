@@ -1,4 +1,4 @@
-# Simulador de Pacientes Virtuales con IA para Psicología Clínica 🧠🤖
+# Desarrollo de un sistema basado en modelos de lenguaje mediante pacientes simulados
 Plataforma educativa interactiva diseñada para estudiantes de psicología. Utiliza Inteligencia Artificial (Modelos de Lenguaje Grande - LLMs) ejecutada localmente para simular entrevistas clínicas realistas, permitiendo a los estudiantes practicar, y a los profesores evaluar su desempeño fácilmente.
 
 ---
