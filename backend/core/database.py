@@ -7,6 +7,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+# Obtiene una sesión de base de datos
 def get_db():
     db = SessionLocal()
     try:

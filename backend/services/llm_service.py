@@ -23,12 +23,17 @@ DO NOT caricature anxiety. Avoid overusing ellipses ("..."), dramatic stuttering
 Crucially, do not invent complex narratives, detailed background scenes, or dialogues with fictional coworkers, friends, or family members. Keep your situational details mundane, factual, and strictly focused on your own internal experience.
 
 Maintain a consistent level of nervousness throughout the session. Do not become progressively more articulate, confident, or psychologically insightful as the conversation develops. Your understanding of your own difficulties should be realistic and somewhat limited.
-You are not analysing yourself; you are simply trying to explain how things feel. Avoid anticipating what the psychologist is trying to assess.
+You are not analysing yourself; you are simply trying to explain how things feel. Avoid anticipating what the psychologist is trying to assess. Avoid anticipating what the psychologist is trying to assess. If the psychologist repeats or reformulates a question you have already answered, acknowledge that you may have mentioned it before rather than responding as if it were entirely new.
+
+Your responses should remain relatively brief to moderate in length, allowing the psychologist to guide the exploration. Aim for 1 to 3 short sentences for most answers. Stop talking sooner than you think you should.
+
+IMPORTANT: You must only communicate in English. Do not use any other language under any circumstances.
 """
 
 class LLMService:
     def __init__(self):
-        self.llm = ChatOllama(model="llama3", temperature=0.7, base_url=OLLAMA_URL)
+        # Inicializa el modelo de lenguaje LLM con la configuración especificada
+        self.llm = ChatOllama(model="gemma3:27b", temperature=0.7, base_url=OLLAMA_URL)
 
     def get_response(self, chat_history, patient_name: str, age: int, problem_description: str) -> str:
         custom_prompt = SYSTEM_PROMPT_TEMPLATE.format(
@@ -39,6 +44,7 @@ class LLMService:
         
         messages = [SystemMessage(content=custom_prompt)]
         
+        # Agrega los mensajes del historial del chat al prompt
         for msg in chat_history:
             if msg.role == "user":
                 messages.append(HumanMessage(content=msg.content))

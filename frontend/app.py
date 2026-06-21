@@ -155,9 +155,6 @@ st.markdown("""
         font-size: 14px !important;
     }
 
-    /* =======================================================
-       1. BOTÓN NEW SIMULATION (Transparente punteado)
-       ======================================================= */
     div[data-testid="stExpanderDetails"] button[kind="secondary"] {
         background: transparent !important;
         border: 2px dashed #94a3b8 !important; 
@@ -171,13 +168,10 @@ st.markdown("""
     div[data-testid="stExpanderDetails"] button[kind="secondary"]:hover {
         border-color: #3b82f6 !important;
         color: #3b82f6 !important;
-        background: #eff6ff !important;
+        background: transparent !important; /* <--- AHORA SE QUEDA TRANSPARENTE */
         transform: translateY(-1px) !important;
     }
 
-    /* =======================================================
-       2. BOTONES CHAT SUBMITTED (Morado - SOLO COLUMNA 1)
-       ======================================================= */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(1) button[kind="secondary"] {
         background: #581c87 !important; 
         color: white !important;
@@ -199,9 +193,6 @@ st.markdown("""
         filter: brightness(0.85) !important; 
     }
 
-    /* =======================================================
-       3. BOTÓN PAPELERA (Rojo - SOLO COLUMNA 2)
-       ======================================================= */
     div[data-testid="stExpanderDetails"] div[data-testid="column"]:nth-child(2) button {
         background: linear-gradient(135deg, #ef4444, #dc2626) !important; 
         color: white !important;
@@ -226,9 +217,6 @@ st.markdown("""
         opacity: 0.6 !important;
     }
 
-    /* =======================================================
-       4. BOTONES DEL SIDEBAR (Perfil y Salir)
-       ======================================================= */
     section[data-testid="stSidebar"] div[data-testid="stHorizontalBlock"]:first-of-type button {
         padding: 15px 0px !important; 
         font-size: 28px !important; 
@@ -316,7 +304,7 @@ if "preview_case_id" in st.query_params:
 # ====================================
 # Interfaz del Alumno
 # ====================================
-# ---------- AUTH ----------
+# ---------- Autenticacion ----------
 if "token" not in st.session_state:
     token_param = st.query_params.get("token")
 
@@ -326,7 +314,7 @@ if "token" not in st.session_state:
         st.error("No authentication token provided")
         st.stop()
 
-# ---------- INIT SESSION ----------
+# ---------- Inicio de sesion ----------
 
 if "current_chat_id" not in st.session_state:
     st.session_state.current_chat_id = None
@@ -334,7 +322,7 @@ if "current_chat_id" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# ---------- SIDEBAR ----------
+# ---------- Barra lateral ----------
 col_margin1, col_profile, col_spacer, col_logout, col_margin2 = st.sidebar.columns([0.5, 3, 1.5, 3, 0.5])
 
 with col_profile:
@@ -470,7 +458,7 @@ if current_chat:
 
     col_titulo, col_boton = st.columns([3, 1])
     with col_titulo:
-        st.title(f"🧠 Virtual Patient: {patient_name}")
+        st.title(f"Virtual Patient: {patient_name}")
             
     with col_boton:
         st.write("") 

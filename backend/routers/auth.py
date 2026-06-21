@@ -1,7 +1,7 @@
-from aiohttp import request
-from fastapi import APIRouter, Request, Form, Header, HTTPException, Depends
+from fastapi import APIRouter, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from httpcore import request
 
 from backend.core.database import SessionLocal
 from backend.core.security import verify_password, get_password_hash
@@ -81,6 +81,15 @@ def login(  request: Request, username: str = Form(...), password: str = Form(..
 # Endpoint GET para cerrar sesión
 @router.get("/logout")
 def logout(request: Request):
+    token = request.session.get("token")
+    if token:
+        db = SessionLocal()
+        try:
+            db.query(SessionToken).filter_by(token=token).delete()
+            db.commit()
+        finally:
+            db.close()
+            
     request.session.clear()
     return RedirectResponse("/login", status_code=303)
 

@@ -97,39 +97,6 @@ def open_chat(
     finally:
         db.close()
 
-# Endpoint POST para asignar nota y feedback a un chat
-@router.post("/professor/chat/{chat_id}/grade")
-def assign_grade(
-    request: Request,
-    chat_id: int,
-    grade: float = Form(...),
-    feedback: str = Form(None)
-):
-    if request.session.get("role") != "professor":
-        return RedirectResponse("/login", status_code=303)
-
-    db = SessionLocal()
-    try:
-        chat = db.query(Chat).filter_by(id=chat_id).first()
-
-        if not chat:
-            raise HTTPException(status_code=404, detail="Chat not found")
-
-        if grade < 0 or grade > 10:
-            raise HTTPException(status_code=400, detail="Invalid grade")
-
-        chat.grade = grade
-        chat.feedback = feedback
-        db.commit()
-
-        return RedirectResponse(
-            url=f"/professor/student/{chat.student_id}/chat/{chat.id}",
-            status_code=303
-        )
-
-    finally:
-        db.close()
-
 # Endpoint GET para listar estudiantes con chats enviados
 @router.get("/professor/create-case", response_class=HTMLResponse)
 def create_case_form(request: Request):
@@ -334,7 +301,7 @@ def submit_evaluation(
     try:
         chat = db.query(Chat).filter_by(id=chat_id).first()
         if not chat:
-            raise HTTPException(status_code=404, detail="Chat no encontrado")
+            raise HTTPException(status_code=404, detail="Chat not found")
 
         respuestas = [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16]
         media = sum(respuestas) / len(respuestas)
@@ -378,7 +345,7 @@ def professor_test_chat(
     try:
         clinical_case = db.query(ClinicalCase).filter_by(id=case_id).first()
         if not clinical_case:
-            raise HTTPException(status_code=404, detail="Caso clínico no encontrado")
+            raise HTTPException(status_code=404, detail="Clinical case not found")
 
         history_objects = [
             MessageDictToObject(msg["role"], msg["content"]) 
