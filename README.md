@@ -1,6 +1,7 @@
 # Desarrollo de un sistema basado en modelos de lenguaje mediante pacientes simulados
-Plataforma educativa interactiva diseñada para estudiantes de psicología. Utiliza Inteligencia Artificial (Modelos de Lenguaje Grande - LLMs) ejecutada localmente para simular entrevistas clínicas realistas, permitiendo a los estudiantes practicar, y a los profesores evaluar su desempeño fácilmente.
+Plataforma educativa interactiva diseñada para estudiantes de psicología. Utiliza modelos de lenguaje ejecutada localmente para simular entrevistas clínicas realistas, permitiendo a los estudiantes realizar sesiones terapéuticas y a los profesores evaluar su desempeño fácilmente.
 
+![Diagrama de Arquitectura](./images/DiagramaBase_TFGv2)
 ---
 
 ## Arquitectura del Sistema
@@ -12,6 +13,15 @@ El proyecto está construido bajo una arquitectura distribuida que separa la ló
 * **Motor de Inteligencia Artificial:** Integración con **Ollama** para la ejecución de modelos de lenguaje en local, garantizando la privacidad absoluta de los datos médicos y sin costes.
 * **Base de Datos:** **PostgreSQL** gestionada a través de **SQLAlchemy**.
 
+---
+## Tecnologías utilizadas
+
+* **Backend:** FastAPI, Python 3.11
+* **Frontend:** Streamlit
+* **Inteligencia Artificial:** Ollama (LLMs locales)
+* **Base de Datos:** PostgreSQL, SQLAlchemy
+* **Despliegue y Contenedores:** Docker, Docker Compose
+* **Frontend (Paneles de gestión):** Jinja2 (HTML/CSS)
 ---
 
 ## Funcionalidades Principales
@@ -26,9 +36,9 @@ El proyecto está construido bajo una arquitectura distribuida que separa la ló
 * **Memoria Conversacional:** Reconstrucción automática del historial de mensajes en cada petición para que la IA mantenga la coherencia durante toda la terapia.
 
 ### 3. Evaluación Académica Automatizada
-* **Control de Entregas Estricto:** Regla que garantiza que solo exista una única simulación enviada por estudiante y caso clínico. Al enviar, el chat se bloquea de forma inalterable.
-* **Rúbrica de evaluación:** El profesor evalúa la sesión utilizando un formulario estructurado. El sistema calcula dinámicamente la media y se obtiene una calificación estándar de 0 a 10.
-* **Modo Prueba:** Entorno de pruebas para que los profesores interactúen con el paciente, sin generar registros  en la base de datos.
+* **Control de Entregas:** Regla que garantiza que solo exista una única simulación enviada por estudiante y caso clínico. Al enviar, el chat se bloquea de forma inalterable.
+* **Rúbrica de evaluación:** El profesor evalúa la sesión utilizando un formulario estructurado. El sistema calcula automáticamente la calificación final en una escala de 0 a 10.
+* **Modo Prueba:** Entorno de pruebas para que los profesores interactúen con el paciente, sin persistir los registros en la base de datos.
 
 ---
 
@@ -44,7 +54,7 @@ Gracias a la contenedorización, no necesitas instalar Python ni configurar ento
 
 **1. Clonar el repositorio**
 ```bash
-git clone [https://github.com/tu-usuario/nombre-del-repo.git](https://github.com/tu-usuario/nombre-del-repo.git)
+git clone https://github.com/YTTREW/TFG-LLM.git
 cd nombre-del-repo
 ```
 
@@ -55,10 +65,10 @@ ollama pull llama3
 ```
 
 **3. Configurar las variables de entorno**
-Crea un archivo llamado `.env` en la raíz del proyecto (puedes tomar como referencia un `.env.example`). Configura las credenciales de tu base de datos PostgreSQL y la URL de Ollama. Para conectar los contenedores Docker con el servicio de Ollama de tu máquina, utiliza la dirección del host interno:
+Crea un archivo llamado `.env` en la raíz del proyecto (puedes tomar como referencia el `.env.example`). Configura las credenciales de tu base de datos PostgreSQL y la URL de Ollama. Para conectar los contenedores Docker con el servicio de Ollama de tu máquina, utiliza la dirección del host interno:
 ```ini
 DATABASE_URL=postgresql://usuario:password@db:5432/nombre_bd
-OLLAMA_URL=[http://host.docker.internal:11434](http://host.docker.internal:11434)
+OLLAMA_URL=[http://host.docker.internal:11434](http://host.docker.internal:11434) (para comunicación entre contenedores y host local)
 ```
 
 **4. Levantar los contenedores con Docker**
