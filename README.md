@@ -1,7 +1,7 @@
 # Desarrollo de un sistema basado en modelos de lenguaje mediante pacientes simulados
 Plataforma educativa interactiva diseñada para estudiantes de psicología. Utiliza modelos de lenguaje ejecutada localmente para simular entrevistas clínicas realistas, permitiendo a los estudiantes realizar sesiones terapéuticas y a los profesores evaluar su desempeño fácilmente.
 
-![Diagrama de Arquitectura](./images/DiagramaBase_TFGv2)
+![Diagrama de Arquitectura](./images/DiagramaBase_TFGv2.png)
 ---
 
 ## Arquitectura del Sistema
