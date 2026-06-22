@@ -3,7 +3,7 @@ Plataforma educativa interactiva diseñada para estudiantes de psicología. Util
 
 ---
 
-## 🚀 Arquitectura del Sistema
+## Arquitectura del Sistema
 
 El proyecto está construido bajo una arquitectura distribuida que separa la lógica de negocio y la gestión de la interfaz de simulación:
 
@@ -14,7 +14,7 @@ El proyecto está construido bajo una arquitectura distribuida que separa la ló
 
 ---
 
-## ✨ Funcionalidades Principales
+## Funcionalidades Principales
 
 ### 1. Control de Acceso Basado en Roles
 * **Administrador:** Alta, baja y gestión de cuentas de profesores y estudiantes.
@@ -32,7 +32,7 @@ El proyecto está construido bajo una arquitectura distribuida que separa la ló
 
 ---
 
-## 🛠️ Requisitos Previos
+## Requisitos Previos
 
 Gracias a la contenedorización, no necesitas instalar Python ni configurar entornos locales. Solo asegúrate de tener instalado en tu máquina:
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) (o Docker Engine y Docker Compose).
@@ -40,7 +40,7 @@ Gracias a la contenedorización, no necesitas instalar Python ni configurar ento
 
 ---
 
-## ⚙️ Instalación y Despliegue
+## Instalación y Despliegue
 
 **1. Clonar el repositorio**
 ```bash
